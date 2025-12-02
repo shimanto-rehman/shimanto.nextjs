@@ -18,7 +18,7 @@ export default function HomePage() {
       <div style={{position: "fixed", top: 0, left: 0, width: "100vw", height: "100vh", zIndex: 0}}>
         <ColorBends />
       </div>
-      <div style={{ width: '100%', height: '100vh', position: 'fixed'}}>
+      <div style={{width: '100%', height: '100vh', position: 'fixed'}}>
         <Prism animationType="rotate" timeScale={0.5} height={3.5} baseWidth={5.5} scale={3.6} hueShift={0} colorFrequency={1} noise={0.1} glow={1}/>
       </div>
       <section style={{ position: "relative", zIndex: 1, display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", minHeight: "100vh", padding: "2rem", textAlign: "center"}} >
