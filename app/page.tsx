@@ -5,15 +5,7 @@ import Prism from "./components/Prism";
 
 export default function HomePage() {
   return (
-    <main
-      style={{
-        position: "relative",
-        minHeight: "100vh",
-        overflow: "hidden",
-        color: "white",
-        fontFamily: "system-ui, -apple-system, BlinkMacSystemFont, 'SF Pro Text', sans-serif",
-      }}
-    >
+    <main style={{ position: "relative", minHeight: "100vh", overflow: "hidden", color: "white", fontFamily: "system-ui, -apple-system, BlinkMacSystemFont, 'SF Pro Text', sans-serif" }}>
       {/* Fixed ColorBends Background */}
       <div style={{position: "fixed", top: 0, left: 0, width: "100vw", height: "100vh", zIndex: 0}}>
         <ColorBends />
