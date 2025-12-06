@@ -8,8 +8,514 @@ body {
   width: 100%;
   height: 100%;
   overflow-x: hidden;
+  background-color: black;
+}
+
+@font-face {
+    font-family: 'agustina';
+    src: url('/fonts/Agustina-Signature.otf') format('opentype');
+    font-weight: normal;
+    font-style: normal;
+    font-display: swap;
 }
 
 * {
   box-sizing: border-box;
 }
+
+:root {
+  --c-glass: rgba(255, 255, 255, 0.1);
+  --c-light: rgba(255, 255, 255, 0.9);
+  --c-dark: rgba(0, 0, 0, 0.3);
+  --saturation: 180%;
+  --glass-reflex-light: 1;
+  --glass-reflex-dark: 1;
+}
+
+.glass-rectangle {
+  width: auto;
+  height: auto;
+  box-sizing: border-box;
+  padding: 4px;
+  border-radius: 40px;
+  background-color: color-mix(in srgb, var(--c-glass) 12%, transparent);
+  backdrop-filter: blur(25px) saturate(var(--saturation));
+  -webkit-backdrop-filter: blur(25px) saturate(var(--saturation));
+  box-shadow: 
+    inset 0 0 0 1px color-mix(in srgb, var(--c-light) calc(var(--glass-reflex-light) * 10%), transparent),
+    inset 1.8px 3px 0px -2px color-mix(in srgb, var(--c-light) calc(var(--glass-reflex-light) * 90%), transparent),
+    inset -2px -2px 0px -2px color-mix(in srgb, var(--c-light) calc(var(--glass-reflex-light) * 80%), transparent),
+    inset -3px -8px 1px -6px color-mix(in srgb, var(--c-light) calc(var(--glass-reflex-light) * 60%), transparent),
+    inset -0.3px -1px 4px 0px color-mix(in srgb, var(--c-dark) calc(var(--glass-reflex-dark) * 12%), transparent),
+    inset -1.5px 2.5px 0px -2px color-mix(in srgb, var(--c-dark) calc(var(--glass-reflex-dark) * 20%), transparent),
+    inset 0px 3px 4px -2px color-mix(in srgb, var(--c-dark) calc(var(--glass-reflex-dark) * 20%), transparent),
+    inset 2px -6.5px 1px -4px color-mix(in srgb, var(--c-dark) calc(var(--glass-reflex-dark) * 10%), transparent),
+    0px 1px 5px 0px color-mix(in srgb, var(--c-dark) calc(var(--glass-reflex-dark) * 10%), transparent),
+    0px 6px 16px 0px color-mix(in srgb, var(--c-dark) calc(var(--glass-reflex-dark) * 8%), transparent);
+  color: white;
+  transition: all 400ms cubic-bezier(1, 0, 0.4, 1);
+}
+
+/* Removed hover effect to prevent movement */
+
+
+/* ----------------------------------- Social Links -------------------------------------- */
+
+.social-tab a {
+  text-align: center;
+  color: #eee;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-decoration: none;
+  padding: 0.5rem;
+  transition: all 0.3s ease;
+}
+
+.social-tab a:hover {
+  text-decoration: none;
+}
+
+.social-tab ul {
+  display: flex;
+  flex-wrap: wrap;
+  margin: 0;
+  padding: 0;
+  list-style-type: none;
+  align-items: center;
+  justify-content: center;
+  gap: 0.75rem;
+}
+
+.social-tab ul li {
+  padding: 0;
+  margin: 0;
+}
+
+.social-tab .fab {
+  font-size: 1.5rem;
+}
+
+
+/* transition for social icon hover animation */
+
+.social-tab .fab,
+.social-tab .fa-facebook,
+.social-tab .fa-spotify,
+.social-tab .fa-linkedin,
+.social-tab .fa-instagram,
+.social-tab .fa-github,
+.social-tab .fa-twitter {
+  transition: 0.4s;
+  cursor: pointer;
+  display: inline-block;
+}
+
+
+/* social media icons hover color */
+
+.social-tab a:hover .fa-facebook,
+.social-tab a:focus .fa-facebook,
+.social-tab .fa-facebook:hover {
+  color: #3b5998;
+  text-shadow: 0 0 5px #304a83;
+  transform: scale(2);
+}
+
+.social-tab a:hover .fa-twitter,
+.social-tab a:focus .fa-twitter,
+.social-tab .fa-twitter:hover {
+  color: #1da1f2;
+  text-shadow: 0 0 15px #1da1f2;
+  transform: scale(2);
+}
+
+.social-tab a:hover .fa-linkedin,
+.social-tab a:focus .fa-linkedin,
+.social-tab .fa-linkedin:hover {
+  color: #00a0dc;
+  text-shadow: 0 0 15px #00a0dc;
+  transform: scale(2);
+}
+
+.social-tab a:hover .fa-instagram,
+.social-tab a:focus .fa-instagram,
+.social-tab .fa-instagram:hover {
+  color: #ff69b4;
+  text-shadow: 0 0 15px #ff69b4;
+  transform: scale(2);
+}
+
+.social-tab a:hover .fa-github,
+.social-tab a:focus .fa-github,
+.social-tab .fa-github:hover {
+  color: #dfdfdf;
+  text-shadow: 0 0 15px #d1d1d1;
+  transform: scale(2);
+}
+
+.social-tab a:hover .fa-spotify,
+.social-tab a:focus .fa-spotify,
+.social-tab .fa-spotify:hover {
+  color: #1db954;
+  text-shadow: 0 0 15px #1db954;
+  transform: scale(2);
+}
+
+.social-tab .fa-pinterest:hover,
+.fa-pinterest:focus {
+  color: #b3001b;
+  text-shadow: 0 0 15px #b3001b;
+  transform: scale(2);
+}
+
+
+/* ----------------------------------- Home Page Styles -------------------------------------- */
+
+/* Main container */
+.home-main {
+  position: relative;
+  min-height: 100vh;
+  overflow: hidden;
+  color: white;
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, 'SF Pro Text', sans-serif;
+}
+
+/* Fixed background container */
+.home-background-fixed {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  z-index: 0;
+}
+
+/* Prism container */
+.home-prism-container {
+  width: 100%;
+  height: 100vh;
+  position: fixed;
+}
+
+/* Section container */
+.home-section {
+  position: relative;
+  z-index: 1;
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Content wrapper */
+.home-content-wrapper {
+  position: relative;
+  width: 100%;
+  max-width: 1400px;
+  height: 85vh;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+}
+
+/* Image container */
+.home-image-container {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  border-radius: 24px;
+  overflow: hidden;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5), 0 0 0 1px rgba(255, 255, 255, 0.1);
+  background: transparent;
+  isolation: isolate;
+}
+
+
+/* Image */
+.home-image {
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  margin: auto;
+  position: relative;
+  z-index: 1;
+}
+
+/* Grayscale Image for Left Side */
+.home-image-grayscale {
+  position: absolute;
+  left: 0;
+  top: 0;
+  height: 100%;
+  width: 50%;
+  object-fit: cover;
+  object-position: left center;
+  filter: grayscale(100%);
+  z-index: 2;
+  pointer-events: none;
+}
+
+/* Left overlay - B&W Filter */
+.home-overlay-left {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 50%;
+  height: 100%;
+  z-index: 3;
+  pointer-events: none;
+  transition: all 0.3s ease;
+}
+
+/* Right overlay - Color */
+.home-overlay-right {
+  position: absolute;
+  right: 0;
+  top: 0;
+  width: 50%;
+  height: 100%;
+  z-index: 2;
+  pointer-events: none;
+}
+
+/* Vertical divider line with glow */
+.home-divider-vertical {
+  position: absolute;
+  left: 50%;
+  top: 0;
+  bottom: 0;
+  width: 3px;
+  background: linear-gradient(to bottom, transparent, rgba(255, 255, 255, 0.8), transparent);
+  transform: translateX(-50%);
+  z-index: 10;
+  box-shadow: 0 0 20px rgba(255, 255, 255, 0.6), 0 0 40px rgba(255, 255, 255, 0.3);
+}
+
+.home-text-left,
+.home-text-right {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  font-family: agustina;
+  font-size: clamp(4rem, 8vw, 7.5rem);
+  letter-spacing: 0.5rem;
+  z-index: -1000;
+  text-shadow: 0 0 30px rgba(255, 255, 255, 0.5), 0 0 60px rgba(255, 255, 255, 0.3);
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.9), rgba(255, 255, 255, 0.6));
+  -webkit-background-clip: text;
+  background-clip: text;
+}
+
+/* Left text - Shimanto */
+.home-text-left {
+  left: 8%;
+}
+
+/* Right text - Rehman */
+.home-text-right {
+  right: 8%;
+}
+
+/* Corner decorative elements */
+.home-corner {
+  position: absolute;
+  width: 60px;
+  height: 60px;
+  z-index: 5;
+  border: 2px solid rgba(255, 255, 255, 0.4);
+}
+
+.home-corner-top-left {
+  top: 20px;
+  left: 20px;
+  border-top: 2px solid rgba(255, 255, 255, 0.4);
+  border-left: 2px solid rgba(255, 255, 255, 0.4);
+  border-bottom: none;
+  border-right: none;
+}
+
+.home-corner-top-right {
+  top: 20px;
+  right: 20px;
+  border-top: 2px solid rgba(255, 255, 255, 0.4);
+  border-right: 2px solid rgba(255, 255, 255, 0.4);
+  border-bottom: none;
+  border-left: none;
+}
+
+.home-corner-bottom-left {
+  bottom: 20px;
+  left: 20px;
+  border-bottom: 2px solid rgba(255, 255, 255, 0.4);
+  border-left: 2px solid rgba(255, 255, 255, 0.4);
+  border-top: none;
+  border-right: none;
+}
+
+.home-corner-bottom-right {
+  bottom: 20px;
+  right: 20px;
+  border-bottom: 2px solid rgba(255, 255, 255, 0.4);
+  border-right: 2px solid rgba(255, 255, 255, 0.4);
+  border-top: none;
+  border-left: none;
+}
+
+/* Social media container positioning */
+.home-social-container {
+  position: absolute;
+  bottom: 30px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 10;
+}
+
+/* ----------------------------------- Intro Section -------------------------------------- */
+
+.home-intro-section {
+  position: absolute;
+  top: 70%;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 90%;
+  z-index: 15;
+  pointer-events: none;
+}
+
+.home-intro-content {
+  text-align: center;
+} 
+
+.home-intro-description {
+  font-size: 0.7rem;
+  line-height: 1.7;
+  color: rgba(255, 255, 255, 0.9);
+  font-weight: 300;
+  font-family: 'SF Pro Text', -apple-system, BlinkMacSystemFont, sans-serif;
+  text-transform: uppercase;
+  letter-spacing: 0.1rem;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.home-intro-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  justify-content: center;
+  align-items: center;
+}
+
+.home-intro-tag {
+  display: inline-block;
+  padding: 0.5rem 1.25rem;
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 20px;
+  font-size: 0.85rem;
+  color: rgba(255, 255, 255, 0.9);
+  font-weight: 400;
+  font-family: 'SF Pro Text', -apple-system, BlinkMacSystemFont, sans-serif;
+  transition: all 0.3s ease;
+}
+
+.home-intro-tag:hover {
+  background: rgba(255, 255, 255, 0.15);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+
+
+
+.designation {
+  font-size: 20px;
+  font-weight: 600;
+  margin: 0;
+  text-transform: uppercase;
+  letter-spacing: 0.2rem;
+  text-shadow: 0 0 30px #ffffff80, 0 0 60px #ffffff4d;
+}
+
+.designation-list {
+  display: flex;
+  justify-content: center;
+  overflow: hidden;
+  height: 20px;
+}
+
+
+.title-word-3 {
+  --color-1: #accfcb;
+  --color-2: #e4a9a8;
+  --color-3: #accfcb;
+}
+
+
+.designation-list span.desig-item {
+  position: absolute;
+  transform-origin: 50% 70%;
+}
+
+.desig-item span{
+  animation: color-animation 3s linear infinite;
+}
+
+@keyframes color-animation {
+  0% {
+      color: var(--color-1);
+  }
+  32% {
+      color: var(--color-1);
+  }
+  33% {
+      color: var(--color-2);
+  }
+  65% {
+      color: var(--color-2);
+  }
+  66% {
+      color: var(--color-3);
+  }
+  99% {
+      color: var(--color-3);
+  }
+  100% {
+      color: var(--color-1);
+  }
+}
+
+span.desig-item:nth-child(1) {
+  animation: flipUp 16s cubic-bezier(0.68, -0.55, 0.26, 1.55) 0s both infinite;
+}
+
+span.desig-item:nth-child(2) {
+  animation: flipUp 16s cubic-bezier(0.68, -0.55, 0.26, 1.55) 4s both infinite;
+}
+
+span.desig-item:nth-child(3) {
+  animation: flipUp 16s cubic-bezier(0.68, -0.55, 0.26, 1.55) 8s both infinite;
+}
+
+span.desig-item:nth-child(4) {
+  animation: flipUp 16s cubic-bezier(0.68, -0.55, 0.26, 1.55) 12s both infinite;
+}
+
+@keyframes flipUp {
+  0% {
+   opacity: 0;
+   margin-top: -30px;
+  }
+  20%{
+    opacity: 1;
+    margin-top: 0;
+    transform: rotateX(0deg);
+  }
+  50%, 100% {
+    opacity: 0;
+    margin-top: 0;
+    transform: rotateX(90deg);
+  }
+} 
