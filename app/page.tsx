@@ -1,5 +1,6 @@
 "use client";
 import React, { useEffect } from "react";
+import { usePathname } from "next/navigation";
 import ColorBends from "./components/ColorBends";
 import Prism from "./components/Prism";
 import RotatingDesignation from "./components/RotatingDesignation";
@@ -21,6 +22,9 @@ declare global {
 }
 
 export default function HomePage() {
+  const pathname = usePathname();
+  const isHomePage = pathname === '/';
+  
   const navItems = [
     { label: 'About', href: '/about' },
     { label: 'Blog', href: '/blog' },
@@ -56,49 +60,56 @@ export default function HomePage() {
     script.async = true;
     
     script.onload = () => {
-      // Wait a bit for the script to fully initialize
-      setTimeout(() => {
-        if (typeof window.confetti !== 'undefined') {
-          // Left side burst - shoots across entire screen to the right
-          window.confetti({
-            particleCount: 300,     // Good density
-            angle: 60,              // Angle up and to the right
-            spread: 100,            // Wide spread for full coverage
-            startVelocity: 90,      // High velocity to reach across screen
-            origin: { 
-              x: -0.1,              // Start slightly off left edge
-              y: 1.1                // Middle-lower area
-            }
-          });
-          
-          // Right side burst - shoots across entire screen to the left
-          window.confetti({
-            particleCount: 300,     // Good density
-            angle: 120,             // Angle up and to the left
-            spread: 100,            // Wide spread for full coverage
-            startVelocity: 90,      // High velocity to reach across screen
-            origin: { 
-              x: 1.1,               // Start slightly off right edge
-              y: 1.1                // Middle-lower area
-            }
-          });
-        }
-      }, 100);
+      // Only trigger confetti on home page
+      if (!isHomePage) return;
+      
+      // Listen for preloader completion event (only on home page)
+      const handlePreloaderComplete = () => {
+        // Wait a bit to ensure preloader has fully faded out
+        setTimeout(() => {
+          if (typeof window.confetti !== 'undefined') {
+            // Left side burst - shoots across entire screen to the right
+            window.confetti({
+              particleCount: 300,
+              angle: 60,
+              spread: 100,
+              startVelocity: 90,
+              origin: { 
+                x: -0.1,
+                y: 1.1
+              }
+            });
+            
+            // Right side burst - shoots across entire screen to the left
+            window.confetti({
+              particleCount: 300,
+              angle: 120,
+              spread: 100,
+              startVelocity: 90,
+              origin: { 
+                x: 1.1,
+                y: 1.1
+              }
+            });
+          }
+        }, 200);
+      };
+      
+      // Always listen for the preloader completion event
+      // Don't check readyState - wait for the actual event
+      window.addEventListener('preloaderComplete', handlePreloaderComplete, { once: true });
     };
     
     document.body.appendChild(script);
     
-    // Cleanup: remove script on unmount
+    // Cleanup
     return () => {
       if (script.parentNode) {
         script.parentNode.removeChild(script);
       }
-      // Reset confetti if available
-      if (typeof window.confetti !== 'undefined' && (window.confetti as any).reset) {
-        (window.confetti as any).reset();
-      }
+      window.removeEventListener('preloaderComplete', () => {});
     };
-  }, []);
+  }, [isHomePage]);
 
   return (
     <main className="home-main">
