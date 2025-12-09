@@ -1,0 +1,7 @@
+[33m4cd464f[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mmain[m[33m, [m[1;31morigin/main[m[33m, [m[1;31morigin/HEAD[m[33m)[m HEAD@{0}: reset: moving to origin/main
+[33m4cd464f[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mmain[m[33m, [m[1;31morigin/main[m[33m, [m[1;31morigin/HEAD[m[33m)[m HEAD@{1}: checkout: moving from main to main
+[33m4cd464f[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mmain[m[33m, [m[1;31morigin/main[m[33m, [m[1;31morigin/HEAD[m[33m)[m HEAD@{2}: commit: Uncle Bob - 2
+[33m66a7885[m HEAD@{3}: commit: Uncle Bob - 1
+[33md1ee7fa[m HEAD@{4}: Branch: renamed refs/heads/master to refs/heads/main
+[33md1ee7fa[m HEAD@{6}: commit: Initial commit
+[33mddd4178[m HEAD@{7}: commit (initial): Initial commit from Create Next App
