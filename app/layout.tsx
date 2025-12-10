@@ -3,7 +3,6 @@ import { useState, useEffect } from 'react';
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import "./responsive.css";  
-import "./components/navbar.css";
 import Preloader from './components/Preloader';
 
 const geistSans = Geist({
