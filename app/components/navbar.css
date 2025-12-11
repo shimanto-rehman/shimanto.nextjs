@@ -410,6 +410,12 @@
       background: rgba(0, 0, 0, 0.5);
       z-index: 998;
     }
+    .hamburger-btn.open span:nth-child(1) {
+      transform: translateY(9px) rotate(45deg);
+    }
+    .hamburger-btn.open span:nth-child(3) {
+      transform: translateY(-8px) rotate(-45deg);
+    }
   }
   
   @media (max-width: 480px) {
@@ -446,5 +452,11 @@
     .mobile-submenu .link-item {
       font-size: 14px;
       padding: 8px 20px;
+    }
+    .hamburger-btn.open span:nth-child(1) {
+      transform: translateY(6.7px) rotate(45deg);
+    }
+    .hamburger-btn.open span:nth-child(3) {
+      transform: translateY(-6.7px) rotate(-45deg);
     }
   }
