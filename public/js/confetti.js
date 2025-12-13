@@ -237,6 +237,5 @@
     manager.cleanup();
   };
 
-  console.log('✨ Enhanced Confetti Library Loaded');
 })();
 

@@ -13,7 +13,10 @@ body {
 
 @font-face {
     font-family: 'agustina';
-    src: url('/fonts/Agustina-Signature.otf') format('opentype');
+    src: url("/fonts/4972bc805329380c98be5ccf855ab77b.eot");
+    src: url("/fonts/4972bc805329380c98be5ccf855ab77b.eot?#iefix")format("embedded-opentype"),
+        url("/fonts/4972bc805329380c98be5ccf855ab77b.woff")format("woff"),
+        url("/fonts/4972bc805329380c98be5ccf855ab77b.woff2")format("woff2");
     font-weight: normal;
     font-style: normal;
     font-display: swap;

@@ -97,6 +97,13 @@
       inset 0 0 0 1px color-mix(in srgb, var(--c-light) calc(var(--glass-reflex-light) * 10%), transparent),
       0px 4px 12px 0px color-mix(in srgb, var(--c-dark) calc(var(--glass-reflex-dark) * 12%), transparent);
   }
+
+  /* Submenu opens on left for screens less than 1024px */
+  @media (max-width: 1023px) {
+    .navbar-submenu {
+      left: -80px;
+    }
+  }
   
   .navbar-sublink {
     display: block;
@@ -188,6 +195,13 @@
     visibility: visible;
     opacity: 1;
     z-index: 999;
+  }
+
+  /* Hide mobile menu on desktop, even when open */
+  @media (min-width: 769px) {
+    .nav-menu {
+      display: none !important;
+    }
   }
   
   .close-nav-menu {
@@ -297,6 +311,7 @@
   .nav-item:nth-child(7) { transition-delay: 0.7s; }
   .nav-item:nth-child(8) { transition-delay: 0.8s; }
   .nav-item:nth-child(9) { transition-delay: 0.9s; }
+  .nav-item:nth-child(10) { transition-delay: 1s; }
   
   .link-item {
     display: inline-block;
@@ -444,15 +459,12 @@
       height: 150px;
     }
   
-    .link-item {
+    .link-item,
+    .mobile-submenu .link-item {
       font-size: 10px;
       padding: 10px 25px;
     }
   
-    .mobile-submenu .link-item {
-      font-size: 14px;
-      padding: 8px 20px;
-    }
     .hamburger-btn.open span:nth-child(1) {
       transform: translateY(6.7px) rotate(45deg);
     }

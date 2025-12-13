@@ -17,27 +17,28 @@ interface NavbarProps {
   className?: string;
 }
 
-const defaultNavItems: NavItem[] = [
-  { label: 'About', href: '/about' },
-  { label: 'Blog', href: '/blog' },
-  { label: 'Publications', href: '/publications' },
-  { label: 'Projects', href: '/projects' },
-  { label: 'Repositories', href: '/repositories' },
-  { label: 'CV', href: '/cv' },
-  { label: 'Teaching', href: '/teaching' },
-  { label: 'People', href: '/people' },
+export const navItems: NavItem[] = [
+  { label: 'Home', href: '/' },
+  { label: 'About', href: '/pages/about' },
+  { label: 'Blog', href: '/pages/blog' },
+  { label: 'Publications', href: '/pages/publications' },
+  { label: 'Projects', href: '/pages/projects' },
+  { label: 'Repositories', href: '/pages/repositories' },
+  { label: 'CV', href: '/pages/cv' },
+  { label: 'Teaching', href: '/pages/teaching' },
+  { label: 'People', href: '/pages/people' },
   { 
-    label: 'Submenus', 
+    label: 'More', 
     href: '#',
     submenu: [
-      { label: 'Submenu 1', href: '/submenu-1' },
-      { label: 'Submenu 2', href: '/submenu-2' },
-      { label: 'Submenu 3', href: '/submenu-3' }
+      { label: 'Resources', href: '/pages/resources' },
+      { label: 'Gallery', href: '/pages/gallery' },
+      { label: 'Contact', href: '/pages/contact' }
     ]
   }
 ];
 
-export default function Navbar({ items = defaultNavItems, logo, className = '' }: NavbarProps) {
+export default function Navbar({ items = navItems, logo, className = '' }: NavbarProps) {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [activeSubmenu, setActiveSubmenu] = useState<string | null>(null);
   const pathname = usePathname();
@@ -52,6 +53,8 @@ export default function Navbar({ items = defaultNavItems, logo, className = '' }
       document.body.style.overflow = 'unset';
     };
   }, [isMenuOpen]);
+
+
 
   const handleMenuToggle = () => {
     setIsMenuOpen(!isMenuOpen);

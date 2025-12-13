@@ -1,5 +1,9 @@
 /* responsive.css - Mobile-first responsive styles */
-
+@media (max-width: 1180px) {
+    .desktop-menu {
+        scale: 0.85;
+    }
+}
 /* Tablets and smaller desktops (1024px and below) */
 @media (max-width: 1024px) {
     .home-content-wrapper {
@@ -68,8 +72,20 @@
     .social-tab a:focus .fab {
       transform: scale(1.5);
     }
+
+    .home-social-container {
+      scale: 0.9;
+    }
+    .desktop-menu {
+      scale: 0.8;
+    }
   }
   
+  @media (max-width: 799px) {
+    .desktop-menu {
+      scale: 0.7;
+    }
+  }
   /* Tablets portrait and large phones (768px and below) */
   @media (max-width: 768px) {
     .home-content-wrapper {
@@ -98,6 +114,7 @@
       pointer-events: auto;
       margin-top: 11rem;
       margin-bottom: 2rem;
+      top: 85%;
     }
   
     .designation {

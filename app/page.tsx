@@ -1,12 +1,10 @@
 "use client";
 import React, { useEffect } from "react";
 import { usePathname } from "next/navigation";
-import ColorBends from "./components/ColorBends";
-import Prism from "./components/Prism";
 import RotatingDesignation from "./components/RotatingDesignation";
 import TagList from "./components/TagList";
 import SocialLinks from "./components/SocialLinks";
-import Navbar from "./components/Navbar";
+import Navbar, { navItems } from "./components/Navbar";
 
 // Type declaration for confetti
 declare global {
@@ -24,26 +22,6 @@ declare global {
 export default function HomePage() {
   const pathname = usePathname();
   const isHomePage = pathname === '/';
-  
-  const navItems = [
-    { label: 'About', href: '/about' },
-    { label: 'Blog', href: '/blog' },
-    { label: 'Publications', href: '/publications' },
-    { label: 'Projects', href: '/projects' },
-    { label: 'Repositories', href: '/repositories' },
-    { label: 'CV', href: '/cv' },
-    { label: 'Teaching', href: '/teaching' },
-    { label: 'People', href: '/people' },
-    { 
-      label: 'More', 
-      href: '#',
-      submenu: [
-        { label: 'Resources', href: '/resources' },
-        { label: 'Gallery', href: '/gallery' },
-        { label: 'Contact', href: '/contact' }
-      ]
-    }
-  ];
   useEffect(() => {
     // Load Font Awesome if not already loaded
     if (!document.querySelector('link[href*="font-awesome"]')) {
@@ -114,13 +92,6 @@ export default function HomePage() {
   return (
     <main className="home-main">
       <Navbar items={navItems} logo="/images/shimanto.png" />
-      {/* Fixed ColorBends Background */}
-      <div className="home-background-fixed">
-        <ColorBends />
-      </div>
-      <div className="home-prism-container">
-        <Prism animationType="rotate" timeScale={0.5} height={3.5} baseWidth={5.5} scale={3.6} hueShift={0} colorFrequency={1} noise={0.05} glow={1}/>
-      </div>
       <section className="home-section">
           <div className="home-content-wrapper">
           {/* Container for image and overlays */}
@@ -141,40 +112,40 @@ export default function HomePage() {
               borderRadius: "24px",
               overflow: "hidden",
               zIndex: 1
-            }}>
-              {/* Single Image */}
-              <img 
-                src="/images/shimanto.png" 
-                alt="Shimanto Rehman" 
+          }}>
+            {/* Single Image */}
+            <img 
+              src="/images/shimanto.png" 
+              alt="Shimanto Rehman" 
                 className="home-image"
-              />
-              
-              {/* Left Overlay Div - B&W Filter */}
-              <div style={{
-                position: "absolute",
-                left: 0,
-                top: 0,
-                width: "50%",
-                height: "100%",
-                backdropFilter: "grayscale(100%)",
-                WebkitBackdropFilter: "grayscale(100%)",
-                zIndex: 2,
-                pointerEvents: "none",
-                transition: "all 0.3s ease"
-              }} />
-              
-              {/* Right Overlay Div - Color (transparent, no filter) */}
-              <div style={{
-                position: "absolute",
-                right: 0,
-                top: 0,
-                width: "50%",
-                height: "100%",
-                zIndex: 2,
-                pointerEvents: "none"
-              }} />
-              
-              {/* Vertical Line with Glow */}
+            />
+            
+            {/* Left Overlay Div - B&W Filter */}
+            <div style={{
+              position: "absolute",
+              left: 0,
+              top: 0,
+              width: "50%",
+              height: "100%",
+              backdropFilter: "grayscale(100%)",
+              WebkitBackdropFilter: "grayscale(100%)",
+              zIndex: 2,
+              pointerEvents: "none",
+              transition: "all 0.3s ease"
+            }} />
+            
+            {/* Right Overlay Div - Color (transparent, no filter) */}
+            <div style={{
+              position: "absolute",
+              right: 0,
+              top: 0,
+              width: "50%",
+              height: "100%",
+              zIndex: 2,
+              pointerEvents: "none"
+            }} />
+            
+            {/* Vertical Line with Glow */}
               <div className="home-divider-vertical" />
             </div>
             
