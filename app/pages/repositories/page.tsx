@@ -38,7 +38,6 @@ interface GitHubRepo {
 export default function RepositoriesPage() {
   const [user, setUser] = useState<GitHubUser | null>(null);
   const [repos, setRepos] = useState<GitHubRepo[]>([]);
-  const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [searchQuery, setSearchQuery] = useState('');
   const [currentPage, setCurrentPage] = useState(1);
@@ -47,7 +46,6 @@ export default function RepositoriesPage() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        setLoading(true);
         setError(null);
 
         // Fetch user profile
@@ -64,7 +62,6 @@ export default function RepositoriesPage() {
       } catch (err) {
         setError(err instanceof Error ? err.message : 'An error occurred');
       } finally {
-        setLoading(false);
         // Dispatch event to signal that API data has been loaded
         // This allows the preloader to wait for data before completing
         signalPageDataLoaded();
@@ -121,22 +118,6 @@ export default function RepositoriesPage() {
     };
     return colors[language] || '#64c8ff';
   };
-
-  if (loading) {
-    return (
-      <main className="home-main">
-        <Navbar items={navItems} logo="/images/shimanto.png" />
-        <section className="repositories-section">
-          <div className="repositories-container">
-            <div className="repositories-loading">
-              <div className="loading-spinner"></div>
-              <p>Loading repositories...</p>
-            </div>
-          </div>
-        </section>
-      </main>
-    );
-  }
 
   if (error) {
     return (
