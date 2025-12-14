@@ -101,173 +101,100 @@ export default function Preloader({ onLoadComplete }: { onLoadComplete?: () => v
     createBeams("beams-1", generateBeamData());
     monitorAnimationProgress();
 
-    // Store original functions for cleanup
-    const originalFetch = window.fetch;
-    const originalXHROpen = XMLHttpRequest.prototype.open;
-    const originalXHRSend = XMLHttpRequest.prototype.send;
-    
-    let activeRequests = 0;
-    let lastRequestTime = Date.now();
+    // Simplified and optimized preloader logic
+    let pageDataLoaded = false;
     let checkInterval: NodeJS.Timeout;
-    let stabilityTimeout: NodeJS.Timeout;
-    const STABILITY_DELAY = 500; // Wait 500ms of no new requests
-    const MAX_WAIT_TIME = 15000; // Maximum 15 seconds wait
+    const STABILITY_DELAY = 300; // Reduced from 500ms for faster response
+    const MAX_WAIT_TIME = 10000; // Reduced from 15s to 10s
+    const CHECK_INTERVAL = 200; // Check every 200ms instead of 100ms (less CPU)
 
-    // Track fetch requests
-    window.fetch = function(...args) {
-      activeRequests++;
-      lastRequestTime = Date.now();
-      const fetchPromise = originalFetch.apply(this, args);
-      fetchPromise.finally(() => {
-        activeRequests--;
-        lastRequestTime = Date.now();
-      });
-      return fetchPromise;
+    // Listen for explicit page data loaded event (for pages like repositories)
+    const handlePageDataLoaded = () => {
+      pageDataLoaded = true;
     };
+    window.addEventListener('pageDataLoaded', handlePageDataLoaded);
 
-    // Track XMLHttpRequest
-    XMLHttpRequest.prototype.open = function(...args) {
-      this._preloaderTracked = true;
-      return originalXHROpen.apply(this, args);
-    };
-    
-    XMLHttpRequest.prototype.send = function(...args) {
-      if (this._preloaderTracked) {
-        activeRequests++;
-        lastRequestTime = Date.now();
-        const originalOnReadyStateChange = this.onreadystatechange;
-        this.onreadystatechange = function(...eventArgs) {
-          if (this.readyState === 4) {
-            activeRequests--;
-            lastRequestTime = Date.now();
-          }
-          if (originalOnReadyStateChange) {
-            originalOnReadyStateChange.apply(this, eventArgs);
-          }
-        };
-      }
-      return originalXHRSend.apply(this, args);
-    };
-
-    // Generalized page load detection - works for ALL pages automatically
-    const checkPageLoad = () => {
-      const startTime = Date.now();
-
-      const checkAllReady = (): boolean => {
-        // Check if all images are loaded
-        const images = Array.from(document.images);
-        const allImagesLoaded = images.length === 0 || images.every(img => img.complete);
-        
-        // Check if fonts are loaded
-        const fontsReady = !document.fonts || document.fonts.status === 'loaded';
-        
-        // Check if there are no active requests
-        const noActiveRequests = activeRequests === 0;
-        
-        // Check if enough time has passed since last request (stability check)
-        const timeSinceLastRequest = Date.now() - lastRequestTime;
-        const isStable = timeSinceLastRequest >= STABILITY_DELAY;
-        
-        // Check if DOM is ready
-        const domReady = document.readyState === 'complete' || document.readyState === 'interactive';
-        
-        return allImagesLoaded && fontsReady && noActiveRequests && isStable && domReady;
-      };
-
-      const proceedWithFadeOut = () => {
-        if (checkInterval) clearInterval(checkInterval);
-        if (stabilityTimeout) clearTimeout(stabilityTimeout);
-        
-        // Wait for animation to complete (around 4.5s based on CSS), then fade out
-        setTimeout(() => {
-          const container = document.querySelector('.container');
-          if (container) {
-            container.classList.add('fade-out');
-            // After fade out animation completes, call onLoadComplete
-            // Wait for full fade-out transition (0.8s) before dispatching event
-            setTimeout(() => {
-              isAnimationPaused = true;
-              // Dispatch event after preloader is completely gone
-              if (typeof window !== 'undefined') {
-                window.dispatchEvent(new CustomEvent('preloaderComplete'));
-              }
-              onLoadComplete?.();
-            }, 800); // Match the fade-out transition duration
-          } else {
+    const proceedWithFadeOut = () => {
+      if (checkInterval) clearInterval(checkInterval);
+      
+      setTimeout(() => {
+        const container = document.querySelector('.container');
+        if (container) {
+          container.classList.add('fade-out');
+          setTimeout(() => {
             isAnimationPaused = true;
-            if (typeof window !== 'undefined') {
-              window.dispatchEvent(new CustomEvent('preloaderComplete'));
-            }
+            window.dispatchEvent(new CustomEvent('preloaderComplete'));
             onLoadComplete?.();
-          }
-        }, 1500);
-      };
+          }, 800);
+        } else {
+          isAnimationPaused = true;
+          window.dispatchEvent(new CustomEvent('preloaderComplete'));
+          onLoadComplete?.();
+        }
+      }, 1500);
+    };
 
-      // Wait for initial resources (images, fonts)
-      const waitForInitialResources = (): Promise<void> => {
-        const images = Array.from(document.images);
-        const imagesPromise = images.length === 0 
-          ? Promise.resolve()
-          : Promise.all(images.map(img => 
-              new Promise<void>(resolve => {
-                if (img.complete) resolve();
-                else {
-                  img.onload = img.onerror = () => resolve();
-                  // Timeout for broken images
-                  setTimeout(() => resolve(), 5000);
-                }
-              })
-            ));
-        
-        const fontsPromise = document.fonts ? document.fonts.ready : Promise.resolve();
-        
-        return Promise.all([imagesPromise, fontsPromise]).then(() => {});
-      };
+    const checkAllReady = (): boolean => {
+      // For pages that explicitly signal (like repositories), wait for that signal
+      // Check if page explicitly signaled data is loaded
+      const needsExplicitSignal = pageDataLoaded === false && document.querySelector('[data-wait-for-api]');
+      
+      if (needsExplicitSignal) {
+        return false; // Wait for explicit signal
+      }
 
-      // Start checking periodically
-      const startChecking = () => {
-        // Check every 100ms
-        checkInterval = setInterval(() => {
+      // Check images (only if they exist)
+      const images = document.images;
+      if (images.length > 0) {
+        for (let i = 0; i < images.length; i++) {
+          if (!images[i].complete) return false;
+        }
+      }
+      
+      // Check fonts (quick check)
+      if (document.fonts && document.fonts.status !== 'loaded') {
+        return false;
+      }
+      
+      // DOM ready
+      return document.readyState === 'complete';
+    };
+
+    const startChecking = () => {
+      const startTime = Date.now();
+      let lastCheckTime = Date.now();
+      
+      checkInterval = setInterval(() => {
+        const now = Date.now();
+        
+        // Only check if enough time has passed (stability check)
+        if (now - lastCheckTime >= STABILITY_DELAY) {
           if (checkAllReady()) {
             proceedWithFadeOut();
+            return;
           }
-          
-          // Safety: Maximum wait time
-          if (Date.now() - startTime > MAX_WAIT_TIME) {
-            console.warn('Preloader: Maximum wait time reached, proceeding anyway');
-            proceedWithFadeOut();
-          }
-        }, 100);
-      };
-
-      // Wait for initial resources, then start checking
-      if (document.readyState === 'complete') {
-        waitForInitialResources().then(() => {
-          // Small delay to allow any initial requests to start
-          setTimeout(startChecking, 200);
-        });
-      } else {
-        window.addEventListener('load', () => {
-          waitForInitialResources().then(() => {
-            // Small delay to allow any initial requests to start
-            setTimeout(startChecking, 200);
-          });
-        }, { once: true });
-      }
+          lastCheckTime = now;
+        }
+        
+        // Safety timeout
+        if (now - startTime > MAX_WAIT_TIME) {
+          proceedWithFadeOut();
+        }
+      }, CHECK_INTERVAL);
     };
 
-    checkPageLoad();
+    // Start checking after DOM is ready
+    if (document.readyState === 'complete') {
+      setTimeout(startChecking, 100);
+    } else {
+      window.addEventListener('load', () => setTimeout(startChecking, 100), { once: true });
+    }
 
     return () => { 
       isAnimationPaused = true;
       if (animationTimeout) clearTimeout(animationTimeout);
       if (checkInterval) clearInterval(checkInterval);
-      if (stabilityTimeout) clearTimeout(stabilityTimeout);
-      
-      // Restore original functions
-      window.fetch = originalFetch;
-      XMLHttpRequest.prototype.open = originalXHROpen;
-      XMLHttpRequest.prototype.send = originalXHRSend;
+      window.removeEventListener('pageDataLoaded', handlePageDataLoaded);
     };
   }, [onLoadComplete]);
 

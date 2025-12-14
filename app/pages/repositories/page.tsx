@@ -59,11 +59,44 @@ export default function RepositoriesPage() {
         if (!reposResponse.ok) throw new Error('Failed to fetch repositories');
         const reposData: GitHubRepo[] = await reposResponse.json();
         setRepos(reposData);
+        
+        // Wait for images to load after data is set
+        await new Promise<void>((resolve) => {
+          const images = document.querySelectorAll('img');
+          if (images.length === 0) {
+            resolve();
+            return;
+          }
+          
+          let loadedCount = 0;
+          const totalImages = images.length;
+          
+          images.forEach((img) => {
+            if (img.complete) {
+              loadedCount++;
+            } else {
+              img.onload = img.onerror = () => {
+                loadedCount++;
+                if (loadedCount === totalImages) resolve();
+              };
+            }
+          });
+          
+          // Resolve if all images are already loaded
+          if (loadedCount === totalImages) {
+            resolve();
+          }
+          
+          // Timeout after 3 seconds for broken images
+          setTimeout(() => resolve(), 3000);
+        });
+        
+        // Small delay to ensure DOM is updated
+        await new Promise(resolve => setTimeout(resolve, 100));
       } catch (err) {
         setError(err instanceof Error ? err.message : 'An error occurred');
       } finally {
         // Dispatch event to signal that API data has been loaded
-        // This allows the preloader to wait for data before completing
         signalPageDataLoaded();
       }
     };
@@ -136,7 +169,7 @@ export default function RepositoriesPage() {
   }
 
   return (
-    <main className="home-main">
+    <main className="home-main" data-wait-for-api="true">
       <Navbar items={navItems} logo="/images/shimanto.png" />
       <section className="repositories-section">
         <div className="repositories-container">
