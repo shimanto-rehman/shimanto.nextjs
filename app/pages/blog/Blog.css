@@ -55,6 +55,87 @@
   font-size: inherit;
 }
 
+/* Search Bar */
+.blog-search-container {
+  margin-bottom: clamp(20px, 2.5vw, 30px);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: clamp(8px, 1vw, 12px);
+}
+
+.blog-search {
+  position: relative;
+  max-width: 700px;
+  width: 100%;
+  display: flex;
+  align-items: center;
+}
+
+.blog-search i {
+  position: absolute;
+  left: clamp(12px, 1.8vw, 16px);
+  color: rgba(255, 255, 255, 0.5);
+  font-size: clamp(0.85rem, 1.1vw, 1rem);
+  z-index: 1;
+}
+
+.blog-search-input {
+  width: 100%;
+  padding: clamp(10px, 1.3vw, 14px) clamp(38px, 4.5vw, 45px) clamp(10px, 1.3vw, 14px) clamp(38px, 4.5vw, 45px);
+  background: color-mix(in srgb, var(--c-glass) 18%, transparent);
+  backdrop-filter: blur(25px) saturate(var(--saturation));
+  -webkit-backdrop-filter: blur(25px) saturate(var(--saturation));
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: clamp(10px, 1.3vw, 14px);
+  color: rgba(255, 255, 255, 0.9);
+  font-size: clamp(0.8rem, 1.1vw, 0.95rem);
+  font-family: var(--font-geist-sans), -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  transition: all 0.3s ease;
+  box-shadow:
+    inset 0 0 0 1px rgba(255, 255, 255, 0.1),
+    0px 2px 8px rgba(0, 0, 0, 0.2);
+}
+
+.blog-search-input::placeholder {
+  color: rgba(255, 255, 255, 0.4);
+  font-size: clamp(0.75rem, 1vw, 0.9rem);
+}
+
+.blog-search-input:focus {
+  outline: none;
+  border-color: rgba(100, 200, 255, 0.4);
+  box-shadow:
+    inset 0 0 0 1px rgba(100, 200, 255, 0.2),
+    0px 4px 12px rgba(100, 200, 255, 0.2);
+}
+
+.blog-search-clear {
+  position: absolute;
+  right: clamp(10px, 1.3vw, 14px);
+  background: transparent;
+  border: none;
+  color: rgba(255, 255, 255, 0.5);
+  cursor: pointer;
+  padding: clamp(4px, 0.5vw, 6px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: color 0.3s ease;
+  z-index: 1;
+  font-size: clamp(0.8rem, 1vw, 0.95rem);
+}
+
+.blog-search-clear:hover {
+  color: rgba(255, 255, 255, 0.9);
+}
+
+.blog-search-count {
+  font-size: clamp(0.75rem, 1vw, 0.85rem);
+  color: rgba(255, 255, 255, 0.6);
+  text-align: center;
+}
+
 /* Tag and Category List */
 .blog-tag-category-list {
   margin-bottom: clamp(20px, 2.5vw, 30px);
@@ -477,7 +558,7 @@
 }
 
 .blog-modal-title {
-  font-size: clamp(1.5rem, 2.6vw, 2.5rem);
+  font-size: clamp(1.4rem, 2.2vw, 2rem);
   font-weight: 700;
   color: rgba(255, 255, 255, 0.95);
   margin: 0 0 clamp(10px, 1vw, 12px) 0;
@@ -486,7 +567,7 @@
 }
 
 .blog-modal-description {
-  font-size: clamp(0.95rem, 1.1vw, 1.1rem);
+  font-size: clamp(0.8rem, 1.4vw, 1.1rem);
   color: rgba(255, 255, 255, 0.75);
   margin: 0 0 clamp(16px, 1.67vw, 20px) 0;
   line-height: 1.6;
@@ -518,7 +599,7 @@
   border-radius: clamp(12px, 1.33vw, 16px);
   padding: clamp(4px, 0.5vw, 6px) clamp(8px, 1vw, 12px);
   color: rgba(255, 255, 255, 0.85);
-  font-size: clamp(0.75rem, 0.89vw, 0.85rem);
+  font-size: clamp(0.65rem, 0.79vw, 0.75rem);
   display: inline-flex;
   align-items: center;
   gap: clamp(4px, 0.5vw, 6px);
@@ -534,7 +615,7 @@
 }
 
 .blog-post-content h2 {
-  font-size: clamp(1.5rem, 2vw, 2rem);
+  font-size: clamp(1.1rem, 1.7vw, 1.6rem);
   font-weight: 600;
   color: rgba(255, 255, 255, 0.95);
   margin: clamp(20px, 2.67vw, 32px) 0 clamp(12px, 1.33vw, 16px);
@@ -543,7 +624,7 @@
 }
 
 .blog-post-content h3 {
-  font-size: clamp(1.2rem, 1.56vw, 1.5rem);
+  font-size: clamp(0.8rem, 1.2vw, 1.4rem);
   font-weight: 600;
   color: rgba(255, 255, 255, 0.95);
   margin: clamp(16px, 2vw, 24px) 0 clamp(10px, 1vw, 12px);
@@ -552,6 +633,7 @@
 .blog-post-content p {
   margin: clamp(12px, 1.33vw, 16px) 0;
   color: rgba(255, 255, 255, 0.85);
+  font-size: clamp(0.8rem, 1.4vw, 1.1rem);
 }
 
 .blog-post-content pre {

@@ -12,22 +12,29 @@ const allCategories = Array.from(new Set(allBlogPosts.map(post => post.category)
 export default function BlogPage() {
   const [selectedTag, setSelectedTag] = useState<string | null>(null);
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
+  const [searchQuery, setSearchQuery] = useState('');
   const [currentPage, setCurrentPage] = useState(1);
   const [selectedPost, setSelectedPost] = useState<BlogPost | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const postsPerPage = 10;
 
   const filteredPosts = useMemo(() => {
-    let filtered = allBlogPosts.filter(post => 
-      (!selectedTag || post.tags.includes(selectedTag)) &&
-      (!selectedCategory || post.category === selectedCategory)
-    );
+    let filtered = allBlogPosts.filter(post => {
+      const matchesTag = !selectedTag || post.tags.includes(selectedTag);
+      const matchesCategory = !selectedCategory || post.category === selectedCategory;
+      const matchesSearch = !searchQuery.trim() || 
+        post.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        post.description.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        post.tags.some(tag => tag.toLowerCase().includes(searchQuery.toLowerCase())) ||
+        (post.category && post.category.toLowerCase().includes(searchQuery.toLowerCase()));
+      return matchesTag && matchesCategory && matchesSearch;
+    });
     return filtered.sort((a, b) => {
       if (a.pinned && !b.pinned) return -1;
       if (!a.pinned && b.pinned) return 1;
       return new Date(b.date).getTime() - new Date(a.date).getTime();
     });
-  }, [selectedTag, selectedCategory]);
+  }, [selectedTag, selectedCategory, searchQuery]);
 
   const pinnedPosts = useMemo(() => filteredPosts.filter(post => post.pinned), [filteredPosts]);
   const regularPosts = useMemo(() => filteredPosts.filter(post => !post.pinned), [filteredPosts]);
@@ -50,6 +57,11 @@ export default function BlogPage() {
     setCurrentPage(1);
   }, []);
 
+  const handleSearchChange = useCallback((query: string) => {
+    setSearchQuery(query);
+    setCurrentPage(1);
+  }, []);
+
   const handlePostClick = useCallback((post: BlogPost) => {
     setSelectedPost(post);
     setIsModalOpen(true);
@@ -63,6 +75,34 @@ export default function BlogPage() {
           <div className="blog-header-bar">
             <h1 className="blog-main-title">{'<blog />'}</h1>
             <h2 className="blog-subtitle"><code>{'<thinkingInPublic />'}</code> Exploring the Intersection of Technology and Thought</h2>
+          </div>
+
+          {/* Search Bar */}
+          <div className="blog-search-container">
+            <div className="blog-search">
+              <i className="fas fa-search"></i>
+              <input
+                type="text"
+                placeholder="Search posts by title, description, tags, or category..."
+                value={searchQuery}
+                onChange={(e) => handleSearchChange(e.target.value)}
+                className="blog-search-input"
+              />
+              {searchQuery && (
+                <button 
+                  className="blog-search-clear"
+                  onClick={() => handleSearchChange('')}
+                  aria-label="Clear search"
+                >
+                  <i className="fas fa-times"></i>
+                </button>
+              )}
+            </div>
+            {searchQuery && (
+              <div className="blog-search-count">
+                Found {filteredPosts.length} post{filteredPosts.length !== 1 ? 's' : ''}
+              </div>
+            )}
           </div>
 
           <div className="blog-tag-category-list">
