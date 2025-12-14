@@ -114,7 +114,7 @@
       pointer-events: auto;
       margin-top: 11rem;
       margin-bottom: 2rem;
-      top: 85%;
+      top: 70%;
     }
   
     .designation {
@@ -242,6 +242,7 @@
     }
   
     .home-intro-section {
+      top: 75%;
       margin-bottom: 1.5rem;
     }
   

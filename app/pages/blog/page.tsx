@@ -4,6 +4,7 @@ import React, { useState, useMemo, useCallback } from 'react';
 import Navbar, { navItems } from "../../components/Navbar";
 import BlogPostModal from "./BlogPostModal";
 import { allBlogPosts, BlogPost } from "./BlogPost";
+import { usePageDataLoaded } from "../../hooks/usePageDataLoaded";
 import './Blog.css';
 
 const allTags = Array.from(new Set(allBlogPosts.flatMap(post => post.tags)));
@@ -66,6 +67,9 @@ export default function BlogPage() {
     setSelectedPost(post);
     setIsModalOpen(true);
   }, []);
+
+  // Signal that page data is loaded (blog uses static data, so it's ready immediately)
+  usePageDataLoaded();
 
   return (
     <main className="home-main">

@@ -22,14 +22,39 @@ declare global {
 export default function HomePage() {
   const pathname = usePathname();
   const isHomePage = pathname === '/';
+  
   useEffect(() => {
+    let scriptsLoaded = 0;
+    const totalScripts = 1; // confetti.js
+    let fontAwesomeLoaded = false;
+    
+    const checkAllLoaded = () => {
+      // Signal that page data is loaded when all scripts and fonts are ready
+      if (scriptsLoaded >= totalScripts && fontAwesomeLoaded) {
+        if (typeof window !== 'undefined') {
+          window.dispatchEvent(new CustomEvent('pageDataLoaded'));
+        }
+      }
+    };
+    
     // Load Font Awesome if not already loaded
     if (!document.querySelector('link[href*="font-awesome"]')) {
       const link = document.createElement('link');
       link.rel = 'stylesheet';
       link.href = 'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css';
       link.crossOrigin = 'anonymous';
+      link.onload = () => {
+        fontAwesomeLoaded = true;
+        checkAllLoaded();
+      };
+      link.onerror = () => {
+        fontAwesomeLoaded = true; // Proceed even if font fails
+        checkAllLoaded();
+      };
       document.head.appendChild(link);
+    } else {
+      fontAwesomeLoaded = true;
+      checkAllLoaded();
     }
     
     // Load confetti script
@@ -38,6 +63,9 @@ export default function HomePage() {
     script.async = true;
     
     script.onload = () => {
+      scriptsLoaded++;
+      checkAllLoaded();
+      
       // Only trigger confetti on home page
       if (!isHomePage) return;
       
@@ -76,6 +104,11 @@ export default function HomePage() {
       // Always listen for the preloader completion event
       // Don't check readyState - wait for the actual event
       window.addEventListener('preloaderComplete', handlePreloaderComplete, { once: true });
+    };
+    
+    script.onerror = () => {
+      scriptsLoaded++; // Proceed even if script fails
+      checkAllLoaded();
     };
     
     document.body.appendChild(script);

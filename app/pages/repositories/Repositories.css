@@ -48,8 +48,8 @@
 
 .profile-card {
   background: color-mix(in srgb, var(--c-glass) 18%, transparent);
-  backdrop-filter: blur(25px) saturate(var(--saturation));
-  -webkit-backdrop-filter: blur(25px) saturate(var(--saturation));
+  -webkit-backdrop-filter: blur(40px) saturate(var(--saturation));
+  backdrop-filter: blur(40px) saturate(var(--saturation));
   border-radius: clamp(16px, 2vw, 24px);
   padding: clamp(16px, 2.5vw, 24px);
   border: 1px solid rgba(255, 255, 255, 0.1);
@@ -561,7 +561,7 @@
   }
 
   .profile-github-btn {
-    width: 100%;
+    width: fit-content;
     justify-content: center;
   }
 
@@ -580,7 +580,7 @@
   }
 
   .repositories-grid {
-    grid-template-columns: 1fr;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
     gap: clamp(12px, 1.8vw, 18px);
   }
 
@@ -618,7 +618,7 @@
 
 @media (max-width: 480px) {
   .profile-stats {
-    flex-direction: column;
+    flex-direction: row;
     gap: clamp(8px, 1.5vw, 12px);
   }
 

@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useMemo } from 'react';
 import Navbar, { navItems } from "../../components/Navbar";
+import { signalPageDataLoaded } from "../../hooks/usePageDataLoaded";
 import './Repositories.css';
 
 interface GitHubUser {
@@ -64,6 +65,9 @@ export default function RepositoriesPage() {
         setError(err instanceof Error ? err.message : 'An error occurred');
       } finally {
         setLoading(false);
+        // Dispatch event to signal that API data has been loaded
+        // This allows the preloader to wait for data before completing
+        signalPageDataLoaded();
       }
     };
 

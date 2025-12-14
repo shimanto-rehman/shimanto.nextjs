@@ -101,60 +101,157 @@ export default function Preloader({ onLoadComplete }: { onLoadComplete?: () => v
     createBeams("beams-1", generateBeamData());
     monitorAnimationProgress();
 
-    // Wait for all resources to fully load, then fade out immediately
+    // Store original functions for cleanup
+    const originalFetch = window.fetch;
+    const originalXHROpen = XMLHttpRequest.prototype.open;
+    const originalXHRSend = XMLHttpRequest.prototype.send;
+    
+    let activeRequests = 0;
+    let lastRequestTime = Date.now();
+    let checkInterval: NodeJS.Timeout;
+    let stabilityTimeout: NodeJS.Timeout;
+    const STABILITY_DELAY = 500; // Wait 500ms of no new requests
+    const MAX_WAIT_TIME = 15000; // Maximum 15 seconds wait
+
+    // Track fetch requests
+    window.fetch = function(...args) {
+      activeRequests++;
+      lastRequestTime = Date.now();
+      const fetchPromise = originalFetch.apply(this, args);
+      fetchPromise.finally(() => {
+        activeRequests--;
+        lastRequestTime = Date.now();
+      });
+      return fetchPromise;
+    };
+
+    // Track XMLHttpRequest
+    XMLHttpRequest.prototype.open = function(...args) {
+      this._preloaderTracked = true;
+      return originalXHROpen.apply(this, args);
+    };
+    
+    XMLHttpRequest.prototype.send = function(...args) {
+      if (this._preloaderTracked) {
+        activeRequests++;
+        lastRequestTime = Date.now();
+        const originalOnReadyStateChange = this.onreadystatechange;
+        this.onreadystatechange = function(...eventArgs) {
+          if (this.readyState === 4) {
+            activeRequests--;
+            lastRequestTime = Date.now();
+          }
+          if (originalOnReadyStateChange) {
+            originalOnReadyStateChange.apply(this, eventArgs);
+          }
+        };
+      }
+      return originalXHRSend.apply(this, args);
+    };
+
+    // Generalized page load detection - works for ALL pages automatically
     const checkPageLoad = () => {
-      const allResourcesLoaded = (): Promise<void> => {
+      const startTime = Date.now();
+
+      const checkAllReady = (): boolean => {
         // Check if all images are loaded
         const images = Array.from(document.images);
-        const allImagesLoaded = images.every(img => img.complete);
+        const allImagesLoaded = images.length === 0 || images.every(img => img.complete);
         
         // Check if fonts are loaded
-        const fontsLoaded = document.fonts ? document.fonts.ready : Promise.resolve();
+        const fontsReady = !document.fonts || document.fonts.status === 'loaded';
         
-        const imagesPromise = allImagesLoaded 
-          ? Promise.resolve() 
-          : Promise.all(images.map(img => 
-              new Promise<void>(resolve => {
-                if (img.complete) resolve();
-                else img.onload = img.onerror = () => resolve();
-              })
-            ));
+        // Check if there are no active requests
+        const noActiveRequests = activeRequests === 0;
         
-        return Promise.all([imagesPromise, fontsLoaded]).then(() => {});
+        // Check if enough time has passed since last request (stability check)
+        const timeSinceLastRequest = Date.now() - lastRequestTime;
+        const isStable = timeSinceLastRequest >= STABILITY_DELAY;
+        
+        // Check if DOM is ready
+        const domReady = document.readyState === 'complete' || document.readyState === 'interactive';
+        
+        return allImagesLoaded && fontsReady && noActiveRequests && isStable && domReady;
       };
 
-      const handleComplete = () => {
-    // Wait for all resources to fully load, then fade out and call onLoadComplete
+      const proceedWithFadeOut = () => {
+        if (checkInterval) clearInterval(checkInterval);
+        if (stabilityTimeout) clearTimeout(stabilityTimeout);
+        
         // Wait for animation to complete (around 4.5s based on CSS), then fade out
         setTimeout(() => {
-            const container = document.querySelector('.container');
-            if (container) {
-              container.classList.add('fade-out');
-              // After fade out animation completes, call onLoadComplete
-              // Wait for full fade-out transition (0.8s) before dispatching event
-              setTimeout(() => {
-                isAnimationPaused = true;
-                // Dispatch event after preloader is completely gone
-                if (typeof window !== 'undefined') {
-                  window.dispatchEvent(new CustomEvent('preloaderComplete'));
-                }
-                onLoadComplete?.();
-              }, 800); // Match the fade-out transition duration
-            } else {
+          const container = document.querySelector('.container');
+          if (container) {
+            container.classList.add('fade-out');
+            // After fade out animation completes, call onLoadComplete
+            // Wait for full fade-out transition (0.8s) before dispatching event
+            setTimeout(() => {
               isAnimationPaused = true;
+              // Dispatch event after preloader is completely gone
               if (typeof window !== 'undefined') {
                 window.dispatchEvent(new CustomEvent('preloaderComplete'));
               }
               onLoadComplete?.();
+            }, 800); // Match the fade-out transition duration
+          } else {
+            isAnimationPaused = true;
+            if (typeof window !== 'undefined') {
+              window.dispatchEvent(new CustomEvent('preloaderComplete'));
             }
-          }, 1500);
+            onLoadComplete?.();
+          }
+        }, 1500);
       };
 
+      // Wait for initial resources (images, fonts)
+      const waitForInitialResources = (): Promise<void> => {
+        const images = Array.from(document.images);
+        const imagesPromise = images.length === 0 
+          ? Promise.resolve()
+          : Promise.all(images.map(img => 
+              new Promise<void>(resolve => {
+                if (img.complete) resolve();
+                else {
+                  img.onload = img.onerror = () => resolve();
+                  // Timeout for broken images
+                  setTimeout(() => resolve(), 5000);
+                }
+              })
+            ));
+        
+        const fontsPromise = document.fonts ? document.fonts.ready : Promise.resolve();
+        
+        return Promise.all([imagesPromise, fontsPromise]).then(() => {});
+      };
+
+      // Start checking periodically
+      const startChecking = () => {
+        // Check every 100ms
+        checkInterval = setInterval(() => {
+          if (checkAllReady()) {
+            proceedWithFadeOut();
+          }
+          
+          // Safety: Maximum wait time
+          if (Date.now() - startTime > MAX_WAIT_TIME) {
+            console.warn('Preloader: Maximum wait time reached, proceeding anyway');
+            proceedWithFadeOut();
+          }
+        }, 100);
+      };
+
+      // Wait for initial resources, then start checking
       if (document.readyState === 'complete') {
-        allResourcesLoaded().then(handleComplete);
+        waitForInitialResources().then(() => {
+          // Small delay to allow any initial requests to start
+          setTimeout(startChecking, 200);
+        });
       } else {
         window.addEventListener('load', () => {
-          allResourcesLoaded().then(handleComplete);
+          waitForInitialResources().then(() => {
+            // Small delay to allow any initial requests to start
+            setTimeout(startChecking, 200);
+          });
         }, { once: true });
       }
     };
@@ -164,6 +261,13 @@ export default function Preloader({ onLoadComplete }: { onLoadComplete?: () => v
     return () => { 
       isAnimationPaused = true;
       if (animationTimeout) clearTimeout(animationTimeout);
+      if (checkInterval) clearInterval(checkInterval);
+      if (stabilityTimeout) clearTimeout(stabilityTimeout);
+      
+      // Restore original functions
+      window.fetch = originalFetch;
+      XMLHttpRequest.prototype.open = originalXHROpen;
+      XMLHttpRequest.prototype.send = originalXHRSend;
     };
   }, [onLoadComplete]);
 
