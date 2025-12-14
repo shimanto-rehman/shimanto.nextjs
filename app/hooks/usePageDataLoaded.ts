@@ -1,32 +1,33 @@
-/**
- * Hook to signal that page data is loaded
- * Use this in pages that don't fetch data - it will dispatch immediately
- * For pages that fetch data, dispatch the event manually when data is ready
- */
-import { useEffect } from 'react';
-
-export function usePageDataLoaded(immediate = true) {
-  useEffect(() => {
-    if (immediate) {
-      // Small delay to ensure DOM is ready
-      const timer = setTimeout(() => {
-        if (typeof window !== 'undefined') {
-          window.dispatchEvent(new CustomEvent('pageDataLoaded'));
-        }
-      }, 100);
-      
-      return () => clearTimeout(timer);
-    }
-  }, [immediate]);
-}
+// hooks/usePageDataLoaded.ts
 
 /**
- * Manual function to dispatch the pageDataLoaded event
- * Use this when you need to signal data is loaded after async operations
+ * Signals to the preloader that page data has been loaded
+ * Call this after API data and images are ready
  */
-export function signalPageDataLoaded() {
+export const signalPageDataLoaded = () => {
   if (typeof window !== 'undefined') {
+    // Dispatch the custom event
     window.dispatchEvent(new CustomEvent('pageDataLoaded'));
+    console.log('✓ Page data loaded signal dispatched');
   }
-}
+};
 
+/**
+ * Hook to listen for page data loaded event (optional - not used in current implementation)
+ * The preloader listens directly to the window event
+ */
+export const usePageDataLoaded = (callback?: () => void) => {
+  if (typeof window !== 'undefined' && callback) {
+    const handlePageDataLoaded = () => {
+      callback();
+    };
+    
+    window.addEventListener('pageDataLoaded', handlePageDataLoaded);
+    
+    return () => {
+      window.removeEventListener('pageDataLoaded', handlePageDataLoaded);
+    };
+  }
+  
+  return () => {}; // Return empty cleanup function if not used
+};

@@ -212,6 +212,94 @@
   font-size: clamp(0.9rem, 1.2vw, 1.1rem);
 }
 
+/* GitHub Stats Section */
+.github-stats-card {
+  background: color-mix(in srgb, var(--c-glass) 18%, transparent);
+  backdrop-filter: blur(25px) saturate(var(--saturation));
+  -webkit-backdrop-filter: blur(25px) saturate(var(--saturation));
+  border-radius: clamp(10px, 1.5vw, 14px);
+  padding: clamp(12px, 1.8vw, 18px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.1), 0px 4px 16px rgba(0, 0, 0, 0.2);
+  margin-bottom: clamp(16px, 2.5vw, 28px);
+  max-width: 400px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.github-stats-title {
+  font-size: clamp(0.85rem, 1.2vw, 1rem);
+  font-weight: 600;
+  color: rgba(255, 255, 255, 0.95);
+  margin: 0 0 clamp(12px, 1.8vw, 16px) 0;
+  font-family: var(--font-geist-sans), -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+}
+
+.github-stats-grid {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: clamp(16px, 2.5vw, 24px);
+  align-items: center;
+}
+
+.github-stats-list {
+  display: flex;
+  flex-direction: column;
+  gap: clamp(8px, 1.2vw, 10px);
+}
+
+.github-stat {
+  display: flex;
+  align-items: center;
+  gap: clamp(8px, 1.1vw, 10px);
+  font-size: clamp(0.75rem, 1vw, 0.85rem);
+  color: rgba(255, 255, 255, 0.8);
+}
+
+.github-stat i {
+  color: rgba(200, 170, 50, 0.9);
+  width: clamp(16px, 2vw, 18px);
+  font-size: clamp(0.8rem, 1.1vw, 0.9rem);
+  flex-shrink: 0;
+}
+
+.github-stat span {
+  flex: 1;
+  color: rgba(255, 255, 255, 0.7);
+  font-size: clamp(0.7rem, 0.95vw, 0.8rem);
+}
+
+.github-stat strong {
+  color: rgba(255, 255, 255, 0.95);
+  font-weight: 600;
+  font-family: var(--font-geist-sans), -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  font-size: clamp(0.75rem, 1vw, 0.85rem);
+  min-width: fit-content;
+}
+
+.github-grade-circle {
+  position: relative;
+  width: clamp(80px, 12vw, 110px);
+  height: clamp(80px, 12vw, 110px);
+  flex-shrink: 0;
+}
+
+.github-grade-circle svg {
+  width: 100%;
+  height: 100%;
+}
+
+.github-grade-letter {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: clamp(2rem, 3.5vw, 2.8rem);
+  font-weight: 700;
+  color: rgba(255, 255, 255, 0.9);
+  font-family: var(--font-geist-sans), -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+}
+
 /* Header Section */
 .repositories-header {
   text-align: center;
@@ -543,6 +631,15 @@
 
 /* Responsive Design - Mobile & Tablet */
 @media (max-width: 1024px) {
+  .github-stats-grid {
+    grid-template-columns: 1fr;
+    gap: clamp(16px, 2.5vw, 24px);
+  }
+
+  .github-grade-circle {
+    justify-self: center;
+  }
+
   .repositories-grid {
     grid-template-columns: repeat(auto-fill, minmax(clamp(260px, 40vw, 320px), 1fr));
     gap: clamp(14px, 2vw, 20px);
@@ -577,6 +674,19 @@
 @media (max-width: 768px) {
   .repositories-section {
     padding: clamp(50px, 7vw, 80px) clamp(10px, 2vw, 20px) clamp(25px, 3.5vw, 40px);
+  }
+
+  .github-stats-card {
+    max-width: 60%;
+  }
+
+  .github-grade-circle {
+    width: clamp(70px, 18vw, 90px);
+    height: clamp(70px, 18vw, 90px);
+  }
+
+  .github-grade-letter {
+    font-size: clamp(1.8rem, 4.5vw, 2.5rem);
   }
 
   .repositories-grid {

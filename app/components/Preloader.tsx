@@ -1,202 +1,218 @@
 'use client';
 
-import { useEffect } from 'react';
+import { useEffect, useRef, useCallback } from 'react';
 import './Preloader.css';
 
 export default function Preloader({ onLoadComplete }: { onLoadComplete?: () => void }) {
-  useEffect(() => {
+  const animationRef = useRef<NodeJS.Timeout | null>(null);
+  const checkIntervalRef = useRef<NodeJS.Timeout | null>(null);
+  const isPausedRef = useRef(false);
+  const hasCompletedRef = useRef(false);
+
+  const beamColors = [
+    "#ff1500", "#ffff00", "#ff00ff", "#00ff9f", "#ff5500", "#ffaa00",
+    "#00a9ff", "#bf00ff", "#ffdd00", "#00ffff", "#ff153b", "#ff00cc"
+  ];
+
+  const generateStripData = useCallback(() => {
     const numStrips = 20;
-    const beamColors = [
-      "#ff1500", "#ffff00", "#ff00ff", "#00ff9f", "#ff5500", "#ffaa00",
-      "#00a9ff", "#bf00ff", "#ffdd00", "#00ffff", "#ff153b", "#ff00cc"
-    ];
-
-    let splashAnimation = document.querySelector(".splash-animation");
-    let isAnimationPaused = false;
-    let animationTimeout: NodeJS.Timeout;
-
-    const generateStripData = () => {
-      const data = [];
-      const stripWidth = 100 / numStrips;
-      for (let i = 0; i < numStrips; i++) {
-        const left = i * stripWidth;
-        const width = stripWidth + 0.5;
-        const fillPercentage = 10 + Math.random() * 40;
-        const fadePoint = 60 + Math.random() * 40;
-        const color = beamColors[Math.floor(Math.random() * beamColors.length)];
-        const bg = `linear-gradient(to bottom, ${color} 0%, ${color} ${fillPercentage}%, rgba(0, 0, 0, 0) ${fadePoint}%, rgba(0, 0, 0, 0) 100%)`;
-        data.push({ left: left + "%", width: width + "%", bg, color });
-      }
-      return data;
-    };
-
-    const generateBeamData = () => {
-      const data = [];
-      for (let i = 0; i < 28; i++) {
-        const color = beamColors[Math.floor(Math.random() * beamColors.length)];
-        const width = (0.5 + Math.random() * 2.5).toFixed(1);
-        const left = ((i / 28) * 100 + (Math.random() * 1.5 - 0.75)).toFixed(1);
-        data.push({ left: left + "%", width: width + "%", color });
-      }
-      return data.sort((a, b) => parseFloat(a.left) - parseFloat(b.left));
-    };
-
-    const createStrips = (containerId: string, stripData: any[]) => {
-      const container = document.getElementById(containerId);
-      if (!container) return;
-      const fragment = document.createDocumentFragment();
-      stripData.forEach((strip, index) => {
-        const el = document.createElement("span");
-        el.className = `strip-${index + 1}`;
-        Object.assign(el.style, { left: strip.left, width: strip.width, background: strip.bg, zIndex: index.toString() });
-        fragment.appendChild(el);
+    const data = [];
+    const stripWidth = 100 / numStrips;
+    for (let i = 0; i < numStrips; i++) {
+      const fillPercentage = 10 + Math.random() * 40;
+      const fadePoint = 60 + Math.random() * 40;
+      const color = beamColors[Math.floor(Math.random() * beamColors.length)];
+      data.push({
+        left: `${i * stripWidth}%`,
+        width: `${stripWidth + 0.5}%`,
+        bg: `linear-gradient(to bottom, ${color} 0%, ${color} ${fillPercentage}%, rgba(0, 0, 0, 0) ${fadePoint}%, rgba(0, 0, 0, 0) 100%)`,
       });
-      container.appendChild(fragment);
-    };
+    }
+    return data;
+  }, [beamColors]);
 
-    const createBeams = (containerId: string, beamData: any[]) => {
-      const container = document.getElementById(containerId);
-      if (!container) return;
-      const fragment = document.createDocumentFragment();
-      beamData.forEach((beam, index) => {
-        const el = document.createElement("span");
-        el.className = `beam beam-${index + 1} ${index % 2 === 0 ? "left-moving-beam" : "right-moving-beam"}`;
-        Object.assign(el.style, { 
-          left: beam.left, 
-          width: beam.width, 
-          animationDelay: `${(Math.random() * 2).toFixed(2)}s`,
-          filter: `brightness(${1 + Math.random() * 0.8})`
-        });
-        el.style.setProperty("--color", beam.color);
-        fragment.appendChild(el);
+  const generateBeamData = useCallback(() => {
+    const data = [];
+    for (let i = 0; i < 28; i++) {
+      const color = beamColors[Math.floor(Math.random() * beamColors.length)];
+      data.push({
+        left: `${(i / 28) * 100 + (Math.random() * 1.5 - 0.75)}%`,
+        width: `${0.5 + Math.random() * 2.5}%`,
+        color,
+        delay: `${Math.random() * 2}s`,
+        brightness: 1 + Math.random() * 0.8,
+        isLeft: i % 2 === 0
       });
-      container.appendChild(fragment);
-    };
+    }
+    return data.sort((a, b) => parseFloat(a.left) - parseFloat(b.left));
+  }, [beamColors]);
 
-    const resetAnimation = () => {
-      const gradEffect = document.getElementById("grad-effect-1");
-      const beamsContainer = document.getElementById("beams-1");
-      if (gradEffect) gradEffect.innerHTML = "";
-      if (beamsContainer) beamsContainer.innerHTML = "";
-      
-      const oldSplash = splashAnimation;
-      const newSplash = oldSplash?.cloneNode(true) as HTMLElement;
-      oldSplash?.parentNode?.replaceChild(newSplash, oldSplash);
-      splashAnimation = document.querySelector(".splash-animation");
-      
-      setTimeout(() => {
-        createStrips("grad-effect-1", generateStripData());
-        createBeams("beams-1", generateBeamData());
-        monitorAnimationProgress();
-      }, 0);
-    };
+  const createElements = useCallback((stripData: any[], beamData: any[]) => {
+    const gradEffect = document.getElementById("grad-effect-1");
+    const beamsContainer = document.getElementById("beams-1");
+    
+    if (!gradEffect || !beamsContainer) return;
 
-    const monitorAnimationProgress = () => {
-      animationTimeout = setTimeout(() => {
-        if (!isAnimationPaused) resetAnimation();
-      }, 5500);
-    };
+    // Clear existing content
+    gradEffect.innerHTML = "";
+    beamsContainer.innerHTML = "";
 
-    createStrips("grad-effect-1", generateStripData());
-    createBeams("beams-1", generateBeamData());
-    monitorAnimationProgress();
+    // Create strips fragment
+    const stripFragment = document.createDocumentFragment();
+    stripData.forEach((strip, index) => {
+      const el = document.createElement("span");
+      el.className = `strip-${index + 1}`;
+      el.style.cssText = `left:${strip.left};width:${strip.width};background:${strip.bg};z-index:${index}`;
+      stripFragment.appendChild(el);
+    });
+    gradEffect.appendChild(stripFragment);
 
-    // Simplified and optimized preloader logic
+    // Create beams fragment
+    const beamFragment = document.createDocumentFragment();
+    beamData.forEach((beam, index) => {
+      const el = document.createElement("span");
+      el.className = `beam beam-${index + 1} ${beam.isLeft ? "left-moving-beam" : "right-moving-beam"}`;
+      el.style.cssText = `left:${beam.left};width:${beam.width};animation-delay:${beam.delay};filter:brightness(${beam.brightness})`;
+      el.style.setProperty("--color", beam.color);
+      beamFragment.appendChild(el);
+    });
+    beamsContainer.appendChild(beamFragment);
+  }, []);
+
+  const resetAnimation = useCallback(() => {
+    if (isPausedRef.current) return;
+
+    const stripData = generateStripData();
+    const beamData = generateBeamData();
+    createElements(stripData, beamData);
+
+    // Schedule next reset
+    animationRef.current = setTimeout(resetAnimation, 5500);
+  }, [generateStripData, generateBeamData, createElements]);
+
+  const proceedWithFadeOut = useCallback(() => {
+    if (hasCompletedRef.current) return;
+    hasCompletedRef.current = true;
+
+    // Clear intervals
+    if (checkIntervalRef.current) clearInterval(checkIntervalRef.current);
+    if (animationRef.current) clearTimeout(animationRef.current);
+
+    // Small delay before fade out for smooth transition
+    setTimeout(() => {
+      const container = document.querySelector('.container');
+      if (container) {
+        container.classList.add('fade-out');
+        setTimeout(() => {
+          isPausedRef.current = true;
+          window.dispatchEvent(new CustomEvent('preloaderComplete'));
+          onLoadComplete?.();
+        }, 800);
+      } else {
+        isPausedRef.current = true;
+        window.dispatchEvent(new CustomEvent('preloaderComplete'));
+        onLoadComplete?.();
+      }
+    }, 1500);
+  }, [onLoadComplete]);
+
+  useEffect(() => {
+    // Initialize animation
+    const stripData = generateStripData();
+    const beamData = generateBeamData();
+    createElements(stripData, beamData);
+    animationRef.current = setTimeout(resetAnimation, 5500);
+
+    // Loading detection system
     let pageDataLoaded = false;
-    let checkInterval: NodeJS.Timeout;
-    const STABILITY_DELAY = 300; // Reduced from 500ms for faster response
-    const MAX_WAIT_TIME = 10000; // Reduced from 15s to 10s
-    const CHECK_INTERVAL = 200; // Check every 200ms instead of 100ms (less CPU)
+    let imagesLoaded = false;
+    let fontsLoaded = false;
 
-    // Listen for explicit page data loaded event (for pages like repositories)
+    const checkAllReady = (): boolean => {
+      // Check if page needs explicit API signal
+      const needsApiSignal = document.querySelector('[data-wait-for-api]');
+      if (needsApiSignal && !pageDataLoaded) return false;
+
+      // Check images
+      if (!imagesLoaded) {
+        const images = Array.from(document.images);
+        if (images.length > 0 && !images.every(img => img.complete)) return false;
+        imagesLoaded = true;
+      }
+
+      // Check fonts
+      if (!fontsLoaded && document.fonts) {
+        if (document.fonts.status !== 'loaded') return false;
+        fontsLoaded = true;
+      }
+
+      // DOM ready
+      return document.readyState === 'complete';
+    };
+
+    // Listen for page data loaded event
     const handlePageDataLoaded = () => {
       pageDataLoaded = true;
     };
     window.addEventListener('pageDataLoaded', handlePageDataLoaded);
 
-    const proceedWithFadeOut = () => {
-      if (checkInterval) clearInterval(checkInterval);
-      
-      setTimeout(() => {
-        const container = document.querySelector('.container');
-        if (container) {
-          container.classList.add('fade-out');
-          setTimeout(() => {
-            isAnimationPaused = true;
-            window.dispatchEvent(new CustomEvent('preloaderComplete'));
-            onLoadComplete?.();
-          }, 800);
-        } else {
-          isAnimationPaused = true;
-          window.dispatchEvent(new CustomEvent('preloaderComplete'));
-          onLoadComplete?.();
-        }
-      }, 1500);
-    };
+    // Check fonts separately to avoid blocking
+    if (document.fonts) {
+      document.fonts.ready.then(() => {
+        fontsLoaded = true;
+      }).catch(() => {
+        fontsLoaded = true; // Continue even if fonts fail
+      });
+    }
 
-    const checkAllReady = (): boolean => {
-      // For pages that explicitly signal (like repositories), wait for that signal
-      // Check if page explicitly signaled data is loaded
-      const needsExplicitSignal = pageDataLoaded === false && document.querySelector('[data-wait-for-api]');
-      
-      if (needsExplicitSignal) {
-        return false; // Wait for explicit signal
-      }
-
-      // Check images (only if they exist)
-      const images = document.images;
-      if (images.length > 0) {
-        for (let i = 0; i < images.length; i++) {
-          if (!images[i].complete) return false;
-        }
-      }
-      
-      // Check fonts (quick check)
-      if (document.fonts && document.fonts.status !== 'loaded') {
-        return false;
-      }
-      
-      // DOM ready
-      return document.readyState === 'complete';
-    };
-
+    // Optimized checking system
     const startChecking = () => {
       const startTime = Date.now();
-      let lastCheckTime = Date.now();
-      
-      checkInterval = setInterval(() => {
-        const now = Date.now();
-        
-        // Only check if enough time has passed (stability check)
-        if (now - lastCheckTime >= STABILITY_DELAY) {
-          if (checkAllReady()) {
-            proceedWithFadeOut();
-            return;
-          }
-          lastCheckTime = now;
+      const MAX_WAIT = 12000; // 12 seconds max
+      const CHECK_INTERVAL = 150; // Check every 150ms
+      const MIN_DISPLAY_TIME = 1000; // Minimum preloader display time
+
+      checkIntervalRef.current = setInterval(() => {
+        const elapsed = Date.now() - startTime;
+
+        // Ensure minimum display time
+        if (elapsed < MIN_DISPLAY_TIME) return;
+
+        // Check if ready
+        if (checkAllReady()) {
+          proceedWithFadeOut();
+          return;
         }
-        
+
         // Safety timeout
-        if (now - startTime > MAX_WAIT_TIME) {
+        if (elapsed > MAX_WAIT) {
+          console.warn('Preloader: Maximum wait time reached, proceeding anyway');
           proceedWithFadeOut();
         }
       }, CHECK_INTERVAL);
     };
 
-    // Start checking after DOM is ready
+    // Start checking when DOM is ready
     if (document.readyState === 'complete') {
       setTimeout(startChecking, 100);
     } else {
-      window.addEventListener('load', () => setTimeout(startChecking, 100), { once: true });
+      const handleLoad = () => {
+        setTimeout(startChecking, 100);
+      };
+      window.addEventListener('load', handleLoad, { once: true });
+      
+      return () => {
+        window.removeEventListener('load', handleLoad);
+      };
     }
 
-    return () => { 
-      isAnimationPaused = true;
-      if (animationTimeout) clearTimeout(animationTimeout);
-      if (checkInterval) clearInterval(checkInterval);
+    return () => {
+      isPausedRef.current = true;
+      if (animationRef.current) clearTimeout(animationRef.current);
+      if (checkIntervalRef.current) clearInterval(checkIntervalRef.current);
       window.removeEventListener('pageDataLoaded', handlePageDataLoaded);
     };
-  }, [onLoadComplete]);
+  }, [generateStripData, generateBeamData, createElements, resetAnimation, proceedWithFadeOut]);
 
   return (
     <div className="container">

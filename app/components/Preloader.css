@@ -54,7 +54,7 @@
     overflow: hidden;
     animation: scale-up var(--animation-time) 0.5s ease-in forwards, 
                fade-out-splash 1s 4.5s forwards;
-    transform-origin: 25% center;
+    transform-origin: 30% center;
     will-change: transform, opacity;
   }
   

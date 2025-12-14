@@ -1,9 +1,5 @@
-'use client';
-
-import { useState, useEffect, useMemo } from 'react';
-import Navbar, { navItems } from "../../components/Navbar";
-import { signalPageDataLoaded } from "../../hooks/usePageDataLoaded";
-import './Repositories.css';
+// app/repositories/page.tsx
+import RepositoriesClient from './RepositoriesClient';
 
 interface GitHubUser {
   login: string;
@@ -35,353 +31,110 @@ interface GitHubRepo {
   fork: boolean;
 }
 
-export default function RepositoriesPage() {
-  const [user, setUser] = useState<GitHubUser | null>(null);
-  const [repos, setRepos] = useState<GitHubRepo[]>([]);
-  const [error, setError] = useState<string | null>(null);
-  const [searchQuery, setSearchQuery] = useState('');
-  const [currentPage, setCurrentPage] = useState(1);
-  const reposPerPage = 9;
+// Fetch data at build time and revalidate
+async function getGitHubData() {
+  try {
+    const [userResponse, reposResponse] = await Promise.all([
+      fetch('https://api.github.com/users/shimanto-rehman', {
+        headers: {
+          'Accept': 'application/vnd.github.v3+json',
+          'User-Agent': 'NextJS-Portfolio',
+          ...(process.env.GITHUB_TOKEN && {
+            'Authorization': `Bearer ${process.env.GITHUB_TOKEN}`
+          })
+        },
+        next: { 
+          revalidate: 3600 // Revalidate every hour
+        }
+      }),
+      fetch('https://api.github.com/users/shimanto-rehman/repos?sort=updated&per_page=100', {
+        headers: {
+          'Accept': 'application/vnd.github.v3+json',
+          'User-Agent': 'NextJS-Portfolio',
+          ...(process.env.GITHUB_TOKEN && {
+            'Authorization': `Bearer ${process.env.GITHUB_TOKEN}`
+          })
+        },
+        next: { 
+          revalidate: 3600 // Revalidate every hour
+        }
+      })
+    ]);
 
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        setError(null);
+    if (!userResponse.ok || !reposResponse.ok) {
+      throw new Error('Failed to fetch GitHub data');
+    }
 
-        // Fetch user profile
-        const userResponse = await fetch('https://api.github.com/users/shimanto-rehman');
-        if (!userResponse.ok) throw new Error('Failed to fetch user profile');
-        const userData: GitHubUser = await userResponse.json();
-        setUser(userData);
+    const [user, repos]: [GitHubUser, GitHubRepo[]] = await Promise.all([
+      userResponse.json(),
+      reposResponse.json()
+    ]);
 
-        // Fetch repositories
-        const reposResponse = await fetch('https://api.github.com/users/shimanto-rehman/repos?sort=updated&per_page=100');
-        if (!reposResponse.ok) throw new Error('Failed to fetch repositories');
-        const reposData: GitHubRepo[] = await reposResponse.json();
-        setRepos(reposData);
-        
-        // Wait for images to load after data is set
-        await new Promise<void>((resolve) => {
-          const images = document.querySelectorAll('img');
-          if (images.length === 0) {
-            resolve();
-            return;
-          }
-          
-          let loadedCount = 0;
-          const totalImages = images.length;
-          
-          images.forEach((img) => {
-            if (img.complete) {
-              loadedCount++;
-            } else {
-              img.onload = img.onerror = () => {
-                loadedCount++;
-                if (loadedCount === totalImages) resolve();
-              };
-            }
-          });
-          
-          // Resolve if all images are already loaded
-          if (loadedCount === totalImages) {
-            resolve();
-          }
-          
-          // Timeout after 3 seconds for broken images
-          setTimeout(() => resolve(), 3000);
-        });
-        
-        // Small delay to ensure DOM is updated
-        await new Promise(resolve => setTimeout(resolve, 100));
-      } catch (err) {
-        setError(err instanceof Error ? err.message : 'An error occurred');
-      } finally {
-        // Dispatch event to signal that API data has been loaded
-        signalPageDataLoaded();
-      }
+    // Calculate GitHub stats from repos
+    const totalStars = repos.reduce((sum, repo) => sum + repo.stargazers_count, 0);
+    const oneYearAgo = new Date();
+    oneYearAgo.setFullYear(oneYearAgo.getFullYear() - 1);
+    
+    // Calculate commits, PRs, issues, and contributions (approximations from repos)
+    const recentRepos = repos.filter(repo => new Date(repo.updated_at) > oneYearAgo);
+    const totalCommits = Math.floor(recentRepos.length * 12); // Approximation
+    const totalPRs = Math.floor(recentRepos.length * 2); // Approximation
+    const totalIssues = Math.floor(recentRepos.length * 0.5); // Approximation
+    const contributedTo = repos.filter(repo => repo.fork).length;
+
+    // Calculate grade based on activity
+    const activityScore = totalStars * 0.3 + totalCommits * 0.3 + totalPRs * 0.2 + recentRepos.length * 0.2;
+    let grade = 'F';
+    if (activityScore > 1000) grade = 'A+';
+    else if (activityScore > 500) grade = 'A';
+    else if (activityScore > 300) grade = 'B+';
+    else if (activityScore > 200) grade = 'B';
+    else if (activityScore > 100) grade = 'C+';
+    else if (activityScore > 50) grade = 'C';
+    else if (activityScore > 20) grade = 'D';
+    
+    const gradePercentage = Math.min(100, (activityScore / 1000) * 100);
+
+    const stats = {
+      totalStars,
+      totalCommits,
+      totalPRs,
+      totalIssues,
+      contributedTo,
+      grade,
+      gradePercentage
     };
 
-    fetchData();
-  }, []);
+    return { user, repos, stats };
+  } catch (error) {
+    return { user: null, repos: [], stats: null };
+  }
+}
 
-  // Filter and paginate repositories
-  const filteredRepos = useMemo(() => {
-    if (!searchQuery.trim()) return repos;
-    const query = searchQuery.toLowerCase();
-    return repos.filter(repo => 
-      repo.name.toLowerCase().includes(query) ||
-      (repo.description && repo.description.toLowerCase().includes(query)) ||
-      repo.language?.toLowerCase().includes(query) ||
-      repo.topics.some(topic => topic.toLowerCase().includes(query))
-    );
-  }, [repos, searchQuery]);
+// Server Component (runs at build time with ISR)
+export default async function RepositoriesPage() {
+  const { user, repos, stats } = await getGitHubData();
 
-  const paginatedRepos = useMemo(() => {
-    const startIndex = (currentPage - 1) * reposPerPage;
-    return filteredRepos.slice(startIndex, startIndex + reposPerPage);
-  }, [filteredRepos, currentPage]);
-
-  const totalPages = Math.ceil(filteredRepos.length / reposPerPage);
-
-  const formatDate = (dateString: string) => {
-    const date = new Date(dateString);
-    return date.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
-  };
-
-  const getLanguageColor = (language: string) => {
-    const colors: { [key: string]: string } = {
-      'JavaScript': '#f1e05a',
-      'TypeScript': '#3178c6',
-      'Python': '#3572A5',
-      'Java': '#b07219',
-      'C++': '#f34b7d',
-      'C': '#555555',
-      'CSS': '#563d7c',
-      'HTML': '#e34c26',
-      'Ruby': '#701516',
-      'PHP': '#4F5D95',
-      'Go': '#00ADD8',
-      'Rust': '#dea584',
-      'Swift': '#fa7343',
-      'Kotlin': '#F18E33',
-      'Dart': '#00B4AB',
-      'Shell': '#89e051',
-      'Vue': '#4fc08d',
-      'React': '#61dafb',
-    };
-    return colors[language] || '#64c8ff';
-  };
-
-  if (error) {
+  if (!user) {
     return (
       <main className="home-main">
-        <Navbar items={navItems} logo="/images/shimanto.png" />
-        <section className="repositories-section">
-          <div className="repositories-container">
-            <div className="repositories-error">
-              <i className="fas fa-exclamation-triangle"></i>
-              <p>Error: {error}</p>
-            </div>
-          </div>
-        </section>
+        <div className="repositories-error">
+          <i className="fas fa-exclamation-triangle"></i>
+          <p>Failed to load GitHub data. Please try again later.</p>
+        </div>
       </main>
     );
   }
 
-  return (
-    <main className="home-main" data-wait-for-api="true">
-      <Navbar items={navItems} logo="/images/shimanto.png" />
-      <section className="repositories-section">
-        <div className="repositories-container">
-          {/* Profile Section - Compact Modern Design */}
-          {user && (
-            <div className="repositories-profile">
-              <div className="profile-card">
-                <div className="profile-avatar">
-                  <img src={user.avatar_url} alt={user.name || user.login} />
-                </div>
-                <div className="profile-info">
-                  <div className="profile-header">
-                    <div>
-                      <h1 className="profile-name">{user.name || user.login}</h1>
-                      <p className="profile-username">@{user.login}</p>
-                    </div>
-                    <a 
-                      href={user.html_url} 
-                      target="_blank" 
-                      rel="noopener noreferrer"
-                      className="profile-github-btn"
-                    >
-                      <i className="fab fa-github"></i>
-                      GitHub
-                    </a>
-                  </div>
-                  {user.bio && <p className="profile-bio">{user.bio}</p>}
-                  <div className="profile-stats">
-                    <div className="profile-stat">
-                      <i className="fas fa-code-branch"></i>
-                      <span className="stat-number">{user.public_repos}</span>
-                      <span className="stat-label">Repos</span>
-                    </div>
-                    <div className="profile-stat">
-                      <i className="fas fa-users"></i>
-                      <span className="stat-number">{user.followers}</span>
-                      <span className="stat-label">Followers</span>
-                    </div>
-                    <div className="profile-stat">
-                      <i className="fas fa-user-plus"></i>
-                      <span className="stat-number">{user.following}</span>
-                      <span className="stat-label">Following</span>
-                    </div>
-                  </div>
-                  <div className="profile-meta">
-                    {user.location && (
-                      <div className="profile-meta-item">
-                        <i className="fas fa-map-marker-alt"></i>
-                        <span>{user.location}</span>
-                      </div>
-                    )}
-                    {user.company && (
-                      <div className="profile-meta-item">
-                        <i className="fas fa-building"></i>
-                        <span>{user.company}</span>
-                      </div>
-                    )}
-                    {user.blog && (
-                      <div className="profile-meta-item">
-                        <i className="fas fa-link"></i>
-                        <a href={user.blog} target="_blank" rel="noopener noreferrer">{user.blog}</a>
-                      </div>
-                    )}
-                  </div>
-                </div>
-              </div>
-            </div>
-          )}
+  return <RepositoriesClient initialUser={user} initialRepos={repos} initialStats={stats} />;
+}
 
-          {/* Search and Filters */}
-          <div className="repositories-header">
-            <p className="repositories-subtitle">Exploring code, one commit at a time</p>
-            <div className="repositories-search">
-              <i className="fas fa-search"></i>
-              <input
-                type="text"
-                placeholder="Search repositories by name, description, language, or topic..."
-                value={searchQuery}
-                onChange={(e) => {
-                  setSearchQuery(e.target.value);
-                  setCurrentPage(1);
-                }}
-                className="search-input"
-              />
-              {searchQuery && (
-                <button 
-                  className="search-clear"
-                  onClick={() => {
-                    setSearchQuery('');
-                    setCurrentPage(1);
-                  }}
-                  aria-label="Clear search"
-                >
-                  <i className="fas fa-times"></i>
-                </button>
-              )}
-            </div>
-            <div className="repositories-count">
-              Showing {filteredRepos.length} of {repos.length} repositories
-            </div>
-          </div>
-
-          {/* Repositories Grid */}
-          {paginatedRepos.length > 0 ? (
-            <>
-              <div className="repositories-grid">
-                {paginatedRepos.map((repo) => (
-                  <div key={repo.id} className="repo-card">
-                    <div className="repo-card-header">
-                      <div className="repo-card-title-row">
-                        <h3 className="repo-card-title">
-                          <a 
-                            href={repo.html_url} 
-                            target="_blank" 
-                            rel="noopener noreferrer"
-                            className="repo-link"
-                          >
-                            <i className="fas fa-code-branch"></i>
-                            {repo.name}
-                          </a>
-                        </h3>
-                        {repo.private && (
-                          <span className="repo-badge repo-badge-private">
-                            <i className="fas fa-lock"></i> Private
-                          </span>
-                        )}
-                        {repo.fork && (
-                          <span className="repo-badge repo-badge-fork">
-                            <i className="fas fa-code-branch"></i> Fork
-                          </span>
-                        )}
-                      </div>
-                    </div>
-                    {repo.description && (
-                      <p className="repo-card-description">{repo.description}</p>
-                    )}
-                    <div className="repo-card-footer">
-                      <div className="repo-card-meta">
-                        {repo.language && (
-                          <div className="repo-meta-item">
-                            <span 
-                              className="repo-language-dot" 
-                              style={{ backgroundColor: getLanguageColor(repo.language) }}
-                            ></span>
-                            <span className="repo-language">{repo.language}</span>
-                          </div>
-                        )}
-                        {repo.stargazers_count > 0 && (
-                          <div className="repo-meta-item">
-                            <i className="fas fa-star"></i>
-                            <span>{repo.stargazers_count}</span>
-                          </div>
-                        )}
-                        {repo.forks_count > 0 && (
-                          <div className="repo-meta-item">
-                            <i className="fas fa-code-branch"></i>
-                            <span>{repo.forks_count}</span>
-                          </div>
-                        )}
-                        <div className="repo-meta-item">
-                          <i className="fas fa-clock"></i>
-                          <span>Updated {formatDate(repo.updated_at)}</span>
-                        </div>
-                      </div>
-                      {repo.topics.length > 0 && (
-                        <div className="repo-card-topics">
-                          {repo.topics.slice(0, 3).map((topic) => (
-                            <span key={topic} className="repo-topic">{topic}</span>
-                          ))}
-                          {repo.topics.length > 3 && (
-                            <span className="repo-topic-more">+{repo.topics.length - 3}</span>
-                          )}
-                        </div>
-                      )}
-                    </div>
-                  </div>
-                ))}
-              </div>
-
-              {/* Pagination */}
-              {totalPages > 1 && (
-                <div className="repositories-pagination">
-                  <button
-                    className="pagination-btn"
-                    onClick={() => setCurrentPage(prev => Math.max(1, prev - 1))}
-                    disabled={currentPage === 1}
-                  >
-                    <i className="fas fa-chevron-left"></i>
-                    Previous
-                  </button>
-                  <div className="pagination-info">
-                    Page {currentPage} of {totalPages}
-                  </div>
-                  <button
-                    className="pagination-btn"
-                    onClick={() => setCurrentPage(prev => Math.min(totalPages, prev + 1))}
-                    disabled={currentPage === totalPages}
-                  >
-                    Next
-                    <i className="fas fa-chevron-right"></i>
-                  </button>
-                </div>
-              )}
-            </>
-          ) : (
-            <div className="repositories-empty">
-              <i className="fas fa-search"></i>
-              <p>No repositories found matching your search.</p>
-            </div>
-          )}
-        </div>
-      </section>
-    </main>
-  );
+// Optional: Generate metadata dynamically
+export async function generateMetadata() {
+  const { user } = await getGitHubData();
+  
+  return {
+    title: `${user?.name || 'Repositories'} - GitHub Portfolio`,
+    description: user?.bio || 'Exploring code, one commit at a time',
+  };
 }
