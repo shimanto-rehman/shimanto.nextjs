@@ -228,6 +228,11 @@
     .home-content-wrapper {
       max-width: 90%;
     }
+    .splash-animation {
+      transform-origin: 25% center !important;
+      width: 200px !important;
+      will-change: transform, opacity;
+    }
   }
   
   /* Mobile phones (480px and below) */
@@ -242,7 +247,7 @@
     }
   
     .home-intro-section {
-      top: 75%;
+      top: 68%;
       margin-bottom: 1.5rem;
     }
   

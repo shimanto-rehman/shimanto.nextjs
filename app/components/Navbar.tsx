@@ -46,15 +46,24 @@ export default function Navbar({ items = navItems, logo, className = '' }: Navba
   useEffect(() => {
     if (isMenuOpen) {
       document.body.style.overflow = 'hidden';
+      document.documentElement.style.overflow = 'hidden';
     } else {
-      document.body.style.overflow = 'unset';
+      document.body.style.overflow = '';
+      document.documentElement.style.overflow = '';
     }
     return () => {
-      document.body.style.overflow = 'unset';
+      document.body.style.overflow = '';
+      document.documentElement.style.overflow = '';
     };
   }, [isMenuOpen]);
 
 
+
+  const triggerNavigationStart = () => {
+    if (typeof window !== 'undefined') {
+      window.dispatchEvent(new CustomEvent('navigationStart'));
+    }
+  };
 
   const handleMenuToggle = () => {
     setIsMenuOpen(!isMenuOpen);
@@ -155,7 +164,10 @@ export default function Navbar({ items = navItems, logo, className = '' }: Navba
                             <Link
                               href={subitem.href}
                               className={`link-item submenu-link ${isActive(subitem.href) ? 'active' : ''}`}
-                              onClick={handleCloseMenu}
+                              onClick={() => {
+                                triggerNavigationStart();
+                                handleCloseMenu();
+                              }}
                             >
                               {subitem.label}
                             </Link>
@@ -167,7 +179,10 @@ export default function Navbar({ items = navItems, logo, className = '' }: Navba
                     <Link
                       href={item.href}
                       className={`link-item ${isActive(item.href) ? 'active' : ''}`}
-                      onClick={handleCloseMenu}
+                      onClick={() => {
+                        triggerNavigationStart();
+                        handleCloseMenu();
+                      }}
                     >
                       {item.label}
                     </Link>

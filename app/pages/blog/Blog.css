@@ -731,6 +731,15 @@
   border-bottom: none;
 }
 
+@media (max-width: 768px) {
+  .blog-subtitle {
+    font-size: 0.8rem;
+  }
+  .blog-post-content li {
+    font-size: 0.8rem;
+  }
+}
+
 /* Responsive Design - Minimal adjustments for very small screens */
 @media (max-width: 480px) {
   .blog-featured-row {
@@ -740,6 +749,9 @@
   
   .blog-modal-overlay {
     padding: 0;
+  }
+  .blog-subtitle {
+    font-size: 0.7rem;
   }
   
   .blog-modal-content {

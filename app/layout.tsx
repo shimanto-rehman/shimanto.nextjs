@@ -38,6 +38,20 @@ export default function RootLayout({
     setLoading(true);
   }, [pathname]);
 
+  // Show preloader as soon as a navigation starts (before route change completes)
+  useEffect(() => {
+    if (typeof window === 'undefined') return;
+
+    const handleNavigationStart = () => {
+      setLoading(true);
+    };
+
+    window.addEventListener('navigationStart', handleNavigationStart);
+    return () => {
+      window.removeEventListener('navigationStart', handleNavigationStart);
+    };
+  }, []);
+
   useEffect(() => {
     // Load confetti script early so it's ready when preloader finishes
     if (typeof window !== 'undefined' && !document.querySelector('script[src="/js/confetti.js"]')) {

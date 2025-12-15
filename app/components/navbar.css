@@ -187,7 +187,7 @@
     z-index: -1;
     opacity: 0;
     visibility: hidden;
-    overflow-y: auto;
+    overflow: hidden;
     transition: all 0.3s ease-in-out;
   }
   
@@ -231,6 +231,8 @@
   .nav-menu-inner {
     min-height: 100vh;
     display: flex;
+    width: 100%;
+    overflow: hidden;
   }
   
   .menu-branding {
@@ -244,6 +246,8 @@
     backdrop-filter: blur(20px) !important;
     transform: translate3d(0, 100%, 0);
     transition: all 0.7s ease-in-out;
+    overflow: hidden;
+    flex-shrink: 0;
   }
   
   .menu-branding.open {
@@ -279,6 +283,23 @@
     backdrop-filter: blur(50px) !important;
     transform: translate3d(0, -100%, 0);
     transition: all 0.7s ease-in-out;
+    overflow-y: auto;
+    overflow-x: hidden;
+    flex-shrink: 0;
+  }
+
+  /* Hide Scrollbar - Nav Options */
+  /* Chrome, Edge, Safari */
+  .nav-options::-webkit-scrollbar {
+    display: none;
+    width: 0;
+    height: 0;
+    background: transparent;
+  }
+
+  /* Firefox */
+  .nav-options {
+    scrollbar-width: none;
   }
   
   .nav-menu.open .nav-options {
@@ -441,11 +462,11 @@
       right: 15px;
       scale: 0.7;
     }
-  
+
     .hamburger-btn span {
       width: 22px;
     }
-  
+
     .close-nav-menu {
       height: 45px;
       width: 45px;
@@ -453,22 +474,29 @@
       right: 15px;
       top: 15px;
     }
-  
+
     .portrait {
       width: 150px;
       height: 150px;
     }
-  
+
     .link-item,
     .mobile-submenu .link-item {
       font-size: 10px;
       padding: 10px 25px;
     }
-  
+
     .hamburger-btn.open span:nth-child(1) {
       transform: translateY(6.7px) rotate(45deg);
     }
     .hamburger-btn.open span:nth-child(3) {
       transform: translateY(-6.7px) rotate(-45deg);
+    }
+
+    /* Ensure no horizontal overflow on very small screens */
+    .menu-branding,
+    .nav-options {
+      min-width: 0;
+      max-width: 50%;
     }
   }

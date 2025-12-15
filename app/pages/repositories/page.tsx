@@ -1,4 +1,4 @@
-// app/repositories/page.tsx
+import { notFound } from 'next/navigation';
 import RepositoriesClient from './RepositoriesClient';
 
 interface GitHubUser {
@@ -31,110 +31,45 @@ interface GitHubRepo {
   fork: boolean;
 }
 
-// Fetch data at build time and revalidate
-async function getGitHubData() {
+async function getGitHubData(): Promise<{ user: GitHubUser | null; repos: GitHubRepo[]; error: string | null }> {
   try {
     const [userResponse, reposResponse] = await Promise.all([
       fetch('https://api.github.com/users/shimanto-rehman', {
-        headers: {
-          'Accept': 'application/vnd.github.v3+json',
-          'User-Agent': 'NextJS-Portfolio',
-          ...(process.env.GITHUB_TOKEN && {
-            'Authorization': `Bearer ${process.env.GITHUB_TOKEN}`
-          })
-        },
-        next: { 
-          revalidate: 3600 // Revalidate every hour
-        }
+        headers: { 'Accept': 'application/vnd.github.v3+json' },
+        next: { revalidate: 3600 } // ISR: revalidate every hour
       }),
       fetch('https://api.github.com/users/shimanto-rehman/repos?sort=updated&per_page=100', {
-        headers: {
-          'Accept': 'application/vnd.github.v3+json',
-          'User-Agent': 'NextJS-Portfolio',
-          ...(process.env.GITHUB_TOKEN && {
-            'Authorization': `Bearer ${process.env.GITHUB_TOKEN}`
-          })
-        },
-        next: { 
-          revalidate: 3600 // Revalidate every hour
-        }
+        headers: { 'Accept': 'application/vnd.github.v3+json' },
+        next: { revalidate: 3600 } // ISR: revalidate every hour
       })
     ]);
 
     if (!userResponse.ok || !reposResponse.ok) {
-      throw new Error('Failed to fetch GitHub data');
+      const errorText = !userResponse.ok 
+        ? `User API error: ${userResponse.status} ${userResponse.statusText}`
+        : `Repos API error: ${reposResponse.status} ${reposResponse.statusText}`;
+      console.error(errorText);
+      return { user: null, repos: [], error: 'Failed to fetch GitHub data' };
     }
 
-    const [user, repos]: [GitHubUser, GitHubRepo[]] = await Promise.all([
+    const [userData, reposData]: [GitHubUser, GitHubRepo[]] = await Promise.all([
       userResponse.json(),
       reposResponse.json()
     ]);
 
-    // Calculate GitHub stats from repos
-    const totalStars = repos.reduce((sum, repo) => sum + repo.stargazers_count, 0);
-    const oneYearAgo = new Date();
-    oneYearAgo.setFullYear(oneYearAgo.getFullYear() - 1);
-    
-    // Calculate commits, PRs, issues, and contributions (approximations from repos)
-    const recentRepos = repos.filter(repo => new Date(repo.updated_at) > oneYearAgo);
-    const totalCommits = Math.floor(recentRepos.length * 12); // Approximation
-    const totalPRs = Math.floor(recentRepos.length * 2); // Approximation
-    const totalIssues = Math.floor(recentRepos.length * 0.5); // Approximation
-    const contributedTo = repos.filter(repo => repo.fork).length;
-
-    // Calculate grade based on activity
-    const activityScore = totalStars * 0.3 + totalCommits * 0.3 + totalPRs * 0.2 + recentRepos.length * 0.2;
-    let grade = 'F';
-    if (activityScore > 1000) grade = 'A+';
-    else if (activityScore > 500) grade = 'A';
-    else if (activityScore > 300) grade = 'B+';
-    else if (activityScore > 200) grade = 'B';
-    else if (activityScore > 100) grade = 'C+';
-    else if (activityScore > 50) grade = 'C';
-    else if (activityScore > 20) grade = 'D';
-    
-    const gradePercentage = Math.min(100, (activityScore / 1000) * 100);
-
-    const stats = {
-      totalStars,
-      totalCommits,
-      totalPRs,
-      totalIssues,
-      contributedTo,
-      grade,
-      gradePercentage
-    };
-
-    return { user, repos, stats };
+    return { user: userData, repos: reposData, error: null };
   } catch (error) {
-    return { user: null, repos: [], stats: null };
+    console.error('GitHub API fetch error:', error);
+    return { 
+      user: null, 
+      repos: [], 
+      error: error instanceof Error ? error.message : 'An error occurred while fetching GitHub data' 
+    };
   }
 }
 
-// Server Component (runs at build time with ISR)
 export default async function RepositoriesPage() {
-  const { user, repos, stats } = await getGitHubData();
+  const { user, repos, error } = await getGitHubData();
 
-  if (!user) {
-    return (
-      <main className="home-main">
-        <div className="repositories-error">
-          <i className="fas fa-exclamation-triangle"></i>
-          <p>Failed to load GitHub data. Please try again later.</p>
-        </div>
-      </main>
-    );
-  }
-
-  return <RepositoriesClient initialUser={user} initialRepos={repos} initialStats={stats} />;
-}
-
-// Optional: Generate metadata dynamically
-export async function generateMetadata() {
-  const { user } = await getGitHubData();
-  
-  return {
-    title: `${user?.name || 'Repositories'} - GitHub Portfolio`,
-    description: user?.bio || 'Exploring code, one commit at a time',
-  };
+  return <RepositoriesClient user={user} repos={repos} error={error} />;
 }
