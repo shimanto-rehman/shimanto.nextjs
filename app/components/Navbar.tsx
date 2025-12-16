@@ -24,7 +24,7 @@ export const navItems: NavItem[] = [
   { label: 'Publications', href: '/pages/publications' },
   { label: 'Projects', href: '/pages/projects' },
   { label: 'Repositories', href: '/pages/repositories' },
-  { label: 'CV', href: '/pages/cv' },
+  { label: 'Certifications', href: '/pages/certifications' },
   { label: 'Teaching', href: '/pages/teaching' },
   { label: 'People', href: '/pages/people' },
   { 

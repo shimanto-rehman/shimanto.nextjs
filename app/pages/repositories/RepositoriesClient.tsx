@@ -1,6 +1,7 @@
+// app/repositories/RepositoriesClient.tsx
 'use client';
 
-import { useState, useMemo, useEffect } from 'react';
+import { useState, useMemo } from 'react';
 import Navbar, { navItems } from "../../components/Navbar";
 import './Repositories.css';
 
@@ -34,71 +35,41 @@ interface GitHubRepo {
   fork: boolean;
 }
 
-interface RepositoriesClientProps {
-  user: GitHubUser | null;
-  repos: GitHubRepo[];
-  error?: string | null;
+interface GitHubStats {
+  totalStars: number;
+  totalCommits: number;
+  totalPRs: number;
+  totalIssues: number;
+  contributedTo: number;
+  grade: string;
+  gradePercentage: number;
 }
 
-export default function RepositoriesClient({ user, repos, error }: RepositoriesClientProps) {
+interface RepositoriesClientProps {
+  initialUser: GitHubUser;
+  initialRepos: GitHubRepo[];
+  initialStats: GitHubStats | null;
+}
+
+// This component runs on CLIENT side (browser)
+export default function RepositoriesClient({ initialUser, initialRepos, initialStats }: RepositoriesClientProps) {
   const [searchQuery, setSearchQuery] = useState('');
   const [currentPage, setCurrentPage] = useState(1);
   const reposPerPage = 9;
 
-  useEffect(() => {
-    // Wait for images to load before signaling
-    const checkImagesAndSignal = async () => {
-      await new Promise<void>((resolve) => {
-        const images = Array.from(document.querySelectorAll('img'));
-        if (images.length === 0) {
-          resolve();
-          return;
-        }
-        
-        let loadedCount = 0;
-        const totalImages = images.length;
-        
-        images.forEach((img) => {
-          const htmlImg = img as HTMLImageElement;
-          if (htmlImg.complete && htmlImg.naturalHeight !== 0) {
-            loadedCount++;
-          } else {
-            htmlImg.addEventListener('load', () => {
-              loadedCount++;
-              if (loadedCount === totalImages) resolve();
-            }, { once: true });
-            htmlImg.addEventListener('error', () => {
-              loadedCount++;
-              if (loadedCount === totalImages) resolve();
-            }, { once: true });
-          }
-        });
-        
-        if (loadedCount === totalImages) resolve();
-        setTimeout(() => resolve(), 2000);
-      });
-
-      // Small delay to ensure everything is rendered
-      await new Promise(resolve => setTimeout(resolve, 100));
-      
-      // Signal that page data is loaded
-      window.dispatchEvent(new CustomEvent('pageDataLoaded'));
-    };
-
-    checkImagesAndSignal();
-  }, [user, repos]);
-
+  // Filter repositories based on search
   const filteredRepos = useMemo(() => {
-    if (!searchQuery.trim()) return repos;
+    if (!searchQuery.trim()) return initialRepos;
     const query = searchQuery.toLowerCase();
-    return repos.filter(repo => 
+    return initialRepos.filter(repo => 
       repo.name.toLowerCase().includes(query) ||
       (repo.description && repo.description.toLowerCase().includes(query)) ||
       repo.language?.toLowerCase().includes(query) ||
       repo.topics.some(topic => topic.toLowerCase().includes(query))
     );
-  }, [repos, searchQuery]);
+  }, [initialRepos, searchQuery]);
 
+  // Paginate filtered results
   const paginatedRepos = useMemo(() => {
     const startIndex = (currentPage - 1) * reposPerPage;
     return filteredRepos.slice(startIndex, startIndex + reposPerPage);
@@ -135,99 +106,106 @@ export default function RepositoriesClient({ user, repos, error }: RepositoriesC
     return colors[language] || '#64c8ff';
   };
 
-  if (error) {
-    return (
-      <main className="home-main">
-        <Navbar items={navItems} logo="/images/shimanto.png" />
-        <section className="repositories-section">
-          <div className="repositories-container">
-            <div className="repositories-error">
-              <i className="fas fa-exclamation-triangle"></i>
-              <p>Error: {error}</p>
-            </div>
-          </div>
-        </section>
-      </main>
-    );
-  }
-
   return (
-    <main className="home-main" data-wait-for-api="true">
+    <main className="home-main">
       <Navbar items={navItems} logo="/images/shimanto.png" />
       <section className="repositories-section">
         <div className="repositories-container">
-          {user && (
-            <div className="repositories-profile">
-              <div className="profile-card">
-                <div className="profile-avatar">
-                  <img 
-                    src={user.avatar_url} 
-                    alt={user.name || user.login}
-                    loading="eager"
-                    decoding="async"
-                  />
+          {/* Profile Section */}
+          <div className="repositories-profile">
+            <div className="profile-card">
+              <div className="profile-avatar">
+                <img 
+                  src={initialUser.avatar_url} 
+                  alt={initialUser.name || initialUser.login}
+                  loading="eager"
+                  decoding="async"
+                />
+              </div>
+              <div className="profile-info">
+                <div className="profile-header">
+                  <div>
+                    <h1 className="profile-name">{initialUser.name || initialUser.login}</h1>
+                    <p className="profile-username">@{initialUser.login}</p>
+                  </div>
+                  <a 
+                    href={initialUser.html_url} 
+                    target="_blank" 
+                    rel="noopener noreferrer"
+                    className="profile-github-btn"
+                  >
+                    <i className="fab fa-github"></i>
+                    GitHub
+                  </a>
                 </div>
-                <div className="profile-info">
-                  <div className="profile-header">
-                    <div>
-                      <h1 className="profile-name">{user.name || user.login}</h1>
-                      <p className="profile-username">@{user.login}</p>
-                    </div>
-                    <a 
-                      href={user.html_url} 
-                      target="_blank" 
-                      rel="noopener noreferrer"
-                      className="profile-github-btn"
-                    >
-                      <i className="fab fa-github"></i>
-                      GitHub
-                    </a>
+                {initialUser.bio && <p className="profile-bio">{initialUser.bio}</p>}
+                <div className="profile-stats">
+                  <div className="profile-stat">
+                    <i className="fas fa-code-branch"></i>
+                    <span className="stat-number">{initialUser.public_repos}</span>
+                    <span className="stat-label">Repos</span>
                   </div>
-                  {user.bio && <p className="profile-bio">{user.bio}</p>}
-                  <div className="profile-stats">
-                    <div className="profile-stat">
-                      <i className="fas fa-code-branch"></i>
-                      <span className="stat-number">{user.public_repos}</span>
-                      <span className="stat-label">Repos</span>
-                    </div>
-                    <div className="profile-stat">
-                      <i className="fas fa-users"></i>
-                      <span className="stat-number">{user.followers}</span>
-                      <span className="stat-label">Followers</span>
-                    </div>
-                    <div className="profile-stat">
-                      <i className="fas fa-user-plus"></i>
-                      <span className="stat-number">{user.following}</span>
-                      <span className="stat-label">Following</span>
-                    </div>
+                  <div className="profile-stat">
+                    <i className="fas fa-users"></i>
+                    <span className="stat-number">{initialUser.followers}</span>
+                    <span className="stat-label">Followers</span>
                   </div>
-                  <div className="profile-meta">
-                    {user.location && (
-                      <div className="profile-meta-item">
-                        <i className="fas fa-map-marker-alt"></i>
-                        <span>{user.location}</span>
-                      </div>
-                    )}
-                    {user.company && (
-                      <div className="profile-meta-item">
-                        <i className="fas fa-building"></i>
-                        <span>{user.company}</span>
-                      </div>
-                    )}
-                    {user.blog && (
-                      <div className="profile-meta-item">
-                        <i className="fas fa-link"></i>
-                        <a href={user.blog} target="_blank" rel="noopener noreferrer">
-                          {user.blog}
-                        </a>
-                      </div>
-                    )}
+                  <div className="profile-stat">
+                    <i className="fas fa-user-plus"></i>
+                    <span className="stat-number">{initialUser.following}</span>
+                    <span className="stat-label">Following</span>
                   </div>
+                </div>
+                <div className="profile-meta">
+                  {initialUser.location && (
+                    <div className="profile-meta-item">
+                      <i className="fas fa-map-marker-alt"></i>
+                      <span>{initialUser.location}</span>
+                    </div>
+                  )}
+                  {initialUser.company && (
+                    <div className="profile-meta-item">
+                      <i className="fas fa-building"></i>
+                      <span>{initialUser.company}</span>
+                    </div>
+                  )}
+                  {initialUser.blog && (
+                    <div className="profile-meta-item">
+                      <i className="fas fa-link"></i>
+                      <a href={initialUser.blog} target="_blank" rel="noopener noreferrer">
+                        {initialUser.blog}
+                      </a>
+                    </div>
+                  )}
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* GitHub Stats Section */}
+          {initialStats && (
+            <div className="github-stats-card">
+              <h2 className="github-stats-title">{initialUser.name || initialUser.login}'s GitHub Stats</h2>
+              <div className="github-stats-grid">
+                <div className="github-stats-list">
+                  <div className="github-stat"><i className="far fa-star"></i><span>Total Stars Earned:</span><strong>{initialStats.totalStars >= 1000 ? (initialStats.totalStars / 1000).toFixed(1) + 'k' : initialStats.totalStars.toLocaleString()}</strong></div>
+                  <div className="github-stat"><i className="fas fa-code-branch"></i><span>Total Commits (last year):</span><strong>{initialStats.totalCommits >= 1000 ? (initialStats.totalCommits / 1000).toFixed(1) + 'k' : initialStats.totalCommits.toLocaleString()}</strong></div>
+                  <div className="github-stat"><i className="fas fa-code-pull-request"></i><span>Total PRs:</span><strong>{initialStats.totalPRs}</strong></div>
+                  <div className="github-stat"><i className="far fa-circle-dot"></i><span>Total Issues:</span><strong>{initialStats.totalIssues}</strong></div>
+                  <div className="github-stat"><i className="far fa-bookmark"></i><span>Contributed to (last year):</span><strong>{initialStats.contributedTo}</strong></div>
+                </div>
+                <div className="github-grade-circle">
+                  <svg viewBox="0 0 120 120">
+                    <circle cx="60" cy="60" r="54" fill="none" stroke="rgba(255,255,255,0.1)" strokeWidth="8"/>
+                    <circle cx="60" cy="60" r="54" fill="none" stroke="rgba(200,170,50,0.8)" strokeWidth="8" strokeLinecap="round" strokeDasharray={`${339}`} strokeDashoffset={`${339 * (1 - initialStats.gradePercentage / 100)}`} transform="rotate(-90 60 60)"/>
+                  </svg>
+                  <div className="github-grade-letter">{initialStats.grade}</div>
                 </div>
               </div>
             </div>
           )}
 
+          {/* Search and Filters */}
           <div className="repositories-header">
             <p className="repositories-subtitle">Exploring code, one commit at a time</p>
             <div className="repositories-search">
@@ -256,10 +234,11 @@ export default function RepositoriesClient({ user, repos, error }: RepositoriesC
               )}
             </div>
             <div className="repositories-count">
-              Showing {filteredRepos.length} of {repos.length} repositories
+              Showing {filteredRepos.length} of {initialRepos.length} repositories
             </div>
           </div>
 
+          {/* Repositories Grid */}
           {paginatedRepos.length > 0 ? (
             <>
               <div className="repositories-grid">
@@ -304,18 +283,14 @@ export default function RepositoriesClient({ user, repos, error }: RepositoriesC
                             <span className="repo-language">{repo.language}</span>
                           </div>
                         )}
-                        {repo.stargazers_count > 0 && (
-                          <div className="repo-meta-item">
-                            <i className="fas fa-star"></i>
-                            <span>{repo.stargazers_count}</span>
-                          </div>
-                        )}
-                        {repo.forks_count > 0 && (
-                          <div className="repo-meta-item">
-                            <i className="fas fa-code-branch"></i>
-                            <span>{repo.forks_count}</span>
-                          </div>
-                        )}
+                        <div className="repo-meta-item">
+                          <i className="fas fa-star"></i>
+                          <span>{repo.stargazers_count}</span>
+                        </div>
+                        <div className="repo-meta-item">
+                          <i className="fas fa-code-branch"></i>
+                          <span>{repo.forks_count}</span>
+                        </div>
                         <div className="repo-meta-item">
                           <i className="fas fa-clock"></i>
                           <span>Updated {formatDate(repo.updated_at)}</span>
@@ -336,6 +311,7 @@ export default function RepositoriesClient({ user, repos, error }: RepositoriesC
                 ))}
               </div>
 
+              {/* Pagination */}
               {totalPages > 1 && (
                 <div className="repositories-pagination">
                   <button
@@ -371,4 +347,3 @@ export default function RepositoriesClient({ user, repos, error }: RepositoriesC
     </main>
   );
 }
-

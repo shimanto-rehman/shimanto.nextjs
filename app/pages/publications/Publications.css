@@ -1,0 +1,526 @@
+/* Publications Page – Scholar / ORCID profile + modern publication list */
+
+.publications-container {
+  max-width: 1200px;
+  width: 100%;
+  margin: 0 auto;
+  padding: clamp(60px, 8vw, 100px) clamp(15px, 3.3vw, 40px) clamp(30px, 5vw, 60px);
+  position: relative;
+  z-index: 1;
+}
+
+/* Scholar profile card */
+.pub-profile-card {
+  background: color-mix(in srgb, var(--c-glass) 18%, transparent);
+  -webkit-backdrop-filter: blur(35px) saturate(var(--saturation));
+  backdrop-filter: blur(35px) saturate(var(--saturation));
+  border-radius: clamp(16px, 2vw, 24px);
+  border: 1px solid rgba(255, 255, 255, 0.09);
+  box-shadow:
+    inset 0 0 0 1px rgba(255, 255, 255, 0.08),
+    0 22px 60px rgba(0, 0, 0, 0.45);
+  padding: clamp(18px, 2.5vw, 26px);
+  display: flex;
+  gap: clamp(16px, 2.5vw, 24px);
+  align-items: center;
+  margin-bottom: clamp(20px, 3vw, 32px);
+}
+
+.pub-profile-avatar {
+  width: clamp(78px, 8vw, 92px);
+  height: clamp(78px, 8vw, 92px);
+  border-radius: 50%;
+  overflow: hidden;
+  border: 2px solid rgba(200, 170, 50, 0.35);
+  box-shadow: 0 0 30px rgba(200, 170, 50, 0.3);
+  flex-shrink: 0;
+}
+
+.pub-profile-avatar img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.pub-profile-main {
+  flex: 1;
+  min-width: 0;
+}
+
+.pub-profile-header-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: clamp(14px, 2vw, 20px);
+  flex-wrap: wrap;
+}
+
+.pub-profile-name {
+  font-size: clamp(1.1rem, 2vw, 1.6rem);
+  font-weight: 600;
+  color: rgba(255, 255, 255, 0.96);
+  margin: 0 0 clamp(4px, 0.6vw, 6px) 0;
+  letter-spacing: 0.02em;
+}
+
+.pub-profile-badge {
+  margin-left: clamp(6px, 0.7vw, 8px);
+  font-size: 0.9em;
+  color: rgba(200, 170, 50, 0.9);
+}
+
+.pub-profile-subtitle {
+  margin: 0;
+  font-size: clamp(0.8rem, 1vw, 0.9rem);
+  color: rgba(255, 255, 255, 0.82);
+}
+
+.pub-profile-email {
+  margin: 2px 0 0 0;
+  font-size: clamp(0.75rem, 0.95vw, 0.85rem);
+  color: rgba(255, 255, 255, 0.7);
+}
+
+.pub-profile-location {
+  margin: clamp(2px, 0.3vw, 4px) 0 0 0;
+  font-size: clamp(0.75rem, 0.9vw, 0.85rem);
+  color: rgba(255, 255, 255, 0.7);
+}
+
+.pub-profile-role {
+  margin: clamp(6px, 0.7vw, 8px) 0 0 0;
+  font-size: clamp(0.85rem, 1.1vw, 0.95rem);
+  color: rgba(255, 255, 255, 0.85);
+}
+
+.pub-profile-cta {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 16px;
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--c-glass) 24%, transparent);
+  border: 1px solid rgba(255, 255, 255, 0.24);
+  color: rgba(255, 255, 255, 0.9);
+  font-size: clamp(0.75rem, 1vw, 0.9rem);
+  text-decoration: none;
+  transition: all 0.25s ease;
+}
+
+.pub-profile-cta i {
+  font-size: 0.9em;
+}
+
+.pub-profile-cta:hover {
+  background: color-mix(in srgb, var(--c-glass) 35%, transparent);
+  border-color: rgba(200, 170, 50, 0.55);
+  transform: translateY(-1px);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.35);
+}
+
+.pub-profile-metrics {
+  display: flex;
+  flex-wrap: wrap;
+  gap: clamp(14px, 2vw, 24px);
+  margin-top: clamp(10px, 1.4vw, 14px);
+}
+
+.pub-profile-interests {
+  margin-top: clamp(6px, 1vw, 10px);
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.pub-interest-chip {
+  padding: 3px 8px;
+  border-radius: 999px;
+  background: rgba(0, 0, 0, 0.35);
+  font-size: clamp(0.7rem, 0.85vw, 0.8rem);
+  color: rgba(255, 255, 255, 0.8);
+}
+
+.pub-metric {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.pub-metric-label {
+  font-size: clamp(0.7rem, 0.85vw, 0.8rem);
+  color: rgba(255, 255, 255, 0.65);
+}
+
+.pub-metric-value {
+  font-size: clamp(0.8rem, 1.05vw, 1rem);
+  font-weight: 600;
+  color: rgba(255, 255, 255, 0.96);
+}
+
+/* ORCID card */
+.pub-profile-orcid {
+  padding-block: clamp(14px, 2vw, 20px);
+}
+
+.pub-orcid-main {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: clamp(10px, 1.5vw, 14px);
+}
+
+.pub-orcid-header-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: clamp(14px, 2vw, 20px);
+  flex-wrap: nowrap;
+  width: 100%;
+  margin-bottom: clamp(10px, 1.4vw, 14px);
+}
+
+.pub-orcid-header-row > div:first-child {
+  flex: 1;
+  min-width: 0;
+}
+
+.pub-orcid-header-row .pub-profile-cta {
+  flex-shrink: 0;
+  align-self: flex-start;
+}
+
+.pub-orcid-metrics {
+  display: flex;
+  flex-wrap: wrap;
+  gap: clamp(14px, 2vw, 24px);
+}
+
+.pub-orcid-label {
+  margin: 0 0 2px;
+  font-size: clamp(0.75rem, 0.9vw, 0.85rem);
+  color: rgba(255, 255, 255, 0.6);
+}
+
+.pub-orcid-name {
+  margin: 0;
+  font-size: clamp(0.95rem, 1.4vw, 1.3rem);
+  font-weight: 600;
+  color: rgba(255, 255, 255, 0.95);
+}
+
+.pub-orcid-id {
+  font-size: clamp(0.75rem, 0.9vw, 0.85rem);
+  color: rgba(200, 170, 50, 0.85);
+  margin-left: 6px;
+}
+
+.pub-orcid-affil {
+  margin: 4px 0 0;
+  font-size: clamp(0.75rem, 0.95vw, 0.85rem);
+  color: rgba(255, 255, 255, 0.78);
+}
+
+
+.pub-orcid-cta {
+  background: color-mix(in srgb, var(--c-glass) 24%, transparent);
+}
+
+.pub-orcid-bio {
+  margin: clamp(8px, 1.2vw, 12px) 0 0 0;
+  font-size: clamp(0.75rem, 0.9vw, 0.85rem);
+  color: rgba(255, 255, 255, 0.75);
+  line-height: 1.5;
+  width: 100%;
+}
+
+.pub-orcid-keywords {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-top: clamp(6px, 0.9vw, 8px);
+  width: 100%;
+}
+
+.pub-keyword-chip {
+  padding: 3px 8px;
+  border-radius: 999px;
+  background: rgba(0, 0, 0, 0.35);
+  font-size: clamp(0.7rem, 0.85vw, 0.8rem);
+  color: rgba(255, 255, 255, 0.8);
+}
+
+/* Search */
+.pub-search-section {
+  margin: clamp(20px, 3vw, 28px) 0 clamp(18px, 2.5vw, 24px);
+}
+
+.pub-search-bar {
+  position: relative;
+  max-width: 650px;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+}
+
+.pub-search-bar i {
+  position: absolute;
+  left: 16px;
+  color: rgba(255, 255, 255, 0.5);
+  font-size: 0.95rem;
+}
+
+.pub-search-bar input {
+  width: 100%;
+  padding: 10px 42px 10px 40px;
+  background: color-mix(in srgb, var(--c-glass) 18%, transparent);
+  border-radius: 999px;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  color: rgba(255, 255, 255, 0.92);
+  font-size: clamp(0.8rem, 0.95vw, 0.9rem);
+  font-family: var(--font-geist-sans), -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  box-shadow:
+    inset 0 0 0 1px rgba(255, 255, 255, 0.08),
+    0 12px 30px rgba(0, 0, 0, 0.35);
+  outline: none;
+}
+
+.pub-search-bar input::placeholder {
+  color: rgba(255, 255, 255, 0.45);
+}
+
+.pub-search-bar input:focus {
+  border-color: rgba(200, 170, 50, 0.55);
+}
+
+.pub-search-clear {
+  position: absolute;
+  right: 14px;
+  background: transparent;
+  border: none;
+  color: rgba(255, 255, 255, 0.55);
+  cursor: pointer;
+  padding: 3px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.pub-search-clear:hover {
+  color: rgba(255, 255, 255, 0.9);
+}
+
+.pub-search-count {
+  margin-top: 8px;
+  text-align: center;
+  font-size: clamp(0.75rem, 0.95vw, 0.9rem);
+  color: rgba(255, 255, 255, 0.7);
+}
+
+/* Publication cards */
+.pub-list-section {
+  margin-top: clamp(10px, 1.5vw, 16px);
+}
+
+.pub-card {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  gap: clamp(14px, 2vw, 18px);
+  padding: clamp(14px, 2vw, 18px) clamp(14px, 2vw, 22px);
+  border-radius: clamp(14px, 1.8vw, 18px);
+  background: color-mix(in srgb, var(--c-glass) 20%, transparent);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow:
+    inset 0 0 0 1px rgba(255, 255, 255, 0.08),
+    0 10px 28px rgba(0, 0, 0, 0.35);
+  margin-bottom: clamp(14px, 2vw, 18px);
+  cursor: default;
+}
+
+.pub-card-left {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 8px;
+  min-width: 110px;
+}
+
+.pub-venue-tag {
+  padding: 6px 12px;
+  border-radius: 999px;
+  background: rgba(0, 0, 0, 0.4);
+  color: rgba(255, 255, 255, 0.9);
+  font-size: clamp(0.75rem, 0.9vw, 0.85rem);
+  font-weight: 500;
+}
+
+.pub-year {
+  font-size: clamp(1rem, 1.5vw, 1.3rem);
+  color: rgba(255, 255, 255, 0.35);
+}
+
+.pub-card-main {
+  min-width: 0;
+}
+
+.pub-title {
+  margin: 0 0 4px 0;
+  font-size: clamp(0.95rem, 1.3vw, 1.2rem);
+  font-weight: 500;
+  color: rgba(255, 255, 255, 0.95);
+}
+
+.pub-title a {
+  color: inherit;
+  text-decoration: none;
+}
+
+.pub-title a:hover {
+  text-decoration: underline;
+}
+
+.pub-authors {
+  margin: 0 0 4px 0;
+  font-size: clamp(0.8rem, 0.95vw, 0.9rem);
+  color: rgba(255, 255, 255, 0.85);
+}
+
+.pub-meta {
+  margin: 0 0 6px 0;
+  font-size: clamp(0.75rem, 0.9vw, 0.85rem);
+  color: rgba(255, 255, 255, 0.7);
+  font-style: italic;
+}
+
+.pub-meta-doi {
+  font-style: normal;
+}
+
+.pub-abstract {
+  margin: 6px 0 8px 0;
+  font-size: clamp(0.75rem, 0.9vw, 0.85rem);
+  color: rgba(255, 255, 255, 0.82);
+}
+
+.pub-links-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 8px;
+}
+
+.pub-link-btn {
+  padding: 4px 10px;
+  border-radius: 999px;
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  background: rgba(0, 0, 0, 0.3);
+  font-size: clamp(0.75rem, 0.9vw, 0.85rem);
+  color: rgba(255, 255, 255, 0.9);
+  text-decoration: none;
+  transition: all 0.2s ease;
+}
+
+.pub-link-btn:hover {
+  background: rgba(200, 170, 50, 0.25);
+  border-color: rgba(200, 170, 50, 0.55);
+}
+
+.pub-metrics-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.pub-metric-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 3px 9px;
+  border-radius: 999px;
+  background: rgba(0, 0, 0, 0.4);
+  font-size: clamp(0.75rem, 0.9vw, 0.85rem);
+  color: rgba(255, 255, 255, 0.8);
+}
+
+.pub-metric-chip i {
+  font-size: 0.85em;
+  color: rgba(200, 170, 50, 0.9);
+}
+
+/* Pagination */
+.pub-pagination {
+  margin-top: clamp(20px, 2.8vw, 26px);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.pub-page-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 16px;
+  border-radius: 999px;
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  background: color-mix(in srgb, var(--c-glass) 18%, transparent);
+  color: rgba(255, 255, 255, 0.9);
+  font-size: clamp(0.8rem, 1vw, 0.95rem);
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.pub-page-btn:hover:not(:disabled) {
+  background: color-mix(in srgb, var(--c-glass) 26%, transparent);
+  border-color: rgba(200, 170, 50, 0.5);
+}
+
+.pub-page-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.pub-page-info {
+  font-size: clamp(0.8rem, 1vw, 0.95rem);
+  color: rgba(255, 255, 255, 0.7);
+}
+
+/* Responsive */
+@media (max-width: 900px) {
+  .pub-card {
+    grid-template-columns: 1fr;
+  }
+
+  .pub-card-left {
+    flex-direction: row;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .pub-year {
+    font-size: clamp(0.9rem, 1.2vw, 1rem);
+  }
+}
+
+@media (max-width: 768px) {
+  .publications-container {
+    padding: clamp(50px, 7vw, 80px) clamp(12px, 3vw, 20px) clamp(25px, 4vw, 40px);
+  }
+
+  .pub-profile-card {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .pub-profile-header-row {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .pub-orcid-header-row {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+}
+
+
