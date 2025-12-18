@@ -283,14 +283,14 @@ export default function RepositoriesClient({ initialUser, initialRepos, initialS
                             <span className="repo-language">{repo.language}</span>
                           </div>
                         )}
-                        <div className="repo-meta-item">
-                          <i className="fas fa-star"></i>
-                          <span>{repo.stargazers_count}</span>
-                        </div>
-                        <div className="repo-meta-item">
-                          <i className="fas fa-code-branch"></i>
-                          <span>{repo.forks_count}</span>
-                        </div>
+                          <div className="repo-meta-item">
+                            <i className="fas fa-star"></i>
+                            <span>{repo.stargazers_count}</span>
+                          </div>
+                          <div className="repo-meta-item">
+                            <i className="fas fa-code-branch"></i>
+                            <span>{repo.forks_count}</span>
+                          </div>
                         <div className="repo-meta-item">
                           <i className="fas fa-clock"></i>
                           <span>Updated {formatDate(repo.updated_at)}</span>

@@ -1,0 +1,386 @@
+/* app/pages/about/About.module.css */
+
+/* The Container */
+.about-container {
+  max-width: 1200px;
+  width: 100%;
+  margin: 0 auto;
+  padding: clamp(60px, 10vw, 120px) clamp(15px, 3.3vw, 40px) clamp(30px, 5vw, 60px);
+  position: relative;
+  z-index: 1;
+}
+
+/* --- 1. Modern Glass Tabs --- */
+.aboutTabs {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  margin-bottom: 60px;
+  gap: 15px;
+}
+
+.tabItem {
+  border-radius: 50px;
+  cursor: pointer;
+  padding: 7px 17px;
+  font-size: 14px;
+  font-weight: 600;
+  text-transform: capitalize;
+  color: rgba(255, 255, 255, 0.6);
+  transition: all 0.3s ease;
+  position: relative;
+  
+  /* Glass Effect */
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(5px);
+}
+
+.tabItem:hover {
+  background: rgba(255, 255, 255, 0.1);
+  color: #fff;
+  transform: translateY(-2px);
+}
+
+.tabItem.active {
+  color: #fff;
+  background: rgba(255, 255, 255, 0.15);
+  border-color: rgba(255, 255, 255, 0.3);
+  box-shadow: 0 0 15px rgba(255, 255, 255, 0.1);
+}
+
+/* --- 2. Animations --- */
+.tabContent {
+  animation: fadeIn 0.6s ease;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* --- 3. Timeline (Experience & Education) --- */
+.timeline {
+  position: relative;
+  max-width: 1000px;
+  margin: auto;
+}
+
+/* Central Line */
+.timeline::before {
+  content: '';
+  position: absolute;
+  width: 2px;
+  background: rgba(255, 255, 255, 0.1);
+  top: 0;
+  bottom: 0;
+  left: 50%;
+  margin-left: -1px;
+}
+
+.timelineItem {
+  margin-bottom: 40px;
+  width: 100%;
+  position: relative;
+}
+
+.timelineItem:last-child {
+  margin-bottom: 0;
+}
+
+.icon {
+  height: 30px;
+  width: 30px;
+  background: rgba(255, 255, 255, 0.03);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  text-align: center;
+  line-height: 26px !important;
+  border-radius: 50%;
+  font-size: 16px;
+  color: #fff;
+  position: absolute;
+  top: 35px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 2;
+}
+
+.timelineContent {
+  position: relative;
+  width: 45%;
+  padding: 30px;
+  border-radius: 15px;
+  
+  /* Glass Card */
+  background: rgba(255, 255, 255, 0.03);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+  transition: transform 0.3s ease;
+}
+
+.timelineContent:hover {
+  transform: translateY(-5px);
+  background: rgba(255, 255, 255, 0.06);
+  border-color: rgba(255, 255, 255, 0.2);
+}
+
+/* Alternating Sides */
+.timelineItem:nth-child(odd) .timelineContent {
+  margin-left: auto; /* Right Side */
+}
+.timelineItem:nth-child(even) .timelineContent {
+  margin-right: auto; /* Left Side */
+}
+
+
+/* Typography inside cards */
+.date {
+  display: block;
+  font-size: 14px;
+  color: rgba(255, 255, 255, 0.5);
+  margin-bottom: 8px;
+  font-weight: 500;
+}
+
+.title {
+  font-size: 17.5px;
+  color: #fff;
+  margin-bottom: 5px;
+  font-weight: 700;
+}
+
+.subtitle {
+  font-size: 15px;
+  color: rgba(255, 255, 255, 0.8);
+  font-style: italic;
+  margin-bottom: 15px;
+}
+
+.desc {
+  font-size: 12px;
+  color: rgba(255, 255, 255, 0.6);
+  line-height: 1.6;
+}
+
+.logo {
+  position: absolute;
+  top: 50%;
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.1);
+  -webkit-backdrop-filter: blur(40px);
+  backdrop-filter: blur(40px);
+  object-fit: contain;
+  padding: 5px;
+  border: 2px solid rgba(255,255,255,0.1);
+}
+
+.logo img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+.timelineItem:nth-child(odd) .logo { left: -75px; }
+.timelineItem:nth-child(even) .logo { right: -75px; }
+
+/* --- 4. Skills Section --- */
+.skillsGrid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 30px;
+}
+
+.skillItem {
+  flex: 0 0 calc(50% - 15px);
+  background: rgba(255, 255, 255, 0.03);
+  padding: 20px;
+  border-radius: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.skillName {
+  font-size: 14px;
+  color: #fff;
+  margin-bottom: 10px;
+  display: block;
+}
+
+.progressBar {
+  height: 8px;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 10px;
+  overflow: hidden;
+  position: relative;
+}
+
+.progress {
+  height: 100%;
+  background: linear-gradient( 180deg,rgba(255,255,255,0.95), rgba(245,245,245,0.85)); /* Cool gradient */
+  box-shadow: 0 10px 30px rgba(0,0,0,0.08), inset 0 1px 0 rgba(255,255,255,0.8);
+  border-radius: 10px;
+  position: relative;
+  width: 0; /* Animated via JS style */
+  transition: width 1s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.percent {
+  position: absolute;
+  right: 0;
+  top: -25px;
+  font-size: 14px;
+  color: rgba(255, 255, 255, 0.6);
+}
+
+
+
+/* --- Impact Stats Section --- */
+.statsGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 20px;
+  margin: 50px 0;
+}
+
+.statCard {
+  background: rgba(255, 255, 255, 0.03);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  padding: 30px;
+  border-radius: 20px;
+  text-align: center;
+  transition: transform 0.3s ease;
+}
+
+.statCard:hover {
+  transform: translateY(-10px);
+  border-color: rgba(255, 255, 255, 0.3);
+}
+
+.statNumber {
+  display: block;
+  font-size: 2.5rem;
+  font-weight: 800;
+  background: linear-gradient(to right, #fff, #666);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.statLabel {
+  color: rgba(255, 255, 255, 0.6);
+  font-size: 0.9rem;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+/* --- Floating Tech Badge --- */
+.techBadgeContainer {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  justify-content: center;
+}
+
+.techBadge {
+  padding: 8px 16px;
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 50px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  font-size: 14px;
+  color: #fff;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+/* Impact Grid */
+.impactGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 20px;
+  margin-top: 40px;
+}
+
+.impactCard {
+  background: rgba(255, 255, 255, 0.02);
+  border-left: 3px solid rgba(255, 255, 255, 0.3);
+  padding: 20px;
+  backdrop-filter: blur(10px);
+  transition: all 0.4s ease;
+}
+
+.impactCard:hover {
+  background: rgba(255, 255, 255, 0.08);
+  border-left-color: #00ff9f; /* Bright accent for hover */
+  transform: translateX(10px);
+}
+
+.impactVal {
+  font-size: 24px;
+  font-weight: 800;
+  color: #fff;
+  display: block;
+}
+
+.impactLabel {
+  font-size: 13px;
+  color: rgba(255,255,255,0.5);
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+/* --- Responsive Media Queries --- */
+@media (max-width: 768px) {
+  .timeline::before { left: 30px; }
+  
+  .timelineItem:nth-child(odd) .timelineContent,
+  .timelineItem:nth-child(even) .timelineContent {
+    width: calc(100% - 70px);
+    margin-left: 70px;
+  }
+  
+  .icon { left: 30px; }
+  
+  .logo { width: 45px; height: 45px; left: -65px !important;} /* Hide floating logos on mobile to save space */
+  
+  .skillItem { flex: 0 0 100%; }
+}
+
+@media (max-width: 480px) {
+  .aboutTabs{
+    margin-bottom: 30px;
+  }
+  .tabItem{
+    padding: 5px 15px;
+    font-size: 12px;
+  }
+  .skillsGrid{
+    gap: 15px;
+  }
+  .skillItem{
+    padding: 15px;
+  }
+  .skillName{
+    font-size: 12px;
+  }
+  .progressBar{
+    height: 6px;
+  }
+  .percent{
+    font-size: 12px;
+  }
+  .title{
+    font-size: 15px;
+  }
+  .subtitle{
+    font-size: 13px;
+  }
+  .desc{
+    font-size: 10px;
+  }
+  .date{
+    font-size: 10px;
+  }
+}

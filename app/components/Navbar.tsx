@@ -141,7 +141,7 @@ export default function Navbar({ items = navItems, logo, className = '' }: Navba
         <div className="nav-menu-inner">
           <div className="menu-branding">
             <div className="portrait">
-              <img src={logo || "/images/shimanto.png"} alt="Profile" />
+              <img src="/images/nav-menu.webp" alt="Profile" />
             </div>
           </div>
           
