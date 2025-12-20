@@ -1,0 +1,247 @@
+/* app/pages/people/People.module.css */
+
+.peopleContainer {
+  width: 100%;
+  position: relative;
+  z-index: 1;
+}
+
+.sectionTitle {
+  text-align: center;
+  margin-bottom: 60px;
+}
+
+.sectionTitle h2 {
+  font-size: 2.5rem;
+  font-weight: 700;
+  background: linear-gradient(to right, #ffe259, #ffa751);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  position: relative;
+  display: inline-block;
+}
+
+.testiBox {
+  width: 100%;
+  max-width: 600px;
+  margin: auto;
+  padding: 0 15px;
+  position: relative;
+}
+
+.testiSlider {
+  border-radius: 10px;
+  overflow: hidden;
+  -webkit-backdrop-filter: blur(10px);
+  backdrop-filter: blur(10px);
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+}
+
+.testiSliderContainer {
+  display: flex;
+  transition: margin 1s ease;
+  align-items: center;
+  position: relative;
+}
+
+.testiItem {
+  padding: 30px;
+  text-align: center;
+  position: relative;
+  min-width: 100%;
+  opacity: 0;
+  display: none;
+}
+
+.testiItem.active {
+  opacity: 1;
+  display: block;
+  animation: fadeIn 0.6s ease;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.testiItem i {
+  position: absolute;
+  font-size: 30px;
+  color: rgba(255, 255, 255, 0.4);
+  opacity: 0.6;
+}
+
+.quoteLeft {
+  left: 5px;
+  top: 5px;
+}
+
+.quoteRight {
+  right: 5px;
+  bottom: 5px;
+}
+
+.testiItem p {
+  font-size: 14px;
+  line-height: 26px;
+  color: rgba(255, 255, 255, 0.85);
+  margin: 0 0 30px;
+  font-style: italic;
+}
+
+.testiItem img {
+  max-width: 70px;
+  display: inline-block;
+  width: 100%;
+}
+
+.testiItem span {
+  display: block;
+  margin: 10px 0 0;
+  font-weight: 600;
+  font-size: 16px;
+  color: rgba(255, 255, 255, 0.9);
+  text-transform: capitalize;
+}
+
+.testiProfile {
+  margin-top: 20px;
+}
+
+.testiProfile img {
+  border-radius: 50%;
+  border: 3px solid rgba(255, 255, 255, 0.1);
+  margin-bottom: 10px;
+}
+
+.testiProfile h5 {
+  color: rgba(255, 255, 255, 0.7);
+  font-size: 14px;
+  font-weight: 500;
+  margin-top: 5px;
+  text-align: center;
+}
+
+.testiSliderNav {
+  margin-top: 30px;
+  text-align: center;
+  display: flex;
+  justify-content: center;
+  gap: 15px;
+}
+
+.testiSliderNav span {
+  height: 40px;
+  width: 40px;
+  color: rgba(255, 255, 255, 0.8);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 20px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  border-radius: 50%;
+  -webkit-backdrop-filter: blur(10px);
+  backdrop-filter: blur(10px);
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+}
+
+.testiSliderNav span:hover {
+  background: rgba(255, 255, 255, 0.1);
+  color: #fff;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(255, 255, 255, 0.1);
+}
+
+.testiSliderNav span i {
+  line-height: 1;
+}
+
+.crowdCanvas {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 0;
+  pointer-events: none;
+}
+
+.testimonialSection {
+  padding: 80px 0 80px;
+  min-height: 100vh;
+}
+
+/* Responsive Styles */
+@media (max-width: 768px) {
+  .sectionTitle h2 {
+    font-size: 1.8rem;
+  }
+
+  .testiItem {
+    padding: 25px 20px;
+  }
+
+  .testiItem p {
+    font-size: 13px;
+    line-height: 24px;
+  }
+
+  .testiItem img {
+    max-width: 60px;
+  }
+
+  .testiItem span {
+    font-size: 14px;
+  }
+
+  .testiProfile h5 {
+    font-size: 12px;
+  }
+
+  .testiSliderNav span {
+    height: 35px;
+    width: 35px;
+    font-size: 18px;
+  }
+}
+
+@media (max-width: 480px) {
+  .sectionTitle h2 {
+    font-size: 1.5rem;
+  }
+
+  .testiItem {
+    padding: 20px 15px;
+  }
+
+  .testiItem p {
+    font-size: 12px;
+    line-height: 22px;
+  }
+
+  .testiItem img {
+    max-width: 50px;
+  }
+
+  .testiItem span {
+    font-size: 13px;
+  }
+
+  .testiProfile h5 {
+    font-size: 11px;
+  }
+}
+

@@ -1,104 +1,178 @@
 'use client';
 
 import { useState } from 'react';
-import styles from './About.module.css'; // Importing the CSS Module
-import { experiences, education, skills, achievements } from './aboutData';
+import styles from './About.module.css'; 
+import { bioData, chartData, experiences, education, skills, achievements } from './aboutData';
 import Navbar, { navItems } from '@/app/components/Navbar';
 import { usePageDataLoaded } from '@/app/hooks/usePageDataLoaded';
+import {
+  Chart as ChartJS, 
+  RadialLinearScale, 
+  ArcElement, 
+  CategoryScale, 
+  LinearScale, 
+  PointElement, 
+  LineElement, 
+  Filler, 
+  Tooltip, 
+  Legend,
+} from 'chart.js';
+import { Radar, PolarArea, Line } from 'react-chartjs-2';
+
+ChartJS.register(
+  RadialLinearScale, ArcElement, CategoryScale, LinearScale, 
+  PointElement, LineElement, Filler, Tooltip, Legend
+);
 
 export default function AboutPage() {
   const [activeTab, setActiveTab] = useState<'experience' | 'education' | 'skills' | 'achievements'>('experience');
   usePageDataLoaded();
+
+  // --- HELPER: Extracts GPA and renders fractional stars ---
+  const renderEducationStars = (description: string) => {
+    // Regex to find "3.06 out of 4" or "5.00 out of 5.00"
+    // Matches: (number) ... "out of" ... (number)
+    const match = description.match(/([\d.]+)\s+out\s+of\s+([\d.]+)/i);
+
+    if (!match) return null;
+
+    const achieved = parseFloat(match[1]); // e.g., 3.06
+    const total = Math.floor(parseFloat(match[2])); // e.g., 4
+
+    const stars = [];
+
+    for (let i = 1; i <= total; i++) {
+      // Calculate how much this specific star should be filled (0% to 100%)
+      let fillPercentage = 0;
+      if (achieved >= i) {
+        fillPercentage = 100;
+      } else if (achieved > i - 1) {
+        fillPercentage = (achieved - (i - 1)) * 100;
+      }
+
+      stars.push(
+        <i
+          key={i}
+          className={`fas fa-star ${styles.star} ${styles.gradientStar}`}
+          style={{
+            // The Magic: Linear gradient background clipped to the text
+            background: `linear-gradient(90deg, #ffd700 ${fillPercentage}%, rgba(255,255,255,0.2) ${fillPercentage}%)`,
+            WebkitBackgroundClip: 'text',
+            WebkitTextFillColor: 'transparent'
+          }}
+        ></i>
+      );
+    }
+
+    return (
+      <div className={styles.starContainer} title={`GPA: ${achieved}/${total}`}>
+        {stars}
+      </div>
+    );
+  };
+
   return (
     <main className="home-main">
-       {/* Ensure Navbar is correctly imported based on your project structure */}
       <Navbar items={navItems} logo="/images/shimanto.png" />
       
       <section className="home-section">
-      <div className={styles['about-container']}>
-        {/* --- Section 1: Professional Impact (Creative Metric View) --- */}
-            <div className={styles.statsGrid}>
-            <div className={styles.statCard}>
-                <span className={styles.statNumber}>3+</span>
-                <span className={styles.statLabel}>Years Industry Exp.</span>
+        <div className={styles['about-container']}>
+          {/* 1. HERO PROFILE */}
+          <div className={styles.heroSection}>
+            <div className={styles.profileWrapper}>
+              <div className={styles.profileRing}></div>
+              <img 
+                src={bioData.photoUrl} 
+                alt="Profile" 
+                className={styles.profileImg} 
+              />
             </div>
-            <div className={styles.statCard}>
-                <span className={styles.statNumber}>10+</span>
-                <span className={styles.statLabel}>ML Models Built</span>
+            <h1 className={styles.heroTitle}>{bioData.title}</h1>
+            <h2 className={styles.heroSubtitle}>{bioData.subtitle}</h2>
+            <div className={styles.bioBox}>
+              <p>{bioData.paragraph}</p>
             </div>
-            <div className={styles.statCard}>
-                <span className={styles.statNumber}>100%</span>
-                <span className={styles.statLabel}>Import Logistics Automation</span>
-            </div>
+          </div>
+
+          {/* 2. THE DATA DASHBOARD */}
+          <div className={styles.dashboardGrid}>
+            <div className={styles.hudCard}>
+              <div className={styles.cardHeader}>
+                <span className={styles.cardTitle}>Skill Topology</span>
+                <i className="fas fa-network-wired cardIcon"></i>
+              </div>
+              <div className={styles.chartContainer}>
+                <Radar 
+                  data={chartData.capabilityRadar} 
+                  options={{
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                      r: {
+                        angleLines: { color: 'rgba(255, 255, 255, 0.1)' },
+                        grid: { color: 'rgba(255, 255, 255, 0.1)' },
+                        pointLabels: { color: '#fff', font: { size: 11 } },
+                        ticks: { display: false, backdropColor: 'transparent' }
+                      }
+                    },
+                    plugins: { legend: { display: false } }
+                  }} 
+                />
+              </div>
             </div>
 
-            {/* --- Section 2: The "Expertise Pillars" (Replacing standard list) --- */}
-            <div className={styles.timeline1} style={{marginTop: '60px'}}>
-                <div className={styles.timelineItem}>
-                    <div className={styles.timelineInner} style={{width: '100%', background: 'rgba(255,255,255,0.02)'}}>
-                        <h3 className={styles.title}>Research & Vision</h3>
-                        <p className={styles.desc}>
-                            From my background at <strong>SUST</strong> to my professional journey, I specialize in 
-                            bridging the gap between <strong>RDBMS Schema Design</strong> and <strong>Machine Learning 
-                            Optimization</strong>. My focus is on <strong>Embedded Finance</strong> and 
-                            <strong>Digital Ecosystems</strong>.
-                        </p>
-                        <div className={styles.techBadgeContainer} style={{marginTop: '20px'}}>
-                            {['TensorFlow', 'scikit-learn', 'Next.js', 'Flutter', 'Cloud Computing'].map(tech => (
-                                <span key={tech} className={styles.techBadge}>
-                                    <i className="fas fa-microchip" style={{fontSize: '10px'}}></i> {tech}
-                                </span>
-                            ))}
-                        </div>
-                    </div>
-                </div>
-            </div>
-          
-          {/* --- Exclusive Impact Section --- */}
-            <div className={styles.tabContent} style={{marginTop: '60px'}}>
-            <h2 className={styles.title} style={{textAlign: 'center', marginBottom: '40px'}}>Systemic Impact & Research</h2>
-            
-            <div className={styles.impactGrid}>
-                {/* Derived from Dana Fintech responsibilities */}
-                <div className={styles.impactCard}>
-                <span className={styles.impactVal}>BNPL & Credit</span>
-                <span className={styles.impactLabel}>Financial Architecture</span>
-                <p className={styles.desc} style={{fontSize: '12px', marginTop: '10px'}}>
-                    Developed Credit Scoring & MSME Loan Management systems evaluating user behavior through SMS data.
-                </p>
-                </div>
-
-                {/* Derived from V Shipping experience */}
-                <div className={styles.impactCard}>
-                <span className={styles.impactVal}>1-Stop Global</span>
-                <span className={styles.impactLabel}>Logistics Automation</span>
-                <p className={styles.desc} style={{fontSize: '12px', marginTop: '10px'}}>
-                    Automated door-to-door shipping workflows and warehouse management using Flutter & Dart.
-                </p>
-                </div>
-
-                {/* Derived from Bioinformatics Research in Resume */}
-                <div className={styles.impactCard}>
-                <span className={styles.impactVal}>In-Silico</span>
-                <span className={styles.impactLabel}>Bio-Data Analysis</span>
-                <p className={styles.desc} style={{fontSize: '12px', marginTop: '10px'}}>
-                    Applied predictive modeling to genetic pathways using Linux/Bash and R-tools.
-                </p>
-                </div>
+            <div className={styles.hudCard}>
+              <div className={styles.cardHeader}>
+                <span className={styles.cardTitle}>Tech Ecosystem</span>
+                <i className="fas fa-code cardIcon"></i>
+              </div>
+              <div className={styles.chartContainer}>
+                <PolarArea 
+                  data={chartData.techPolar} 
+                  options={{
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                      r: {
+                        grid: { color: 'rgba(255, 255, 255, 0.1)' },
+                        ticks: { display: false, backdropColor: 'transparent' }
+                      }
+                    },
+                    plugins: { 
+                      legend: { 
+                        position: 'bottom', 
+                        labels: { color: '#ccc', font: { size: 10 }, boxWidth: 10 } 
+                      } 
+                    }
+                  }} 
+                />
+              </div>
             </div>
 
-            {/* --- The "Germany Vision" Section (SOP integration) --- */}
-            <div className={styles.timelineItem} style={{marginTop: '60px'}}>
-                <div className={styles.timelineInner} style={{width: '100%', border: '1px dashed rgba(255,255,255,0.2)'}}>
-                <h3 className={styles.title}><i className="fas fa-microchip"></i> Future Vision: Data Science in Germany</h3>
-                <p className={styles.desc}>
-                    My goal is to integrate German engineering precision with AI to solve local problems in healthcare and funding. 
-                    I am currently focusing on <strong>Transformer Architectures</strong> and <strong>Serverless Microservices</strong> 
-                    to build the next generation of digital ecosystems.
-                </p>
-                </div>
+            <div className={styles.hudCard}>
+              <div className={styles.cardHeader}>
+                <span className={styles.cardTitle}>Innovation Velocity</span>
+                <i className="fas fa-chart-line cardIcon"></i>
+              </div>
+              <div className={styles.chartContainer}>
+                <Line 
+                  data={chartData.careerVelocity} 
+                  options={{
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                      x: { 
+                        grid: { display: false }, 
+                        ticks: { color: 'rgba(255,255,255,0.6)', font: { size: 10 } } 
+                      },
+                      y: { display: false }
+                    },
+                    plugins: { legend: { display: false } }
+                  }} 
+                />
+              </div>
             </div>
-            </div>
+          </div>
 
           {/* --- Navigation Tabs --- */}
           <div className={styles.aboutTabs} style={{marginTop: '60px'}}>
@@ -141,7 +215,7 @@ export default function AboutPage() {
               </div>
             )}
 
-            {/* 2. Education Tab */}
+            {/* 2. Education Tab (UPDATED WITH STARS) */}
             {activeTab === 'education' && (
               <div className={styles.timeline}>
                 {education.map((edu, index) => (
@@ -159,6 +233,11 @@ export default function AboutPage() {
                       <h3 className={styles.title}>{edu.title}</h3>
                       <h4 className={styles.subtitle}>{edu.subtitle}</h4>
                       <p className={styles.desc}>{edu.description}</p>
+                      <p className={styles.desc}>{edu.group}</p>
+                      
+                      {/* --- RENDER STARS HERE --- */}
+                      {renderEducationStars(edu.description)}
+                      
                     </div>
                   </div>
                 ))}
