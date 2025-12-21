@@ -196,7 +196,20 @@ async function getPublicationsData() {
       throw new Error(`Scholar API failed with status ${scholarRes.status}`);
     }
 
-    const scholarJson: any = await scholarRes.json();
+    interface ScholarApiResponse {
+      name?: string;
+      profile_picture?: string | null;
+      affiliation?: string | null;
+      email?: string | null;
+      citations?: number;
+      h_index?: number;
+      i10_index?: number;
+      interests?: Array<string | { title?: string }>;
+      profile_url?: string;
+      updated_at?: string;
+    }
+
+    const scholarJson: ScholarApiResponse = await scholarRes.json();
 
     scholar = {
       name: scholarJson.name ?? 'Unknown',
@@ -208,7 +221,7 @@ async function getPublicationsData() {
       hIndex: typeof scholarJson.h_index === 'number' ? scholarJson.h_index : 0,
       i10Index: typeof scholarJson.i10_index === 'number' ? scholarJson.i10_index : 0,
       interests: Array.isArray(scholarJson.interests)
-        ? scholarJson.interests.map((i: any) => ({ name: i.title ?? String(i) }))
+        ? scholarJson.interests.map((i: string | { title?: string }) => ({ name: typeof i === 'object' && i.title ? i.title : String(i) }))
         : [],
       profileUrl: scholarJson.profile_url ?? '',
       updatedAt: scholarJson.updated_at ?? new Date().toISOString(),
@@ -227,7 +240,17 @@ async function getPublicationsData() {
       throw new Error(`ORCID request failed with status ${orcidRes.status}`);
     }
 
-    const orcidJson: any = await orcidRes.json();
+    interface OrcidApiResponse {
+      name?: {
+        'given-names'?: { value?: string };
+        'family-name'?: { value?: string };
+      };
+      'last-modified-date'?: { value?: number };
+      biography?: { personal?: { value?: string } };
+      keywords?: { keyword?: Array<{ content: string }> };
+    }
+
+    const orcidJson: OrcidApiResponse = await orcidRes.json();
 
     const givenName: string | undefined = orcidJson?.name?.['given-names']?.value;
     const familyName: string | undefined =
@@ -242,7 +265,7 @@ async function getPublicationsData() {
 
     // Extract biography and keywords from person API
     const biography = orcidJson?.biography?.personal?.value || undefined;
-    const keywords = orcidJson?.keywords?.keyword?.map((k: any) => k.content) || [];
+    const keywords = orcidJson?.keywords?.keyword?.map((k: { content: string }) => k.content) || [];
 
     // Fetch employments from ORCID API (XML)
     const employmentsXml = await fetchXml(`https://pub.orcid.org/v3.0/${orcidId}/employments`);
@@ -276,7 +299,9 @@ async function getPublicationsData() {
     // For ISR: rethrow so Next.js keeps serving the last successful static snapshot
     // This ensures that if API calls fail during revalidation, users still see
     // the last successfully fetched data (no errors shown to users)
-    console.error('Error fetching publications data (will use cached version):', error);
+    if (process.env.NODE_ENV === 'development') {
+      console.error('Error fetching publications data (will use cached version):', error);
+    }
     throw error;
   }
 }

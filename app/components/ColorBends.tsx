@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useRef } from "react";
+import React, { useEffect, useRef, memo } from "react";
 import * as THREE from "three";
 import "./ColorBends.css";
 
@@ -114,7 +114,7 @@ void main() {
 }
 `;
 
-export default function ColorBends({
+function ColorBends({
   className,
   style,
   rotation = 45,
@@ -309,3 +309,5 @@ export default function ColorBends({
 
   return <div ref={containerRef} className={`color-bends-container ${className}`} style={style} />;
 }
+
+export default memo(ColorBends);

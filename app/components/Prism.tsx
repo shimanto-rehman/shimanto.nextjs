@@ -1,5 +1,5 @@
 "use client";
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, memo } from 'react';
 import { Renderer, Triangle, Program, Mesh } from 'ogl';
 import './Prism.css';
 
@@ -456,4 +456,4 @@ const Prism: React.FC<PrismProps> = ({
   return <div className="prism-container" ref={containerRef} />;
 };
 
-export default Prism;
+export default memo(Prism);

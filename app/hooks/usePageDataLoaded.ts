@@ -8,7 +8,9 @@ export const signalPageDataLoaded = () => {
   if (typeof window !== 'undefined') {
     // Dispatch the custom event
     window.dispatchEvent(new CustomEvent('pageDataLoaded'));
-    console.log('✓ Page data loaded signal dispatched');
+    if (process.env.NODE_ENV === 'development') {
+      console.log('✓ Page data loaded signal dispatched');
+    }
   }
 };
 

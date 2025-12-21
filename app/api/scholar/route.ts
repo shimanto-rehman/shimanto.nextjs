@@ -33,7 +33,14 @@ export async function GET() {
       h_index: hIndexAll,
       i10_index: i10IndexAll,
       publications:
-        data.articles?.map((p: any) => ({
+        data.articles?.map((p: {
+          title: string;
+          year: number;
+          cited_by?: { value?: number };
+          link: string;
+          authors: string;
+          publication: string;
+        }) => ({
           title: p.title,
           year: p.year,
           citations: p.cited_by?.value || 0,
@@ -48,10 +55,13 @@ export async function GET() {
 
     return NextResponse.json(result);
 
-  } catch (error: any) {
-    console.error(error.response?.data || error.message);
+  } catch (error) {
+    const errorMessage = error instanceof Error ? error.message : 'Unknown error';
+    if (process.env.NODE_ENV === 'development') {
+      console.error('Scholar API error:', error);
+    }
     return NextResponse.json(
-      { error: "Failed to fetch Scholar data" },
+      { error: "Failed to fetch Scholar data", message: process.env.NODE_ENV === 'development' ? errorMessage : undefined },
       { status: 500 }
     );
   }

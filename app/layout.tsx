@@ -1,12 +1,14 @@
 'use client';
 import { useState, useEffect } from 'react';
 import { usePathname } from 'next/navigation';
+import Script from 'next/script';
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import "./responsive.css";
 import Preloader from './components/Preloader';
 import ColorBends from './components/ColorBends';
 import Prism from './components/Prism';
+import { ErrorBoundary } from './components/ErrorBoundary';
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -52,15 +54,6 @@ export default function RootLayout({
     };
   }, []);
 
-  useEffect(() => {
-    // Load confetti script early so it's ready when preloader finishes
-    if (typeof window !== 'undefined' && !document.querySelector('script[src="/js/confetti.js"]')) {
-      const script = document.createElement('script');
-      script.src = '/js/confetti.js';
-      script.async = true;
-      document.body.appendChild(script);
-    }
-  }, []);
 
   return (
     <html lang="en" suppressHydrationWarning>
@@ -74,15 +67,25 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
+        <Script
+          src="/js/confetti.js"
+          strategy="lazyOnload"
+        />
         {loading && <Preloader onLoadComplete={handleLoadComplete} />}
         {/* Fixed ColorBends Background - Available on all pages */}
-        <div className="home-background-fixed">
-          <ColorBends />
-        </div>
-        <div className="home-prism-container">
-          <Prism animationType="rotate" timeScale={0.5} height={3.5} baseWidth={5.5} scale={3.6} hueShift={0} colorFrequency={1} noise={0.05} glow={1}/>
-        </div>
-        {children}
+        <ErrorBoundary>
+          <div className="home-background-fixed">
+            <ColorBends />
+          </div>
+        </ErrorBoundary>
+        <ErrorBoundary>
+          <div className="home-prism-container">
+            <Prism animationType="rotate" timeScale={0.5} height={3.5} baseWidth={5.5} scale={3.6} hueShift={0} colorFrequency={1} noise={0.05} glow={1}/>
+          </div>
+        </ErrorBoundary>
+        <ErrorBoundary>
+          {children}
+        </ErrorBoundary>
       </body>
     </html>
   );
