@@ -24,107 +24,55 @@ export default function HomePage() {
   const isHomePage = pathname === '/';
   
   useEffect(() => {
-    let scriptsLoaded = 0;
-    const totalScripts = 1; // confetti.js
-    let fontAwesomeLoaded = false;
-    
-    const checkAllLoaded = () => {
-      // Signal that page data is loaded when all scripts and fonts are ready
-      if (scriptsLoaded >= totalScripts && fontAwesomeLoaded) {
-        if (typeof window !== 'undefined') {
-          window.dispatchEvent(new CustomEvent('pageDataLoaded'));
+    // Only trigger confetti on the home page, using the script loaded via layout.tsx
+    if (!isHomePage) return;
+
+    const handlePreloaderComplete = () => {
+      // Wait a bit to ensure preloader has fully faded out
+      setTimeout(() => {
+        if (typeof window !== 'undefined' && typeof window.confetti !== 'undefined') {
+          // Left side burst - shoots across entire screen to the right
+          window.confetti({
+            particleCount: 300,
+            angle: 60,
+            spread: 100,
+            startVelocity: 90,
+            origin: { 
+              x: -0.1,
+              y: 1.1
+            }
+          });
+          
+          // Right side burst - shoots across entire screen to the left
+          window.confetti({
+            particleCount: 300,
+            angle: 120,
+            spread: 100,
+            startVelocity: 90,
+            origin: { 
+              x: 1.1,
+              y: 1.1
+            }
+          });
         }
-      }
+      }, 200);
     };
-    
-    // Load Font Awesome if not already loaded
-    if (!document.querySelector('link[href*="font-awesome"]')) {
-      const link = document.createElement('link');
-      link.rel = 'stylesheet';
-      link.href = 'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css';
-      link.crossOrigin = 'anonymous';
-      link.onload = () => {
-        fontAwesomeLoaded = true;
-        checkAllLoaded();
-      };
-      link.onerror = () => {
-        fontAwesomeLoaded = true; // Proceed even if font fails
-        checkAllLoaded();
-      };
-      document.head.appendChild(link);
-    } else {
-      fontAwesomeLoaded = true;
-      checkAllLoaded();
-    }
-    
-    // Load confetti script
-    const script = document.createElement('script');
-    script.src = '/js/confetti.js';
-    script.async = true;
-    
-    script.onload = () => {
-      scriptsLoaded++;
-      checkAllLoaded();
-      
-      // Only trigger confetti on home page
-      if (!isHomePage) return;
-      
-      // Listen for preloader completion event (only on home page)
-      const handlePreloaderComplete = () => {
-        // Wait a bit to ensure preloader has fully faded out
-        setTimeout(() => {
-          if (typeof window.confetti !== 'undefined') {
-            // Left side burst - shoots across entire screen to the right
-            window.confetti({
-              particleCount: 300,
-              angle: 60,
-              spread: 100,
-              startVelocity: 90,
-              origin: { 
-                x: -0.1,
-                y: 1.1
-              }
-            });
-            
-            // Right side burst - shoots across entire screen to the left
-            window.confetti({
-              particleCount: 300,
-              angle: 120,
-              spread: 100,
-              startVelocity: 90,
-              origin: { 
-                x: 1.1,
-                y: 1.1
-              }
-            });
-          }
-        }, 200);
-      };
-      
-      // Always listen for the preloader completion event
-      // Don't check readyState - wait for the actual event
+
+    // Listen for the preloader completion event once
+    if (typeof window !== 'undefined') {
       window.addEventListener('preloaderComplete', handlePreloaderComplete, { once: true });
-    };
-    
-    script.onerror = () => {
-      scriptsLoaded++; // Proceed even if script fails
-      checkAllLoaded();
-    };
-    
-    document.body.appendChild(script);
-    
-    // Cleanup
+    }
+
     return () => {
-      if (script.parentNode) {
-        script.parentNode.removeChild(script);
+      if (typeof window !== 'undefined') {
+        window.removeEventListener('preloaderComplete', handlePreloaderComplete);
       }
-      window.removeEventListener('preloaderComplete', () => {});
     };
   }, [isHomePage]);
 
   return (
     <main className="home-main">
-      <Navbar items={navItems} logo="/images/shimanto.png" />
+      <Navbar items={navItems} logo="/images/nav-menu.webp" />
       <section className="home-section">
           <div className="home-content-wrapper">
           {/* Container for image and overlays */}
@@ -148,7 +96,7 @@ export default function HomePage() {
           }}>
             {/* Single Image */}
             <img 
-              src="/images/shimanto.png" 
+              src="/images/profile.png" 
               alt="Shimanto Rehman" 
                 className="home-image"
             />
