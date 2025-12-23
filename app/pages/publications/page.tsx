@@ -299,9 +299,6 @@ async function getPublicationsData() {
     // For ISR: rethrow so Next.js keeps serving the last successful static snapshot
     // This ensures that if API calls fail during revalidation, users still see
     // the last successfully fetched data (no errors shown to users)
-    if (process.env.NODE_ENV === 'development') {
-      console.error('Error fetching publications data (will use cached version):', error);
-    }
     throw error;
   }
 }

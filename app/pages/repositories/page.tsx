@@ -112,9 +112,6 @@ async function getGitHubData() {
     // In ISR: if revalidation fails, keep serving the last successful static data.
     // By rethrowing here, Next.js will NOT cache this error result,
     // and the previous good page stays active.
-    if (process.env.NODE_ENV === 'development') {
-      console.error('Error fetching GitHub data:', error);
-    }
     throw error;
   }
 }

@@ -57,9 +57,6 @@ export async function GET() {
 
   } catch (error) {
     const errorMessage = error instanceof Error ? error.message : 'Unknown error';
-    if (process.env.NODE_ENV === 'development') {
-      console.error('Scholar API error:', error);
-    }
     return NextResponse.json(
       { error: "Failed to fetch Scholar data", message: process.env.NODE_ENV === 'development' ? errorMessage : undefined },
       { status: 500 }

@@ -19,7 +19,7 @@ export default function PeoplePage() {
     const rotate = () => setCurrentIndex(prev => (prev + 1) % testimonials.length);
     autoRotateIntervalRef.current = setInterval(rotate, 10000);
     return () => { if (autoRotateIntervalRef.current) clearInterval(autoRotateIntervalRef.current); };
-  }, []);
+  }, [testimonials.length]);
 
   const handleHover = (pause: boolean) => {
     if (pause && autoRotateIntervalRef.current) {

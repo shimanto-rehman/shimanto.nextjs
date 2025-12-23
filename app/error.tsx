@@ -10,9 +10,7 @@ export default function Error({
   reset: () => void;
 }) {
   useEffect(() => {
-    if (process.env.NODE_ENV === 'development') {
-      console.error('Root error:', error);
-    }
+    // Error logged by Next.js internally
   }, [error]);
 
   return (

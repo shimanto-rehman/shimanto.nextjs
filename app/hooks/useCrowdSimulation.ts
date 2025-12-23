@@ -1,16 +1,18 @@
 import { useEffect, useRef } from 'react';
-import { useScriptLoader } from './useScriptLoader';
-
-declare global {
-  interface Window {
-    gsap?: any;
-  }
-}
+import { gsap } from 'gsap';
 
 interface CrowdSimulationConfig {
   src: string;
   rows: number;
   cols: number;
+}
+
+interface GSAPTimeline {
+  timeScale: (value: number) => GSAPTimeline;
+  to: (target: any, vars: any, position?: number | string) => GSAPTimeline;
+  eventCallback: (type: string, callback?: () => void) => void;
+  progress: (value: number) => void;
+  kill: () => void;
 }
 
 /**
@@ -21,23 +23,21 @@ interface CrowdSimulationConfig {
 export function useCrowdSimulation(
   canvasRef: React.RefObject<HTMLCanvasElement | null>,
   config: CrowdSimulationConfig = {
-    src: 'https://res.cloudinary.com/shimanto-rehman/image/upload/v1712485869/img/peeps-sheet.webp',
+    src: '/images/testimonial/crowdsimulator/peeps-sheet.webp',
     rows: 15,
     cols: 7
   },
   enabled: boolean = true
 ) {
   const crowdInitialized = useRef(false);
-  const { loading: gsapLoading } = useScriptLoader('/js/gsap.min.js', {}, enabled);
 
   useEffect(() => {
     if (!enabled) return;
     if (typeof window === 'undefined' || crowdInitialized.current) return;
-    if (gsapLoading || !window.gsap) return;
     if (!canvasRef.current) {
       // Wait for canvas to be available
       const checkCanvas = setInterval(() => {
-        if (canvasRef.current && window.gsap && !gsapLoading) {
+        if (canvasRef.current) {
           clearInterval(checkCanvas);
         }
       }, 100);
@@ -74,7 +74,7 @@ export function useCrowdSimulation(
       y: number;
       anchorY: number;
       scaleX: number;
-      walk: any;
+      walk: GSAPTimeline | null;
 
       constructor({ image, rect }: { image: HTMLImageElement; rect: number[] }) {
         this.image = image;
@@ -115,9 +115,10 @@ export function useCrowdSimulation(
     const availablePeeps: Peep[] = [];
     const crowd: Peep[] = [];
 
-    const resetPeep = ({ stage, peep }: { stage: any; peep: Peep }) => {
+    const resetPeep = ({ stage, peep }: { stage: { width: number; height: number }; peep: Peep }) => {
       const direction = Math.random() > 0.5 ? 1 : -1;
-      const offsetY = 100 - 250 * (window.gsap?.parseEase('power2.in') || ((t: number) => t * t))(Math.random());
+      const easeFn = gsap.parseEase('power2.in') || ((t: number) => t * t);
+      const offsetY = 100 - 250 * easeFn(Math.random());
       const startY = window.innerHeight - peep.height + offsetY;
       let startX: number, endX: number;
 
@@ -144,12 +145,12 @@ export function useCrowdSimulation(
       endX: number;
     }
 
-    const normalWalk = ({ peep, props }: { peep: Peep; props: WalkProps }) => {
+    const normalWalk = ({ peep, props }: { peep: Peep; props: WalkProps }): GSAPTimeline => {
       const { startX, startY, endX } = props;
       const xDuration = 10;
       const yDuration = 0.25;
 
-      const tl = window.gsap.timeline();
+      const tl = gsap.timeline();
       tl.timeScale(randomRange(0.5, 1.5));
       tl.to(peep, {
         duration: xDuration,
@@ -163,7 +164,7 @@ export function useCrowdSimulation(
         y: startY - 10
       }, 0);
 
-      return tl;
+      return tl as GSAPTimeline;
     };
 
     const walks = [normalWalk];
@@ -258,7 +259,7 @@ export function useCrowdSimulation(
     const init = () => {
       createPeeps(img);
       resize();
-      window.gsap?.ticker?.add(render);
+      gsap.ticker.add(render);
       window.addEventListener('resize', resize);
     };
 
@@ -269,10 +270,15 @@ export function useCrowdSimulation(
 
     return () => {
       window.removeEventListener('resize', resize);
+      gsap.ticker.remove(render);
       crowd.forEach((peep) => {
         if (peep.walk) peep.walk.kill();
       });
+      crowd.length = 0;
+      availablePeeps.length = 0;
+      allPeeps.length = 0;
+      crowdInitialized.current = false;
     };
-  }, [canvasRef, config.src, config.rows, config.cols, gsapLoading, enabled]);
+  }, [canvasRef, config.src, config.rows, config.cols, enabled]);
 }
 

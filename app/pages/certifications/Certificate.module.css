@@ -1,0 +1,386 @@
+/* app/pages/certificates/Certificate.module.css */
+
+/* --- Base Styles & Variables Override --- */
+.certificateSection {
+  padding: 80px 0 80px;
+  min-height: 100vh;
+}
+
+.container {
+  max-width: 1140px;
+  margin: auto;
+  padding: 0 15px;
+}
+
+.row {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.sectionTitle {
+  flex: 0 0 100%;
+  max-width: 100%;
+  margin-bottom: 60px;
+  text-align: center;
+}
+
+.projectCaption {
+  display: inline-block;
+  font-size: 30px;
+  font-weight: 700;
+  text-transform: uppercase;
+  margin: 0;
+  color: #fb5b53; /* Use your theme color */
+}
+
+.certificateLogo img {
+  max-width: 150px;
+  margin-top: 20px;
+}
+
+/* --- Certificate Items Grid --- */
+.certificateItems {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.certificateItem {
+  flex: 0 0 33.33%;
+  max-width: 33.33%;
+  padding: 15px;
+  margin-bottom: 30px;
+}
+
+.certificateItemInner {
+  padding: 15px;
+  border-radius: 5px;
+  cursor: pointer;
+  width: 100%;
+}
+
+.certificateItemImg {
+  position: relative;
+  width: 100%;
+}
+
+.certificateItemImg img {
+  border-radius: 5px;
+  width: 100%;
+  display: block;
+  transition: all 0.3s ease;
+}
+
+/* Hover Effect: View Certificate Button */
+.viewCertificate {
+  text-transform: capitalize;
+  font-size: 16px;
+  font-weight: 500;
+  color: var(--skin-color, #fb5b53);
+  transition: all 0.3s ease;
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -20px);
+  z-index: 10;
+  opacity: 0;
+}
+
+.certificateItemInner:hover .viewCertificate {
+  transform: translate(-50%, -50%);
+  opacity: 1;
+}
+
+.certificateItemInner:hover .certificateItemImg img {
+  transform: translateY(-25px);
+  border-radius: 10px;
+  opacity: 0.3;
+}
+
+.certificateItemInner:hover .certificateItemImg {
+  transform: translateY(-5px);
+}
+
+.certificateItemTitle {
+  font-size: 16px;
+  font-weight: 500;
+  color: var(--text-black-900, #ffffff);
+  margin: 10px 0 0;
+  text-transform: capitalize;
+}
+
+/* --- Responsive Grid --- */
+@media (max-width: 991px) {
+  .certificateItem {
+    flex: 0 0 50%;
+    max-width: 50%;
+  }
+}
+
+@media (max-width: 767px) {
+  .certificateItem {
+    flex: 0 0 100%;
+    max-width: 100%;
+  }
+}
+
+/* --- Popup Modal --- */
+.certificatePopup {
+  position: fixed;
+  left: 0;
+  top: 0;
+  height: 100%;
+  width: 100%;
+  z-index: 200;
+  visibility: hidden;
+  opacity: 0;
+  transition: all 0.3s ease;
+}
+
+.certificatePopup.open {
+  visibility: visible;
+  opacity: 1;
+}
+
+/* Popup Background / Details Section */
+.ppDetails {
+  max-width: 1350px;
+  width: calc(100% - 30px);
+  margin: auto;
+  max-height: 0;
+  overflow: hidden;
+  opacity: 0;
+  transition: all 0.5s ease;
+}
+
+.ppDetails.active {
+  opacity: 1;
+}
+
+.ppDetailsInner {
+  padding: 30px 0;
+}
+
+/* Popup Main Section */
+.separator {
+  height: 1px;
+  width: 100%;
+  display: block;
+  background-color: var(--bg-black-100, #353535);
+  opacity: 0;
+  transition: all 0.3s ease;
+}
+
+.separator.active {
+  opacity: 1;
+}
+
+.ppMain {
+  min-height: 100vh;
+  position: fixed;
+  left: 0;
+  top: 0;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  visibility: hidden;
+  opacity: 0;
+  transition: all 0.3s ease;
+  background-color: var(--bg-black-50, #2b2c2f); /* Assuming dark theme background */
+  z-index: 100;
+}
+
+.certificatePopup.open .ppMain {
+  visibility: visible;
+  opacity: 1;
+}
+
+.ppMainInner {
+  padding: 70px 0 50px;
+  position: relative;
+  max-width: 900px;
+  width: 100%;
+}
+
+/* Close & Details Buttons */
+.ppClose,
+.ppCertificateDetailsBtn {
+  position: absolute;
+  height: 40px;
+  width: 40px;
+  top: 15px;
+  right: 15px;
+  text-align: center;
+  line-height: 40px;
+  font-size: 20px;
+  color: var(--text-black-600, #bbbbbb);
+  cursor: pointer;
+  border-radius: 50%;
+  transition: all 0.3s ease;
+}
+
+.ppCertificateDetailsBtn {
+  right: 60px; /* Position next to close btn */
+  width: auto;
+  padding: 0 15px;
+  border-radius: 20px;
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.ppClose:after,
+.ppCertificateDetailsBtn:after {
+  border-radius: 50%;
+}
+
+/* Popup Image */
+.ppImg {
+  max-width: 100%;
+  width: auto;
+  height: auto;
+  display: block;
+  margin: auto;
+  border-radius: 10px;
+}
+
+/* Popup Content Typography */
+.ppTitle h2 {
+  font-size: 28px;
+  color: var(--text-black-900, #ffffff);
+  font-weight: 600;
+  margin: 0 0 5px;
+  text-transform: capitalize;
+}
+
+.ppTitle p {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text-black-600, #bbbbbb);
+  margin: 0 0 15px;
+  border-bottom: 1px solid var(--bg-black-100, #353535);
+  padding-bottom: 10px;
+}
+
+.ppTitle p span {
+  font-weight: 400;
+  text-transform: capitalize;
+}
+
+.ppCertificateDetails h3 {
+  font-size: 20px;
+  font-weight: 600;
+  color: var(--text-black-900, #ffffff);
+  margin: 0 0 15px;
+  text-transform: capitalize;
+}
+
+.description {
+  flex: 0 0 65%;
+  max-width: 65%;
+  padding: 0 15px;
+}
+
+.description p {
+  font-size: 16px;
+  color: var(--text-black-600, #bbbbbb);
+  line-height: 26px;
+  margin: 0;
+  white-space: pre-line; /* Preserves line breaks in description */
+}
+
+.info {
+  flex: 0 0 35%;
+  max-width: 35%;
+  padding: 0 15px;
+}
+
+.info ul li {
+  display: block;
+  margin-bottom: 10px;
+  font-weight: 600;
+  color: var(--text-black-600, #bbbbbb);
+  font-size: 16px;
+}
+
+.info ul li span {
+  font-weight: 400;
+}
+
+.info ul li a {
+  color: var(--skin-color, #fb5b53);
+}
+
+/* Navigation Buttons */
+.ppPrev,
+.ppNext {
+  position: fixed;
+  top: 50%;
+  height: 40px;
+  width: 40px;
+  text-align: center;
+  font-size: 20px;
+  cursor: pointer;
+  z-index: 101;
+  color: var(--text-black-900, #ffffff);
+  transition: all 0.3s ease;
+  opacity: 0.5;
+}
+
+.ppPrev:hover,
+.ppNext:hover {
+  opacity: 1;
+}
+
+.ppPrev {
+  left: 15px;
+}
+
+.ppPrev i {
+  transform: rotate(180deg);
+}
+
+.ppNext {
+  right: 15px;
+}
+
+/* Custom Shadows (Simulating 'outer-shadow') */
+.outerShadow {
+  box-shadow: 3px 3px 3px #222327, -3px -3px 3px #363636;
+}
+
+.hoverInShadow {
+  position: relative;
+  z-index: 1;
+}
+
+.hoverInShadow:hover {
+  box-shadow: 0 0 0 #222327, 0 0 0 #363636;
+}
+
+.hoverInShadow:after {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  transition: all 0.3s ease;
+  z-index: -1;
+}
+
+.hoverInShadow:hover:after {
+  box-shadow: inset 3px 3px 3px #222327, inset -3px -3px 3px #363636;
+}
+
+/* Responsive Popup */
+@media (max-width: 767px) {
+  .description,
+  .info {
+    flex: 0 0 100%;
+    max-width: 100%;
+  }
+  .info {
+    margin-top: 30px;
+  }
+}

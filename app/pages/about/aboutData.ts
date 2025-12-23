@@ -83,7 +83,7 @@ export interface TimelineItem {
       description:
         "V SHIPPAING- It is a DOOR TO DOOR SHIPPING PARTNER. Door to Door Service provider in Bangladesh. Anyone can import products for business or personal needs across the world and we developed it's ecommerce 1stopglobal.com and inhouse warehouse management application in (Flutter, Dart)",
       icon: 'fas fa-briefcase',
-      logo: 'https://res.cloudinary.com/shimanto-rehman/image/upload/v1747358895/img/experience/exp-vshipping.webp',
+      logo: '/images/about-tab/vshipping.webp',
     },
     {
       date: 'December, 2021 - January, 2023',
@@ -92,7 +92,7 @@ export interface TimelineItem {
       description:
         'Dana enables digital platforms and banks to offer digital loans to MSMEs and individuals instantly Integrate Dana embedded lending API with your e-commerce app, e-wallet, retailer app, or any digital platform to allow your merchants and users to apply for digital loan on the go. Embedded finance is the future of the financial services industry.',
       icon: 'fas fa-briefcase',
-      logo: 'https://res.cloudinary.com/shimanto-rehman/image/upload/v1712485867/img/experience/exp-dana.webp',
+      logo: '/images/about-tab/exp-dana.webp',
     },
     {
       date: 'April, 2018 - June, 2020',
@@ -101,7 +101,7 @@ export interface TimelineItem {
       description:
         'SUST science arena is a renowned scientific organization of Shahjalal university of Science and Technology, Sylhet, Bangladesh. Its main objective is to organize conferences, seminar, talk, Science Fair, Olympiads, debate competitions, study circle, running research project. It also trains university Students in writing a research paper, scientific poster, research proposal, etc. My responsibility is to Manage and mentor the Academic Olympiads and research team of this organization.',
       icon: 'fas fa-briefcase',
-      logo: 'https://res.cloudinary.com/shimanto-rehman/image/upload/v1712485868/img/experience/exp-ssa.webp',
+      logo: '/images/about-tab/exp-ssa.webp',
     },
     {
       date: 'June, 2018 - June, 2019',
@@ -110,7 +110,7 @@ export interface TimelineItem {
       description:
         'The Hult Prize is a startup accelerator for social enterprise named by President Bill Clinton and TIME Magazine as one of the top five ideas changing the world. The initiatives that make up the work of the Hult Prize Foundation are all dedicated to launching the next wave of social entrepreneurs through building custom tailored startups which are impact centered and profit minded. My responsibility was to coordinate media and communication team.',
       icon: 'fas fa-briefcase',
-      logo: 'https://res.cloudinary.com/shimanto-rehman/image/upload/v1712485868/img/experience/exp-hult.webp',
+      logo: '/images/about-tab/exp-hult.webp',
     },
     {
       date: 'Jan, 2017 - Oct, 2021',
@@ -119,7 +119,7 @@ export interface TimelineItem {
       description:
         'CSE Society, SUST is a non-political departmental organization. All the students and teachers of CSE department of SUST are the general member of this society. The main purpose of this society is to represent the student of CSE SUST and conduct the co-curricular activities for students',
       icon: 'fas fa-briefcase',
-      logo: 'https://res.cloudinary.com/shimanto-rehman/image/upload/v1712485868/img/experience/exp-sustcse.webp',
+      logo: '/images/about-tab/exp-sustcse.webp',
     },
   ];
   
@@ -131,7 +131,7 @@ export interface TimelineItem {
       description: 'CGPA - 3.06 out of 4',
       group: 'Section: A',
       icon: 'fas fa-graduation-cap',
-      logo: 'https://res.cloudinary.com/shimanto-rehman/image/upload/v1712485867/img/experience/sust.webp',
+      logo: '/images/about-tab/sust.webp',
     },
     {
       date: 'Jan, 2014 - June, 2016',
@@ -140,7 +140,7 @@ export interface TimelineItem {
       description: 'GPA - 5.00 out of 5.00',
       group: 'Group: Science',
       icon: 'fas fa-graduation-cap',
-      logo: 'https://res.cloudinary.com/shimanto-rehman/image/upload/v1712485867/img/experience/gshac.webp',
+      logo: '/images/about-tab/gshac.webp',
     },
     {
       date: 'Jan, 2017 - Oct, 2021',
@@ -149,7 +149,7 @@ export interface TimelineItem {
       description: 'GPA - 5.00 out of 5.00',
       group: 'Group: Science',
       icon: 'fas fa-graduation-cap',
-      logo: 'https://res.cloudinary.com/shimanto-rehman/image/upload/v1712485867/img/experience/bzs.webp',
+      logo: '/images/about-tab/bzs.webp',
     },
     {
       date: 'Jan, 2011 - Nov, 2011',
@@ -158,7 +158,7 @@ export interface TimelineItem {
       description: 'GPA - 5.00 out of 5.00',
       group: 'Group: Science',
       icon: 'fas fa-graduation-cap',
-      logo: 'https://res.cloudinary.com/shimanto-rehman/image/upload/v1712485867/img/experience/bzs.webp',
+      logo: '/images/about-tab/bzs.webp',
     },
     {
       date: 'Jan, 2008 - Nov, 2008',
