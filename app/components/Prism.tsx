@@ -19,6 +19,7 @@ type PrismProps = {
   bloom?: number;
   suspendWhenOffscreen?: boolean;
   timeScale?: number;
+  zIndex?: number;
 };
 
 const Prism: React.FC<PrismProps> = ({

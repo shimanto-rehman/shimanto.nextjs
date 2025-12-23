@@ -51,7 +51,7 @@ export default function PublicationsClient({
           <section className="pub-profile-card pub-profile-scholar">
             <div className="pub-profile-avatar">
               <img
-                src={initialScholar.avatarUrl || '/images/shimanto.png'}
+                src={initialScholar.avatarUrl || '/images/shimanto.webp'}
                 alt={initialScholar.name}
                 loading="eager"
                 decoding="async"
