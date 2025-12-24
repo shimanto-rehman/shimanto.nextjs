@@ -1,0 +1,325 @@
+/* app/pages/projects/Project.module.css */
+
+.projectSection {
+    padding: 100px 0;
+    min-height: 100vh;
+  }
+  
+  .container {
+    max-width: 1200px;
+    margin: auto;
+    padding: 0 20px;
+  }
+  
+  .sectionTitle {
+    text-align: center;
+    margin: 10px 0 60px 0;
+  }
+  
+  /* --- YOUR THEME GRADIENT --- */
+  .projectCaption {
+    background: linear-gradient(to right, #ffe259, #ffa751);
+    background-clip: border-box;
+    -webkit-text-fill-color: transparent;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    -webkit-background-clip: text;
+    font-size: 2rem;
+    font-weight: 700;
+    display: inline-block;
+    position: relative;
+  }
+  
+  /* --- Grid Design --- */
+  .projectItems {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 30px;
+  }
+  
+  .projectItemInner {
+    padding: 15px;
+    background: rgba(255, 255, 255, 0.03); /* Subtle glass bg */
+    border-radius: 12px;
+    cursor: pointer;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    border: 1px solid rgba(255, 255, 255, 0.05);
+  }
+  
+  .projectItemInner:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 30px rgba(0,0,0,0.5); /* Enhanced shadow on hover */
+  }
+  
+  .projectItemImg {
+    position: relative;
+    overflow: hidden;
+    border-radius: 8px;
+    height: 200px; /* Fixed height for consistency */
+  }
+  
+  .projectItemImg img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover; /* Ensures image fills the box */
+    transition: filter 0.3s ease;
+  }
+  
+  .viewProject {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    color: rgb(66, 66, 66);
+    background: linear-gradient(to right, #ffe259, #ffa751);
+    padding: 8px 20px;
+    border-radius: 20px;
+    font-weight: 600;
+    opacity: 0;
+    transition: 0.3s;
+    white-space: nowrap;
+  }
+  
+  .projectItemInner:hover .viewProject {
+    opacity: 1;
+  }
+  
+  .projectItemInner:hover img {
+    filter: blur(2px) brightness(0.5);
+  }
+  
+  .projectItemTitle {
+    margin-top: 15px;
+    font-size: 1.1rem;
+    font-weight: 600;
+    text-align: center;
+    color: #fff;
+  }
+  
+  /* --- POPUP STYLES (MATCHING CERTIFICATES) --- */
+  .projectPopup {
+    position: fixed;
+    inset: 0;
+    z-index: 1000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    visibility: hidden;
+    opacity: 0;
+    transition: 0.3s ease;
+  }
+  
+  .projectPopup.open {
+    visibility: visible;
+    opacity: 1;
+  }
+  
+  .ppOverlay {
+    position: absolute;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.8);
+    backdrop-filter: blur(5px);
+  }
+  
+  .ppContent {
+    position: relative;
+    width: 90%;
+    max-width: 900px;
+    max-height: 90vh;
+    overflow-y: auto;
+    z-index: 1001;
+    /* Scrollbar hiding for cleaner look */
+    scrollbar-width: none; 
+  }
+  .ppContent::-webkit-scrollbar { display: none; }
+  
+  /* GLASSMORPHISM POPUP INNER */
+  .ppContentInner {
+    background: rgba(30, 30, 30, 0.4); /* Higher transparency */
+    -webkit-backdrop-filter: blur(15px);
+    backdrop-filter: blur(15px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 20px;
+    padding: 30px;
+    box-shadow: 0 20px 50px rgba(0,0,0,0.5);
+  }
+  
+  .ppHeader {
+    display: flex;
+    justify-content: flex-end;
+    gap: 15px;
+    margin-bottom: 20px;
+  }
+  
+  .ppCloseBtn {
+    font-size: 30px;
+    color: #fff;
+    background: none;
+    border: none;
+    cursor: pointer;
+    transition: 0.3s;
+  }
+  .ppCloseBtn:hover { color: #ffa751; }
+  
+  .ppBody {
+    display: grid;
+    grid-template-columns: 1.5fr 1fr;
+    gap: 30px;
+  }
+  
+  .ppImg {
+    width: 100%;
+    border-radius: 10px;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+  }
+  
+  .ppTitle {
+    font-size: 1.8rem;
+    font-weight: 700;
+    color: #fff;
+    margin-bottom: 15px;
+  }
+  
+  .ppDesc {
+    color: #ccc;
+    font-size: 0.95rem;
+    line-height: 1.6;
+    margin-bottom: 20px;
+  }
+  
+  .ppTechStack {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-bottom: 25px;
+  }
+  
+  .techTag {
+    background: rgba(255, 255, 255, 0.1);
+    color: #ffe259;
+    padding: 5px 12px;
+    border-radius: 15px;
+    font-size: 0.8rem;
+  }
+  
+  .ppLinkBtn {
+    display: inline-block;
+    background: transparent;
+    border: 1px solid #ffa751;
+    color: #ffa751;
+    padding: 10px 25px;
+    border-radius: 30px;
+    text-decoration: none;
+    font-weight: 600;
+    transition: 0.3s;
+  }
+  
+  .ppLinkBtn:hover {
+    background: linear-gradient(to right, #ffe259, #ffa751);
+    color: #333;
+    border-color: transparent;
+  }
+  
+  /* Responsive */
+  @media (max-width: 991px) {
+    .projectItems { grid-template-columns: repeat(2, 1fr); }
+    .ppBody { grid-template-columns: 1fr; }
+  }
+  
+  @media (max-width: 575px) {
+    .projectItems { 
+        grid-template-columns: repeat(2, 1fr); 
+        gap: 10px;
+    }
+    .viewProject {
+        font-size: 14px;
+        width: 80%;
+        text-align: center;
+    }
+    .projectItemInner { padding: 8px; }
+    .projectItemTitle { font-size: 12px; }
+  }
+
+/* --- NEW: Search & Filter Controls --- */
+.controls {
+    margin-bottom: 50px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 25px;
+  }
+  
+  .searchBox {
+    width: 100%;
+    max-width: 500px;
+    position: relative;
+  }
+  
+  .searchInput {
+    width: 100%;
+    padding: 15px 25px;
+    background: rgba(255, 255, 255, 0.03);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 50px;
+    color: #fff;
+    font-size: 1rem;
+    outline: none;
+    transition: 0.3s;
+  }
+  
+  .searchInput:focus {
+    border-color: #ffa751;
+    box-shadow: 0 0 15px rgba(251, 91, 83, 0.2);
+  }
+  
+  .filterBar {
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+  
+  .filterBtn {
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    color: #aaa;
+    padding: 8px 20px;
+    border-radius: 20px;
+    cursor: pointer;
+    font-size: 0.85rem;
+    transition: 0.3s;
+  }
+  
+  .filterBtn.active {
+    background: linear-gradient(to right, #ffe259, #ffa751);
+    color: #111;
+    font-weight: 600;
+  }
+  
+  /* --- NEW: Status Badge --- */
+  .statusBadge {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    z-index: 5;
+    background: rgba(0, 0, 0, 0.6);
+    backdrop-filter: blur(5px);
+    color: #ffe259;
+    padding: 4px 12px;
+    border-radius: 12px;
+    font-size: 0.7rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    border: 1px solid rgba(255, 226, 89, 0.3);
+  }
+  
+  .statusIcon {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    display: inline-block;
+    margin-right: 6px;
+    background: #ffe259;
+    box-shadow: 0 0 8px #ffe259;
+  }

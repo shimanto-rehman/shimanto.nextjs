@@ -82,15 +82,6 @@ export default function CertificatePage() {
             </div>
 
             <div className={styles.ppBody}>
-              {/* Image Section */}
-              <div className={styles.ppImgContainer}>
-                <img 
-                  src={selectedCert?.screenshots[0] || undefined} 
-                  alt={selectedCert?.title} 
-                  className={styles.ppImg} 
-                />
-              </div>
-
               {/* Details Section (Conditional Slide) */}
               <div className={`${styles.ppDetails} ${showDetails ? styles.active : ''}`}>
                 <div className={styles.ppSeparator}></div>
@@ -111,6 +102,14 @@ export default function CertificatePage() {
                     </a>
                   </div>
                 </div>
+              </div>
+              {/* Image Section */}
+              <div className={styles.ppImgContainer}>
+                <img 
+                  src={selectedCert?.screenshots[0] || undefined} 
+                  alt={selectedCert?.title} 
+                  className={styles.ppImg} 
+                />
               </div>
             </div>
           </div>
