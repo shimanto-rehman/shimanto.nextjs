@@ -42,7 +42,7 @@ export default function CertificatePage() {
             <span className={styles.projectCaption}>Certifications</span>
             <div className={styles.certificateLogo}>
               <img
-                src="https://res.cloudinary.com/shimanto-rehman/image/upload/v1712786054/img/certificate-logo.webp"
+                src="/images/certifications/certificate.webp"
                 alt="Logo"
               />
             </div>

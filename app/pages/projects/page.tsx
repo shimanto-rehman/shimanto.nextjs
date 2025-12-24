@@ -101,7 +101,7 @@ export default function ProjectsPage() {
               </div>
               <div className={styles.ppBody}>
                 <div className={styles.ppImgContainer}>
-                  <img src={selectedProject.image} alt={selectedProject.title} height="350px" />
+                  <img src={selectedProject.image} alt={selectedProject.title} />
                 </div>
                 <div className={styles.ppDetails}>
                   <h3 className={styles.ppTitle}>{selectedProject.title}</h3>

@@ -114,119 +114,179 @@
     opacity: 1;
   }
   
-  .ppOverlay {
-    position: absolute;
-    inset: 0;
-    background: rgba(0, 0, 0, 0.8);
-    backdrop-filter: blur(5px);
-  }
-  
-  .ppContent {
-    position: relative;
-    width: 90%;
-    max-width: 900px;
-    max-height: 90vh;
-    overflow-y: auto;
-    z-index: 1001;
-    /* Scrollbar hiding for cleaner look */
-    scrollbar-width: none; 
-  }
-  .ppContent::-webkit-scrollbar { display: none; }
-  
-  /* GLASSMORPHISM POPUP INNER */
-  .ppContentInner {
-    background: rgba(30, 30, 30, 0.4); /* Higher transparency */
-    -webkit-backdrop-filter: blur(15px);
-    backdrop-filter: blur(15px);
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    border-radius: 20px;
-    padding: 30px;
-    box-shadow: 0 20px 50px rgba(0,0,0,0.5);
-  }
-  
-  .ppHeader {
-    display: flex;
-    justify-content: flex-end;
-    gap: 15px;
-    margin-bottom: 20px;
-  }
-  
-  .ppCloseBtn {
-    font-size: 30px;
-    color: #fff;
-    background: none;
-    border: none;
-    cursor: pointer;
-    transition: 0.3s;
-  }
-  .ppCloseBtn:hover { color: #ffa751; }
-  
-  .ppBody {
-    display: grid;
-    grid-template-columns: 1.5fr 1fr;
-    gap: 30px;
-  }
-  
-  .ppImg {
-    width: 100%;
-    border-radius: 10px;
-    box-shadow: 0 5px 15px rgba(0,0,0,0.3);
-  }
-  
-  .ppTitle {
-    font-size: 1.8rem;
-    font-weight: 700;
-    color: #fff;
-    margin-bottom: 15px;
-  }
-  
-  .ppDesc {
-    color: #ccc;
-    font-size: 0.95rem;
-    line-height: 1.6;
-    margin-bottom: 20px;
-  }
-  
-  .ppTechStack {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 8px;
-    margin-bottom: 25px;
-  }
-  
-  .techTag {
-    background: rgba(255, 255, 255, 0.1);
-    color: #ffe259;
-    padding: 5px 12px;
-    border-radius: 15px;
-    font-size: 0.8rem;
-  }
-  
-  .ppLinkBtn {
-    display: inline-block;
-    background: transparent;
-    border: 1px solid #ffa751;
-    color: #ffa751;
-    padding: 10px 25px;
-    border-radius: 30px;
-    text-decoration: none;
-    font-weight: 600;
-    transition: 0.3s;
-  }
-  
-  .ppLinkBtn:hover {
-    background: linear-gradient(to right, #ffe259, #ffa751);
-    color: #333;
-    border-color: transparent;
-  }
+/* --- Modern Responsive Popup --- */
+.ppOverlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.85);
+  backdrop-filter: blur(10px);
+  z-index: 1000;
+}
+
+.ppContent {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 95%; /* Responsive width */
+  max-width: 900px;
+  max-height: 90vh; /* Prevents overflow on short screens */
+  z-index: 1001;
+  overflow-y: auto; /* Allows internal scrolling if content is long */
+  border-radius: 20px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.ppContentInner {
+  padding: 30px;
+}
+
+.ppHeader {
+  display: flex;
+  justify-content: flex-end;
+  margin-bottom: 10px;
+}
+
+.ppCloseBtn {
+  background: none;
+  border: none;
+  color: #fff;
+  font-size: 40px;
+  line-height: 1;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.ppCloseBtn:hover {
+  color: #ffa751;
+}
+
+/* --- Responsive Body Layout --- */
+.ppBody {
+  display: grid;
+  grid-template-columns: 1fr 1fr; /* Side by side on Desktop */
+  gap: 30px;
+  align-items: start;
+}
+
+.ppImgContainer {
+  width: 100%;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.137);
+}
+
+.ppImgContainer img {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+
+.ppDetails {
+  display: flex;
+  flex-direction: column;
+}
+
+.ppTitle {
+  font-size: 1.8rem;
+  margin-bottom: 15px;
+  background: linear-gradient(to right, #ffe259, #ffa751);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.ppTechStack {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 20px;
+}
+
+.techTag {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  padding: 4px 12px;
+  border-radius: 15px;
+  font-size: 0.75rem;
+  color: #ffa751;
+}
+
+.ppDesc {
+  color: #ccc;
+  line-height: 1.6;
+  font-size: 0.95rem;
+  margin-bottom: 20px;
+}
+
+.ppLinkBtn {
+  display: inline-block;
+  padding: 12px 25px;
+  background: linear-gradient(to right, #ffe259, #ffa751);
+  color: #151515;
+  font-weight: 700;
+  border-radius: 30px;
+  text-decoration: none;
+  text-align: center;
+  transition: 0.3s;
+}
+
+.ppLinkBtn:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 5px 15px rgba(251, 91, 83, 0.3);
+}
   
   /* Responsive */
   @media (max-width: 991px) {
     .projectItems { grid-template-columns: repeat(2, 1fr); }
-    .ppBody { grid-template-columns: 1fr; }
+    .ppBody {
+      grid-template-columns: 1fr; /* Stacks image on top of text */
+      gap: 20px;
+    }
+  
+    .ppContentInner {
+      padding: 20px;
+    }
+  
+    .ppTitle {
+      font-size: 1.5rem;
+    }
   }
   
   @media (max-width: 575px) {
+    .projectCaption{
+      font-size: 1.5rem;
+    }
+    .sectionTitle{
+      margin: 0px 0 40px 0;
+    }
+    .searchBox{
+      scale: 0.8;
+    }
+    .filterBar{
+      scale: 0.8;
+    }.ppContent {
+      width: 92%;
+      top: 50%;
+    }
+    .ppContentInner {
+      padding: 15px;
+    }
+    .ppTechStack span,
+    .ppDesc{
+      font-size: 0.7rem;
+    }
+    .ppTitle{
+      font-size: 1.2rem;
+    }
+    .ppLinkBtn{
+      font-size: 0.8rem;
+    }
+    .ppCloseBtn {
+      font-size: 32px;
+    }
+    .ppInfo{
+      font-size: 0.75rem;
+    }
     .projectItems { 
         grid-template-columns: repeat(2, 1fr); 
         gap: 10px;
