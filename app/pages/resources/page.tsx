@@ -25,19 +25,18 @@ export default function ResourcesPage() {
       <Navbar items={navItems} logo="/images/shimanto.png" />
 
       <section className={styles.floatingSection}>
-        {/* Center Text */}
-        <div className={styles.headerSection}>
+        {/* CENTER TEXT */}
+        <header className={styles.headerSection}>
           <h1 className={`${styles.title} ${isLoaded ? styles.fadeIn : ''}`}>
             KNOWLEDGE <span className={styles.hollow}>ARCHIVE</span>
           </h1>
-        </div>
+        </header>
 
         {/* Floating Images */}
         {resourcesData.map((res, index) => (
           <div
             key={res.id}
             className={`${styles.floatingCard} ${isLoaded ? styles.cardEaseIn : ''}`}
-            // Stagger delay slightly for entrance
             style={{ '--delay': `${0.5 + (index * 0.1)}s` } as React.CSSProperties}
             onClick={() => openPdf(res)}
           >
@@ -65,8 +64,21 @@ export default function ResourcesPage() {
                 <h3>{selectedPdf.title}</h3>
                 <span className={styles.popupCategory}>PDF Resource</span>
               </div>
-              <button className={styles.closeBtn} onClick={closePdf}>&times;</button>
+              
+              {/* NEW: Controls Container with Download Button */}
+              <div className={styles.headerControls}>
+                <a 
+                  href={selectedPdf.pdfUrl} 
+                  download 
+                  className={styles.downloadBtn}
+                  title="Download PDF"
+                >
+                  <i className="fas fa-download"></i>
+                </a>
+                <button className={styles.closeBtn} onClick={closePdf}>&times;</button>
+              </div>
             </div>
+
             <div className={styles.popupBody}>
               <iframe 
                 src={`${selectedPdf.pdfUrl}#toolbar=0&view=FitH`} 

@@ -25,13 +25,13 @@ export const navItems: NavItem[] = [
   { label: 'Projects', href: '/pages/projects' },
   { label: 'Repositories', href: '/pages/repositories' },
   { label: 'Certifications', href: '/pages/certifications' },
-  { label: 'Teaching', href: '/pages/teaching' },
+  { label: 'Resources', href: '/pages/resources' },
   { label: 'People', href: '/pages/people' },
   { 
     label: 'More', 
     href: '#',
     submenu: [
-      { label: 'Resources', href: '/pages/resources' },
+      { label: 'Teaching', href: '/pages/teaching' },
       { label: 'Gallery', href: '/pages/gallery' },
       { label: 'Contact', href: '/pages/contact' }
     ]
