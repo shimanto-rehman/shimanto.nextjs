@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import styles from './About.module.css'; 
 import { bioData, chartData, experiences, education, skills, achievements } from './aboutData';
 import Navbar, { navItems } from '@/app/components/Navbar';
@@ -26,7 +26,12 @@ ChartJS.register(
 
 export default function AboutPage() {
   const [activeTab, setActiveTab] = useState<'experience' | 'education' | 'skills' | 'achievements'>('experience');
+  const [showResume, setShowResume] = useState(false);
   usePageDataLoaded();
+
+  useEffect(() => {
+    document.body.style.overflow = showResume ? 'hidden' : 'auto';
+  }, [showResume]);
 
   // --- HELPER: Extracts GPA and renders fractional stars ---
   const renderEducationStars = (description: string) => {
@@ -92,6 +97,13 @@ export default function AboutPage() {
             <div className={styles.bioBox}>
               <p>{bioData.paragraph}</p>
             </div>
+            <button 
+              className={styles.resumeButton}
+              onClick={() => setShowResume(true)}
+            >
+              <i className="fas fa-file-pdf"></i>
+              <span>View Resume</span>
+            </button>
           </div>
 
           {/* 2. THE DATA DASHBOARD */}
@@ -283,6 +295,41 @@ export default function AboutPage() {
           </div>
         </div>
       </section>
+
+      {/* Resume PDF Popup */}
+      {showResume && (
+        <div className={styles.popupOverlay} onClick={() => setShowResume(false)}>
+          <div className={styles.popupContent} onClick={(e) => e.stopPropagation()}>
+            <div className={styles.popupHeader}>
+              <div className={styles.popupTitle}>
+                <h3>Resume</h3>
+                <span className={styles.popupCategory}>PDF Document</span>
+              </div>
+              
+              <div className={styles.headerControls}>
+                <a 
+                  href="/pdfs/resume.pdf" 
+                  download 
+                  className={styles.downloadBtn}
+                  title="Download Resume"
+                >
+                  <i className="fas fa-download"></i>
+                </a>
+                <button className={styles.closeBtn} onClick={() => setShowResume(false)}>&times;</button>
+              </div>
+            </div>
+
+            <div className={styles.popupBody}>
+              <iframe 
+                src="/pdfs/resume.pdf#toolbar=0&view=FitH" 
+                title="Resume"
+                className={styles.pdfFrame}
+                loading="lazy"
+              />
+            </div>
+          </div>
+        </div>
+      )}
     </main>
   );
 }

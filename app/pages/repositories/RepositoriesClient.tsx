@@ -55,6 +55,7 @@ interface RepositoriesClientProps {
 export default function RepositoriesClient({ initialUser, initialRepos, initialStats }: RepositoriesClientProps) {
   const [searchQuery, setSearchQuery] = useState('');
   const [currentPage, setCurrentPage] = useState(1);
+  const [avatarLoaded, setAvatarLoaded] = useState(false);
   const reposPerPage = 9;
 
   // Filter repositories based on search
@@ -115,11 +116,14 @@ export default function RepositoriesClient({ initialUser, initialRepos, initialS
           <div className="repositories-profile">
             <div className="profile-card">
               <div className="profile-avatar">
+                {!avatarLoaded && <div className="avatar-loader"></div>}
                 <img 
                   src={initialUser.avatar_url} 
                   alt={initialUser.name || initialUser.login}
                   loading="eager"
                   decoding="async"
+                  onLoad={() => setAvatarLoaded(true)}
+                  style={{ opacity: avatarLoaded ? 1 : 0 }}
                 />
               </div>
               <div className="profile-info">

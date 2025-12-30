@@ -8,27 +8,35 @@ export default function ContactPage() {
   const [isRightPanelActive, setIsRightPanelActive] = useState(false);
   const [loading, setLoading] = useState(false);
   const [emailForm, setEmailForm] = useState({ name: '', email: '', subject: '', message: '' });
+  const [toast, setToast] = useState<{ show: boolean; type: 'success' | 'error'; message: string }>({
+    show: false,
+    type: 'success',
+    message: ''
+  });
 
   // Handle Email Sending
   const handleEmailSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
-
+  
     try {
       const res = await fetch('/api/contact', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(emailForm),
       });
-
+  
       if (res.ok) {
-        alert('Message sent successfully!');
+        setToast({ show: true, type: 'success', message: 'Your message has been sent successfully!' });
         setEmailForm({ name: '', email: '', subject: '', message: '' });
+        setTimeout(() => setToast({ show: false, type: 'success', message: '' }), 3500);
       } else {
-        alert('Failed to send message.');
+        setToast({ show: true, type: 'error', message: 'Something went wrong. Please try again.' });
+        setTimeout(() => setToast({ show: false, type: 'error', message: '' }), 3500);
       }
     } catch (error) {
-      alert('Error sending message.');
+      setToast({ show: true, type: 'error', message: 'Network error. Check your connection.' });
+      setTimeout(() => setToast({ show: false, type: 'error', message: '' }), 3500);
     }
     setLoading(false);
   };
@@ -112,7 +120,7 @@ export default function ContactPage() {
               <div className={styles.waSub}>Usually replies in minutes</div>
             </div>
 
-            <p style={{ marginTop: '30px', fontSize: '0.8rem', color: '#rgb(191, 191, 191)' }}>
+            <p style={{ marginTop: '30px', fontSize: '0.8rem', color: 'rgb(183, 183, 183)' }}>
               Tap the card above to open WhatsApp directly.
             </p>
           </div>
@@ -155,6 +163,46 @@ export default function ContactPage() {
         </div>
 
       </div>
+      {toast.show && (
+        <>
+          <div className={styles.toastOverlay} onClick={() => setToast({ ...toast, show: false })} />
+          <div className={`${styles.toastModal} ${styles[toast.type]}`}>
+            <div className={styles.toastGlow}></div>
+            <div className={styles.toastIconWrapper}>
+              {toast.type === 'success' ? (
+                <div className={styles.successCheckmark}>
+                  <svg className={styles.checkmarkCircle} viewBox="0 0 52 52">
+                    <circle className={styles.checkmarkCircleBg} cx="26" cy="26" r="25" fill="none"/>
+                  </svg>
+                  <svg className={styles.checkmarkCheck} viewBox="0 0 52 52">
+                    <path className={styles.checkmarkCheckPath} fill="none" d="M14.1 27.2l7.1 7.2 16.7-16.8"/>
+                  </svg>
+                </div>
+              ) : (
+                <div className={styles.errorCross}>
+                  <svg className={styles.crossCircle} viewBox="0 0 52 52">
+                    <circle className={styles.crossCircleBg} cx="26" cy="26" r="25" fill="none"/>
+                  </svg>
+                  <svg className={styles.crossMark} viewBox="0 0 52 52">
+                    <line className={styles.crossLine1} x1="16" y1="16" x2="36" y2="36"/>
+                    <line className={styles.crossLine2} x1="36" y1="16" x2="16" y2="36"/>
+                  </svg>
+                </div>
+              )}
+            </div>
+            <h2 className={styles.toastTitle}>
+              {toast.type === 'success' ? 'Message Sent!' : 'Failed!'}
+            </h2>
+            <p className={styles.toastMessage}>{toast.message}</p>
+            <button 
+              className={styles.toastButton}
+              onClick={() => setToast({ ...toast, show: false })}
+            >
+              {toast.type === 'success' ? 'Awesome!' : 'Got it'}
+            </button>
+          </div>
+        </>
+      )}
     </main>
   );
 }

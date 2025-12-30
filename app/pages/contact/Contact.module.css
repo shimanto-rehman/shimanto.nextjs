@@ -350,6 +350,41 @@
     .overlayPanel{
         padding: 0px 20px;
     }
+    .toastModal {
+      padding: clamp(18px, 3.5vw, 22px) clamp(16px, 3vw, 18px);
+      max-width: 85%;
+    }
+    
+    .toastIconWrapper {
+      width: clamp(45px, 9vw, 55px);
+      height: clamp(45px, 9vw, 55px);
+      margin-bottom: clamp(10px, 2vw, 14px);
+    }
+    
+    .successCheckmark,
+    .errorCross,
+    .checkmarkCircle,
+    .checkmarkCheck,
+    .crossCircle,
+    .crossMark {
+      width: clamp(45px, 9vw, 55px);
+      height: clamp(45px, 9vw, 55px);
+    }
+    
+    .toastTitle {
+      font-size: clamp(0.95rem, 2.2vw, 1.1rem);
+      margin-bottom: clamp(6px, 1.2vw, 8px);
+    }
+    
+    .toastMessage {
+      font-size: clamp(0.7rem, 1.8vw, 0.8rem);
+      margin-bottom: clamp(14px, 2.5vw, 18px);
+    }
+    
+    .toastButton {
+      padding: clamp(9px, 1.8vw, 11px) clamp(24px, 4.5vw, 28px);
+      font-size: clamp(0.7rem, 1.8vw, 0.8rem);
+    }
   }
   
   @media (max-width: 480px) {
@@ -394,6 +429,45 @@
       font-size: 2.5rem;
       margin-bottom: 12px;
     }
+
+    .toastModal {
+      padding: clamp(16px, 3vw, 20px) clamp(14px, 2.5vw, 16px);
+      max-width: 85%;
+      border-radius: 16px;
+    }
+    
+    .toastIconWrapper {
+      width: clamp(40px, 8vw, 50px);
+      height: clamp(40px, 8vw, 50px);
+      margin-bottom: clamp(8px, 1.5vw, 12px);
+    }
+    
+    .successCheckmark,
+    .errorCross,
+    .checkmarkCircle,
+    .checkmarkCheck,
+    .crossCircle,
+    .crossMark {
+      width: clamp(40px, 8vw, 50px);
+      height: clamp(40px, 8vw, 50px);
+    }
+    
+    .toastTitle {
+      font-size: clamp(0.9rem, 2vw, 1.05rem);
+      margin-bottom: clamp(6px, 1vw, 8px);
+    }
+    
+    .toastMessage {
+      font-size: clamp(0.7rem, 1.6vw, 0.75rem);
+      margin-bottom: clamp(12px, 2vw, 16px);
+      line-height: 1.4;
+    }
+    
+    .toastButton {
+      padding: clamp(8px, 1.5vw, 10px) clamp(20px, 4vw, 24px);
+      font-size: clamp(0.65rem, 1.6vw, 0.75rem);
+      border-radius: 16px;
+    }
   }
   
   @media (max-width: 360px) {
@@ -419,3 +493,320 @@
       font-size: 0.75rem;
     }
   }
+
+/* === ADD TO Contact.module.css === */
+
+/* Toast Overlay */
+.toastOverlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.75);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  z-index: 99998;
+  animation: overlayFadeIn 0.3s ease;
+}
+
+@keyframes overlayFadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+/* Toast Modal - CENTER POSITIONED */
+.toastModal {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%) scale(0.7);
+  background: rgba(255, 255, 255, 0.03);
+  backdrop-filter: blur(40px);
+  -webkit-backdrop-filter: blur(40px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 20px;
+  padding: clamp(20px, 4vw, 24px) clamp(18px, 3.5vw, 20px);
+  width: 90%;
+  max-width: 260px;
+  text-align: center;
+  z-index: 99999;
+  box-shadow: 
+    0 20px 60px rgba(0, 0, 0, 0.5),
+    inset 0 1px 1px rgba(255, 255, 255, 0.1);
+  animation: modalBounceIn 0.6s cubic-bezier(0.68, -0.55, 0.265, 1.55) forwards;
+  overflow: hidden;
+}
+
+@keyframes modalBounceIn {
+  0% {
+    transform: translate(-50%, -50%) scale(0.3);
+    opacity: 0;
+  }
+  50% {
+    transform: translate(-50%, -50%) scale(1.05);
+  }
+  100% {
+    transform: translate(-50%, -50%) scale(1);
+    opacity: 1;
+  }
+}
+
+/* Animated Glow Background */
+.toastGlow {
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background: radial-gradient(circle, rgba(255, 167, 81, 0.15), transparent 70%);
+  animation: glowPulse 3s ease-in-out infinite;
+  pointer-events: none;
+}
+
+.toastModal.success .toastGlow {
+  background: radial-gradient(circle, rgba(37, 211, 102, 0.2), transparent 70%);
+}
+
+.toastModal.error .toastGlow {
+  background: radial-gradient(circle, rgba(251, 91, 83, 0.2), transparent 70%);
+}
+
+@keyframes glowPulse {
+  0%, 100% { transform: scale(1); opacity: 0.5; }
+  50% { transform: scale(1.2); opacity: 0.8; }
+}
+
+/* Icon Wrapper */
+.toastIconWrapper {
+  position: relative;
+  width: clamp(50px, 10vw, 60px);
+  height: clamp(50px, 10vw, 60px);
+  margin: 0 auto clamp(12px, 2.5vw, 16px);
+}
+
+/* Success Checkmark Animation */
+.successCheckmark {
+  width: clamp(50px, 10vw, 60px);
+  height: clamp(50px, 10vw, 60px);
+  margin: 0 auto;
+  position: relative;
+}
+
+.checkmarkCircle {
+  width: clamp(50px, 10vw, 60px);
+  height: clamp(50px, 10vw, 60px);
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+
+.checkmarkCircleBg {
+  stroke: #25D366;
+  stroke-width: 2.5;
+  stroke-dasharray: 166;
+  stroke-dashoffset: 166;
+  stroke-linecap: round;
+  animation: strokeCircle 0.6s cubic-bezier(0.65, 0, 0.45, 1) forwards;
+  filter: drop-shadow(0 0 15px rgba(37, 211, 102, 0.6));
+}
+
+@keyframes strokeCircle {
+  100% {
+    stroke-dashoffset: 0;
+  }
+}
+
+.checkmarkCheck {
+  width: clamp(50px, 10vw, 60px);
+  height: clamp(50px, 10vw, 60px);
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+
+.checkmarkCheckPath {
+  stroke: #25D366;
+  stroke-width: 3;
+  stroke-linecap: round;
+  stroke-dasharray: 48;
+  stroke-dashoffset: 48;
+  animation: strokeCheck 0.3s cubic-bezier(0.65, 0, 0.45, 1) 0.6s forwards;
+  filter: drop-shadow(0 0 12px rgba(37, 211, 102, 0.8));
+}
+
+@keyframes strokeCheck {
+  100% {
+    stroke-dashoffset: 0;
+  }
+}
+
+/* Error Cross Animation */
+.errorCross {
+  width: clamp(50px, 10vw, 60px);
+  height: clamp(50px, 10vw, 60px);
+  margin: 0 auto;
+  position: relative;
+}
+
+.crossCircle {
+  width: clamp(50px, 10vw, 60px);
+  height: clamp(50px, 10vw, 60px);
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+
+.crossCircleBg {
+  stroke: #FB5B53;
+  stroke-width: 2.5;
+  stroke-dasharray: 166;
+  stroke-dashoffset: 166;
+  stroke-linecap: round;
+  animation: strokeCircle 0.6s cubic-bezier(0.65, 0, 0.45, 1) forwards;
+  filter: drop-shadow(0 0 15px rgba(251, 91, 83, 0.6));
+}
+
+.crossMark {
+  width: clamp(50px, 10vw, 60px);
+  height: clamp(50px, 10vw, 60px);
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+
+.crossLine1, .crossLine2 {
+  stroke: #FB5B53;
+  stroke-width: 3;
+  stroke-linecap: round;
+  stroke-dasharray: 28;
+  stroke-dashoffset: 28;
+  filter: drop-shadow(0 0 12px rgba(251, 91, 83, 0.8));
+}
+
+.crossLine1 {
+  animation: strokeCheck 0.3s cubic-bezier(0.65, 0, 0.45, 1) 0.6s forwards;
+}
+
+.crossLine2 {
+  animation: strokeCheck 0.3s cubic-bezier(0.65, 0, 0.45, 1) 0.75s forwards;
+}
+
+/* Toast Title */
+.toastTitle {
+  font-size: clamp(1rem, 2.5vw, 1.2rem);
+  font-weight: 700;
+  color: #fff;
+  margin: 0 0 clamp(8px, 1.5vw, 10px) 0;
+  letter-spacing: -0.5px;
+  text-shadow: 0 0 20px rgba(255, 255, 255, 0.3);
+  animation: titleSlideUp 0.5s ease 0.3s backwards;
+}
+
+@keyframes titleSlideUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.toastModal.success .toastTitle {
+  background: linear-gradient(135deg, #25D366, #20f080);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.toastModal.error .toastTitle {
+  background: linear-gradient(135deg, #FB5B53, #ff7b73);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* Toast Message */
+.toastMessage {
+  font-size: clamp(0.75rem, 2vw, 0.85rem);
+  color: rgba(255, 255, 255, 0.8);
+  margin-bottom: clamp(16px, 3vw, 20px);
+  line-height: 1.5;
+  animation: messageSlideUp 0.5s ease 0.4s backwards;
+}
+
+@keyframes messageSlideUp {
+  from {
+    opacity: 0;
+    transform: translateY(15px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Toast Button */
+.toastButton {
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  color: #fff;
+  padding: clamp(10px, 2vw, 12px) clamp(28px, 5vw, 32px);
+  border-radius: 20px;
+  font-size: clamp(0.75rem, 2vw, 0.85rem);
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  position: relative;
+  overflow: hidden;
+  animation: buttonSlideUp 0.5s ease 0.5s backwards;
+}
+
+@keyframes buttonSlideUp {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.toastButton::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 0;
+  height: 0;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.2);
+  transform: translate(-50%, -50%);
+  transition: width 0.6s, height 0.6s;
+}
+
+.toastButton:hover::before {
+  width: 300px;
+  height: 300px;
+}
+
+.toastButton:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 30px rgba(255, 255, 255, 0.1);
+  border-color: rgba(255, 255, 255, 0.3);
+}
+
+.toastModal.success .toastButton:hover {
+  border-color: rgba(37, 211, 102, 0.5);
+  box-shadow: 0 10px 30px rgba(37, 211, 102, 0.2);
+}
+
+.toastModal.error .toastButton:hover {
+  border-color: rgba(251, 91, 83, 0.5);
+  box-shadow: 0 10px 30px rgba(251, 91, 83, 0.2);
+}

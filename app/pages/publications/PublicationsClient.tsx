@@ -19,6 +19,7 @@ export default function PublicationsClient({
 }: PublicationsClientProps) {
   const [searchQuery, setSearchQuery] = useState('');
   const [currentPage, setCurrentPage] = useState(1);
+  const [avatarLoaded, setAvatarLoaded] = useState(false);
   const perPage = 10;
 
   const filteredPublications = useMemo(() => {
@@ -50,11 +51,14 @@ export default function PublicationsClient({
           {/* Scholar profile header */}
           <section className="pub-profile-card pub-profile-scholar">
             <div className="pub-profile-avatar">
+              {!avatarLoaded && <div className="avatar-loader"></div>}
               <img
                 src={initialScholar.avatarUrl || '/images/shimanto.webp'}
                 alt={initialScholar.name}
                 loading="eager"
                 decoding="async"
+                onLoad={() => setAvatarLoaded(true)}
+                style={{ opacity: avatarLoaded ? 1 : 0 }}
               />
             </div>
             <div className="pub-profile-main">
