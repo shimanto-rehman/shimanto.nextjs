@@ -151,8 +151,8 @@ export default function HomePage() {
                 ]}
               />
                 <p className="home-intro-description">
-                  From structured data to intelligent systems, I transform complex problems into elegant solutions. 
-                  I love databases, but I'm also dreaming in machine learning.
+                  I'm S.M. Obaydur Rahman aka Shimanto Rehman, From structured data to intelligent systems, I transform complex problems into elegant solutions. 
+                  Loving backend, but I'm also dreaming in machine learning.
                 </p>
                 <TagList 
                   tags={[

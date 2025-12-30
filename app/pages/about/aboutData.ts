@@ -5,7 +5,7 @@ export const bioData = {
   subtitle: "Architecting Digital Ecosystems | Future Data Scientist",
   // Update this path to your actual profile image
   photoUrl: "/images/about.webp", 
-  paragraph: "I am an engineer who thinks in systems. From building financial engines at Dana Fintech to automating global logistics at V Shipping, I specialize in robust, scalable architectures. My next mission: Bridging German engineering precision with Advanced AI to solve critical challenges in healthcare and logistics.",
+  paragraph: "I am an engineer who thinks in systems. From building financial engines at Dana Fintech, automating global logistics at V Shipping to building digital ecosystems at Mutual Trust Bank PLC, I specialize in robust, scalable architectures. My next mission: Bridging engineering precision with Advanced AI to solve critical challenges in healthcare and logistics.",
 };
 
 export const chartData = {
@@ -77,13 +77,22 @@ export interface TimelineItem {
   
   export const experiences: TimelineItem[] = [
     {
-      date: 'September, 2023 - Present',
+      date: 'May, 2025 - Present',
+      title: 'Full-Stack Software Developer, Satellite & Digital Ecosystem Development Unit',
+      subtitle: 'Mutual Trust Bank PLC',
+      description:
+        "Mutual Trust Bank PLC is a commercial bank in Bangladesh. I'm working as a Full-Stack Software Developer in the IT department of this bank.",
+      icon: 'fas fa-briefcase',
+      logo: '/images/about-tab/exp-mtb.webp',
+    },
+    {
+      date: 'September, 2023 - May, 2025',
       title: 'Full-Stack Software Developer',
       subtitle: 'V Shipping',
       description:
         "V SHIPPAING- It is a DOOR TO DOOR SHIPPING PARTNER. Door to Door Service provider in Bangladesh. Anyone can import products for business or personal needs across the world and we developed it's ecommerce 1stopglobal.com and inhouse warehouse management application in (Flutter, Dart)",
       icon: 'fas fa-briefcase',
-      logo: '/images/about-tab/vshipping.webp',
+      logo: '/images/about-tab/exp-vshipping.webp',
     },
     {
       date: 'December, 2021 - January, 2023',
