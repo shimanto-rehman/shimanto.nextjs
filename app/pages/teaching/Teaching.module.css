@@ -1,0 +1,206 @@
+/* --- Global Container --- */
+.mainWrapper {
+    min-height: 100vh;
+    background-color: #050505;
+    /* Deep, abstract background consistent with your site */
+    background-image: 
+      radial-gradient(circle at 10% 20%, rgba(251, 91, 83, 0.05), transparent 40%),
+      radial-gradient(circle at 90% 80%, rgba(255, 167, 81, 0.04), transparent 40%);
+    color: #fff;
+    padding-bottom: 80px;
+    overflow-x: hidden;
+  }
+  
+  /* --- Header Section --- */
+  .headerContainer {
+    padding: 140px 20px 60px;
+    text-align: center;
+    position: relative;
+    z-index: 2;
+  }
+  
+  .title {
+    font-size: clamp(2.5rem, 6vw, 4.5rem);
+    font-weight: 800;
+    margin: 0;
+    letter-spacing: -1px;
+    color: #fff;
+    opacity: 0;
+    animation: fadeDown 0.8s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
+  }
+  
+  .hollow {
+    /* The signature "Hollow" text effect */
+    -webkit-text-stroke: 1px rgba(255, 255, 255, 0.3);
+    color: transparent;
+    margin-left: 15px;
+  }
+  
+  .subtitle {
+    color: #c5c5c5;
+    margin-top: 15px;
+    font-size: 1.0rem;
+    letter-spacing: 1px;
+    opacity: 0;
+    animation: fadeDown 0.8s cubic-bezier(0.2, 0.8, 0.2, 1) 0.2s forwards;
+  }
+  
+  /* --- Grid Layout --- */
+  .gridContainer {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 20px;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+    gap: 30px;
+  }
+  
+  /* --- Teaching Card (Glassmorphism) --- */
+  .card {
+    background: rgba(255, 255, 255, 0.02);
+    backdrop-filter: blur(12px);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    border-radius: 16px;
+    padding: 35px;
+    position: relative;
+    overflow: hidden;
+    transition: all 0.4s ease;
+    
+    /* Entry Animation defaults */
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  
+  .animateCard {
+    animation: fadeUp 0.8s cubic-bezier(0.25, 1, 0.5, 1) forwards;
+    animation-delay: var(--delay);
+  }
+  
+  /* Hover Effects */
+  .card:hover {
+    transform: translateY(-8px);
+    background: rgba(255, 255, 255, 0.04);
+    border-color: rgba(255, 167, 81, 0.3); /* Theme glow */
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
+  }
+  
+  /* Card Content */
+  .cardHeader {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 20px;
+  }
+  
+  .role {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: #fff;
+    margin: 0 0 5px 0;
+  }
+  
+  .institution {
+    font-size: 0.95rem;
+    color: #ffa751; /* Theme color */
+    font-weight: 500;
+    margin: 0;
+  }
+  
+  .period {
+    font-size: 0.85rem;
+    color: #e7e7e7;
+    background: rgba(255, 255, 255, 0.05);
+    padding: 6px 12px;
+    border-radius: 20px;
+    white-space: nowrap;
+  }
+  
+  .description {
+    color: #ccc;
+    line-height: 1.6;
+    font-size: 0.95rem;
+    margin-bottom: 25px;
+  }
+  
+  /* Courses Tags */
+  .coursesList {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-top: auto;
+  }
+  
+  .courseTag {
+    font-size: 0.75rem;
+    color: #aaa;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    padding: 5px 12px;
+    border-radius: 8px;
+    transition: 0.3s;
+  }
+  
+  .card:hover .courseTag {
+    border-color: rgba(255, 255, 255, 0.3);
+    color: #fff;
+    background: rgba(255, 255, 255, 0.05);
+  }
+  
+  /* --- EMPTY STATE (No Experience) --- */
+  .emptyState {
+    min-height: 50vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    opacity: 0;
+    animation: fadeUp 1s ease 0.5s forwards;
+  }
+  
+  .emptyIcon {
+    font-size: 4rem;
+    color: #333;
+    margin-bottom: 20px;
+    background: radial-gradient(circle, rgba(255,255,255,0.05) 0%, transparent 70%);
+    width: 120px;
+    height: 120px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    border: 1px solid rgba(255,255,255,0.05);
+  }
+  
+  .emptyText {
+    font-size: 1.5rem;
+    color: #888;
+    margin: 0;
+  }
+  
+  .emptySub {
+    color: #555;
+    margin-top: 10px;
+    font-size: 0.9rem;
+  }
+  
+  /* --- Animations --- */
+  @keyframes fadeDown {
+    from { opacity: 0; transform: translateY(-20px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(40px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  
+  /* Responsive */
+  @media (max-width: 768px) {
+    .cardHeader { flex-direction: column; gap: 10px; }
+    .gridContainer { grid-template-columns: 1fr; }
+    .title { font-size: 2.5rem; }
+    .subtitle { font-size: 0.8rem; }
+    .role { font-size: 1.1rem; }
+    .description { font-size: 0.8rem; }
+    .hollow { margin-left: 0; display: block; } /* Stack title on mobile */
+  }

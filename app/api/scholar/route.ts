@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server";
+import nodemailer from 'nodemailer';
 import axios from "axios";
 
 export async function GET() {
@@ -61,5 +62,43 @@ export async function GET() {
       { error: "Failed to fetch Scholar data", message: process.env.NODE_ENV === 'development' ? errorMessage : undefined },
       { status: 500 }
     );
+  }
+}
+
+export async function POST(req: Request) {
+  try {
+    const { name, email, subject, message } = await req.json();
+
+    // Configure the Transporter
+    // Note: For Gmail, you must use an "App Password" not your login password
+    const transporter = nodemailer.createTransport({
+      service: 'gmail',
+      auth: {
+        user: process.env.EMAIL_USER, // e.g. shimanto.rehman.bd@gmail.com
+        pass: process.env.EMAIL_PASS, // Your Gmail App Password
+      },
+    });
+
+    // Email Options
+    const mailOptions = {
+      from: email,
+      to: 'shimanto.rehman.bd@gmail.com', // Your email
+      subject: `Portfolio Contact: ${subject}`,
+      text: `
+        Name: ${name}
+        Email: ${email}
+        
+        Message:
+        ${message}
+      `,
+    };
+
+    // Send
+    await transporter.sendMail(mailOptions);
+
+    return NextResponse.json({ success: true }, { status: 200 });
+  } catch (error) {
+    console.error(error);
+    return NextResponse.json({ success: false }, { status: 500 });
   }
 }
