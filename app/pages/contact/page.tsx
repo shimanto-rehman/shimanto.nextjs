@@ -112,7 +112,7 @@ export default function ContactPage() {
               <div className={styles.waSub}>Usually replies in minutes</div>
             </div>
 
-            <p style={{ marginTop: '30px', fontSize: '0.8rem', color: '#666' }}>
+            <p style={{ marginTop: '30px', fontSize: '0.8rem', color: '#rgb(191, 191, 191)' }}>
               Tap the card above to open WhatsApp directly.
             </p>
           </div>

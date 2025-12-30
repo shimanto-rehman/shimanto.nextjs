@@ -174,13 +174,13 @@
   .waText {
     color: #fff;
     font-weight: 600;
-    font-size: 1.1rem;
+    font-size: 1.0rem;
     margin-bottom: 5px;
   }
   
   .waSub {
-    color: #aaa;
-    font-size: 0.85rem;
+    color: #c5c5c5;
+    font-size: 0.75rem;
   }
   
   /* --- SLIDER MECHANISM --- */
@@ -341,11 +341,11 @@
     }
     
     .waText {
-      font-size: 1.1rem;
+      font-size: 0.9rem;
     }
     
     .waSub {
-      font-size: 0.8rem;
+      font-size: 0.7rem;
     }
     .overlayPanel{
         padding: 0px 20px;
@@ -393,14 +393,6 @@
     .waIcon {
       font-size: 2.5rem;
       margin-bottom: 12px;
-    }
-    
-    .waText {
-      font-size: 1rem;
-    }
-    
-    .waSub {
-      font-size: 0.75rem;
     }
   }
   
