@@ -55,7 +55,7 @@
     animation: scale-up var(--animation-time) 0.5s ease-in forwards, 
                fade-out-splash 1s 4.5s forwards;
     transform-origin: 30% center;
-    will-change: transform, opacity;
+    /* Removed will-change: transform, opacity; - reduces memory consumption */
   }
   
   .splash-animation::before {
@@ -74,7 +74,7 @@
   
   .segment {
     position: absolute;
-    will-change: transform, opacity;
+    /* Removed will-change: transform, opacity; - reduces memory consumption */
   }
   
   .segment-1 {
@@ -91,7 +91,7 @@
     height: 300%;
     top: 0;
     overflow: hidden;
-    will-change: transform;
+    /* Removed will-change: transform; - reduces memory consumption */
   }
   
   .segment-1 .gradient-effect {
@@ -109,7 +109,7 @@
     height: 100%;
     opacity: 0;
     animation: reveal-beams 2s 1.1s forwards;
-    will-change: opacity;
+    /* Removed will-change: opacity; - reduces memory consumption */
   }
   
   .beam {
@@ -120,7 +120,7 @@
     background: var(--color);
     opacity: 0.9;
     filter: brightness(1.3);
-    will-change: transform;
+    /* Removed will-change: transform; - reduces memory consumption */
   }
   
   .beam::before {
@@ -157,7 +157,7 @@
     box-sizing: border-box;
     backface-visibility: hidden;
     transform: translateZ(0);
-    will-change: opacity, transform;
+    /* Removed will-change: opacity, transform; - reduces memory consumption */
     transition: background 0.01s linear;
   }
   

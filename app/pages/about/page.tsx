@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import styles from './About.module.css'; 
+import styles from './About.module.css';
 import { bioData, chartData, experiences, education, skills, achievements } from './aboutData';
 import Navbar, { navItems } from '@/app/components/Navbar';
 import { usePageDataLoaded } from '@/app/hooks/usePageDataLoaded';
@@ -185,9 +185,9 @@ export default function AboutPage() {
               </div>
             </div>
           </div>
-
+          
           {/* --- Navigation Tabs --- */}
-          <div className={styles.aboutTabs} style={{marginTop: '60px'}}>
+           <div className={styles.aboutTabs} style={{marginTop: '60px'}}>
             {['experience', 'education', 'skills', 'achievements'].map((tab) => (
               <button
                 key={tab}
@@ -197,10 +197,10 @@ export default function AboutPage() {
                 {tab}
               </button>
             ))}
-          </div>
-
+           </div>
+           
           {/* --- Content Area --- */}
-          <div className={styles.tabContent}>
+           <div className={styles.tabContent}>
             
             {/* 1. Experience Tab */}
             {activeTab === 'experience' && (
@@ -224,7 +224,7 @@ export default function AboutPage() {
                     </div>
                   </div>
                 ))}
-              </div>
+           </div>
             )}
 
             {/* 2. Education Tab (UPDATED WITH STARS) */}

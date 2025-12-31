@@ -78,8 +78,7 @@
     border-radius: 4px;
     cursor: pointer;
     background: rgba(255,255,255,0.02);
-    /* Hardware acceleration for smooth scroll */
-    will-change: transform; 
+    /* Removed will-change: transform; - reduces memory consumption, use transform: translateZ(0) if needed */ 
   }
   
   .spacer { flex-grow: 100; min-width: 300px; }

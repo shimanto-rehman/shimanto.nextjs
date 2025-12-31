@@ -90,7 +90,8 @@ export default function GalleryPage() {
                       className={styles.thumbImage}
                       crop="fill"
                       format="auto"    
-                      quality="auto"   // FIXED: Changed from "q_auto" to "auto"
+                      quality="auto"
+                      loading={eIdx === 0 && iIdx === 0 ? "eager" : "lazy"}
                       sizes="(max-width: 768px) 33vw, (max-width: 1200px) 50vw, 33vw"
                     />
                     <div className={styles.hoverOverlay}>
