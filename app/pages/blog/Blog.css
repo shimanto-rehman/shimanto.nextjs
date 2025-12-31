@@ -470,9 +470,8 @@
   left: 0;
   width: 100%;
   height: 100%;
-  background: rgba(0, 0, 0, 0.85);
-  backdrop-filter: blur(10px);
   -webkit-backdrop-filter: blur(10px);
+  backdrop-filter: blur(10px);
   z-index: 10000;
   display: flex;
   align-items: center;
@@ -529,8 +528,8 @@
   height: clamp(32px, 3.67vw, 44px);
   border-radius: 50%;
   background: color-mix(in srgb, var(--c-glass) 25%, transparent);
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(50px);
+  backdrop-filter: blur(50px);
   border: 1px solid rgba(255, 255, 255, 0.15);
   color: rgba(255, 255, 255, 0.9);
   cursor: pointer;
@@ -593,8 +592,8 @@
 .blog-modal-tags .blog-tag,
 .blog-modal-tags .blog-category {
   background: color-mix(in srgb, var(--c-glass) 20%, transparent);
-  backdrop-filter: blur(15px);
   -webkit-backdrop-filter: blur(15px);
+  backdrop-filter: blur(15px);
   border: 1px solid rgba(255, 255, 255, 0.1);
   border-radius: clamp(12px, 1.33vw, 16px);
   padding: clamp(4px, 0.5vw, 6px) clamp(8px, 1vw, 12px);

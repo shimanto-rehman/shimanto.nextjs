@@ -1,0 +1,298 @@
+/* Gallery.module.css */
+  .contentContainer {
+    max-width: 1600px;
+    margin: 0 auto;
+    padding: 0 4vw;
+  }
+  
+  /* --- HEADER --- */
+  .header {
+    padding: 100px 20px 50px;
+    text-align: center;
+  }
+  
+  .title {
+    font-size: clamp(2.6rem, 6vw, 4rem);
+    font-weight: 800;
+    margin: 0;
+    line-height: 0.9;
+    letter-spacing: -0.02em;
+  }
+  
+  .hollow {
+    -webkit-text-stroke: 1px rgba(255, 255, 255, 0.378);
+    color: transparent;
+  }
+  
+  .subtitle {
+    color: #a8a8a8;
+    margin-top: 15px;
+    font-size: 0.8rem;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+  }
+  
+  /* --- SECTION --- */
+  .section { margin-bottom: 60px; }
+  
+  .sectionHeader {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    margin-bottom: 20px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.258);
+    padding-bottom: 10px;
+  }
+  
+  .sectionTitle {
+    font-size: 1.25rem;
+    font-weight: 500;
+    color: #ffa751;
+    margin: 0;
+  }
+  
+  .sectionDate {
+    font-family: monospace;
+    color: #9b9a9a;
+    font-size: 0.9rem;
+  }
+  
+  /* --- GRID SYSTEM --- */
+  .galleryGrid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    opacity: 0;
+    transform: translateY(20px);
+    transition: opacity 0.6s ease, transform 0.6s ease;
+  }
+  
+  .gridVisible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  
+  .gridItem {
+    position: relative;
+    overflow: hidden;
+    border-radius: 4px;
+    cursor: pointer;
+    background: rgba(255,255,255,0.02);
+    /* Hardware acceleration for smooth scroll */
+    will-change: transform; 
+  }
+  
+  .spacer { flex-grow: 100; min-width: 300px; }
+  
+  .imageInner {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    border-radius: 12px;
+  }
+  
+  .thumbImage {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 12px;
+    transition: transform 0.5s cubic-bezier(0.25, 1, 0.5, 1);
+    background-color: #111; /* Placeholder color while loading */
+  }
+  
+  /* Hover Effects (Desktop Only) */
+  @media (hover: hover) {
+    .gridItem:hover .thumbImage { transform: scale(1.05); }
+    .gridItem:hover .hoverOverlay { opacity: 1; }
+  }
+  
+  .hoverOverlay {
+    position: absolute;
+    inset: 0;
+    background: rgba(0,0,0,0.3);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    transition: opacity 0.3s;
+  }
+  
+  .hoverOverlay i {
+    color: #fff;
+    font-size: 1.2rem;
+    background: rgba(255, 255, 255, 0.1);
+    padding: 12px;
+    border-radius: 50%;
+    width: 45px;
+    backdrop-filter: blur(4px);
+  }
+  
+  /* --- MOBILE OPTIMIZATION (3 Columns) --- */
+  @media (max-width: 768px) {
+    .contentContainer {
+      padding: 0 25px; /* Less side padding for wider grid */
+    }
+  
+    /* Switch Flexbox Masonry to CSS Grid for Mobile */
+    .galleryGrid {
+      display: grid !important;
+      grid-template-columns: repeat(3, 1fr); /* Force 3 columns */
+      gap: 3px; /* Tighter gap like Instagram */
+    }
+  
+    .gridItem {
+      width: auto !important; /* Override inline styles */
+      flex-basis: auto !important; /* Override inline styles */
+      flex-grow: 0 !important;
+      border-radius: 0; /* Sharp edges for tight grid */
+      min-width: 0;
+      max-height: none;
+    }
+    
+    /* Force Square Aspect Ratio on Mobile */
+    .imageInner {
+      aspect-ratio: 1 / 1 !important;
+    }
+  
+    .spacer { display: none; }
+    
+    .sectionTitle { font-size: 1.1rem; }
+    .sectionDate { font-size: 0.8rem; }
+  }
+  
+  /* --- FULLSCREEN POPUP --- */
+  .modalOverlay {
+    position: fixed;
+    inset: 0;
+    z-index: 2000;
+    backdrop-filter: blur(10px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  
+  .modalContent {
+    width: 100%;
+    height: 100%;
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  
+  .fullImageWrapper {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  
+  .fullImage {
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: contain;
+    opacity: 0;
+    transform: scale(0.96);
+    transition: opacity 0.4s ease, transform 0.4s ease;
+  }
+  
+  .fullImage.loaded {
+    opacity: 1;
+    transform: scale(1);
+  }
+  
+  /* Description Overlay */
+  .descriptionOverlay {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    background: linear-gradient(to top, rgba(0,0,0,0.9) 0%, rgba(0,0,0,0) 100%);
+    color: #fff;
+    padding: 60px 20px 30px;
+    pointer-events: none;
+  }
+  
+  .textContainer {
+    max-width: 600px;
+    margin: 0 auto;
+    text-align: center;
+  }
+  
+  .textContainer h3 {
+    margin: 0 0 6px;
+    font-size: 1.2rem;
+    color: #fff;
+  }
+  
+  .textContainer p {
+    margin: 0;
+    color: #ccc;
+    font-size: 0.9rem;
+  }
+  
+  /* Buttons */
+  .closeBtn {
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    z-index: 2010;
+    background: rgba(0,0,0,0.4);
+    color: #fff;
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    font-size: 1.5rem;
+    border: none;
+    cursor: pointer;
+  }
+  
+  .navBtn {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    z-index: 2010;
+    background: #ffffff3b !important;
+    color: #fff;
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    border: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+  }
+  
+  .prevBtn { left: 15px; }
+  .nextBtn { right: 15px; }
+  
+  /* Loader */
+  .loader {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: -1;
+  }
+  
+  .spinner {
+    width: 30px;
+    height: 30px;
+    border: 2px solid rgba(255,255,255,0.1);
+    border-top-color: #ffa751;
+    border-radius: 50%;
+    animation: spin 0.8s linear infinite;
+  }
+  
+  @keyframes spin { to { transform: rotate(360deg); } }
+  
+  /* Touch tweaks for mobile modal */
+  @media (max-width: 768px) {
+    .navBtn { width: 40px; height: 40px; background: transparent; }
+    .closeBtn { top: 10px; right: 10px; background: transparent; }
+    .descriptionOverlay { padding: 40px 15px 20px; }
+  }

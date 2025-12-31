@@ -109,7 +109,7 @@ export default function ProjectsPage() {
                     {selectedProject.techStack.map(t => <span key={t} className={styles.techTag}>{t}</span>)}
                   </div>
                   <p className={styles.ppDesc}>{selectedProject.description}</p>
-                  <p style={{ color: '#aaa', fontSize: '0.8rem', marginBottom: '20px' }}>
+                  <p style={{ fontSize: '0.8rem', marginBottom: '20px' }}>
                     Category: <span style={{ color: '#ffa751' }}>{selectedProject.category}</span> | 
                     Status: <span style={{ color: '#ffa751' }}>{selectedProject.status}</span>
                   </p>

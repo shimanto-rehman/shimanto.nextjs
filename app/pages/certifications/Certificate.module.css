@@ -135,8 +135,8 @@
 .ppOverlay {
   position: absolute;
   inset: 0;
-  background: rgba(0, 0, 0, 0.7);
-  backdrop-filter: blur(8px); /* Frosty effect */
+  -webkit-backdrop-filter: blur(20px);
+  backdrop-filter: blur(20px); /* Frosty effect */
 }
 
 .ppContent {
@@ -149,9 +149,9 @@
 }
 
 .ppContentInner {
-  background: rgba(30, 30, 30, 0.212);
-  -webkit-backdrop-filter: blur(10px) !important;
-  backdrop-filter: blur(10px) !important;
+  background: #1e1e1e91;
+  -webkit-backdrop-filter: blur(20px) !important;
+  backdrop-filter: blur(20px) !important;
   border: 1px solid rgba(255, 255, 255, 0.1);
   border-radius: 20px;
   padding: 20px;
