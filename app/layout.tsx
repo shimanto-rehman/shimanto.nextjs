@@ -8,7 +8,7 @@ import { defaultMetadata, siteConfig } from './lib/metadata';
 const geistSans = Geist({
   variable: "--font-geist-sans",
   subsets: ["latin"],
-  preload: true, // Enable preload for better performance
+  preload: false, // Disabled to prevent unused preload warnings (fonts load when CSS variables are used)
 });
 
 const geistMono = Geist_Mono({
