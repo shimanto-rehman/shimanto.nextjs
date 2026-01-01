@@ -4,6 +4,14 @@ import axios from "axios";
 
 export async function GET() {
   try {
+    // Check for required environment variables
+    if (!process.env.SCHOLAR_AUTHOR_ID || !process.env.SERPAPI_KEY) {
+      return NextResponse.json(
+        { error: "Scholar API configuration is missing. Please set SCHOLAR_AUTHOR_ID and SERPAPI_KEY environment variables." },
+        { status: 401 }
+      );
+    }
+
     const response = await axios.get("https://serpapi.com/search.json", {
       params: {
         engine: "google_scholar_author",

@@ -193,7 +193,10 @@ async function getPublicationsData() {
     });
 
     if (!scholarRes.ok) {
-      throw new Error(`Scholar API failed with status ${scholarRes.status}`);
+      // During build, return null to allow build to succeed
+      // The page will show an error message instead of crashing
+      console.error(`Scholar API failed with status ${scholarRes.status}`);
+      return null;
     }
 
     interface ScholarApiResponse {
@@ -237,7 +240,9 @@ async function getPublicationsData() {
     });
 
     if (!orcidRes.ok) {
-      throw new Error(`ORCID request failed with status ${orcidRes.status}`);
+      // During build, return null to allow build to succeed
+      console.error(`ORCID request failed with status ${orcidRes.status}`);
+      return null;
     }
 
     interface OrcidApiResponse {
@@ -296,29 +301,43 @@ async function getPublicationsData() {
 
     return { scholar, orcid, publications };
   } catch (error) {
-    // For ISR: rethrow so Next.js keeps serving the last successful static snapshot
-    // This ensures that if API calls fail during revalidation, users still see
-    // the last successfully fetched data (no errors shown to users)
-    throw error;
+    // Return null instead of throwing to allow build to succeed
+    // The page will handle null data and show an error message
+    console.error('Error fetching publications data:', error);
+    return null;
   }
 }
 
 export default async function PublicationsPage() {
-  try {
-    const { scholar, orcid, publications } = await getPublicationsData();
+  const data = await getPublicationsData();
 
+  if (!data) {
     return (
-      <PublicationsClient
-        initialScholar={scholar}
-        initialOrcid={orcid}
-        initialPublications={publications}
-      />
+      <main className="publications-main">
+        <div className="publications-error" style={{ padding: '2rem', textAlign: 'center' }}>
+          <i className="fas fa-exclamation-triangle" style={{ fontSize: '3rem', color: '#ff6b6b', marginBottom: '1rem' }}></i>
+          <h2>Unable to Load Publications Data</h2>
+          <p>Please check that the required environment variables are configured:</p>
+          <ul style={{ textAlign: 'left', display: 'inline-block', marginTop: '1rem' }}>
+            <li><code>SCHOLAR_AUTHOR_ID</code></li>
+            <li><code>SERPAPI_KEY</code></li>
+          </ul>
+          <p style={{ marginTop: '1rem', color: '#666' }}>
+            The page will load once these are set in your Vercel environment variables.
+          </p>
+        </div>
+      </main>
     );
-  } catch (error) {
-    // If this is the initial build and it fails, Next.js will retry
-    // If this is a revalidation and it fails, Next.js serves the cached version
-    // Re-throw to let Next.js handle ISR fallback behavior
-    throw error;
   }
+
+  const { scholar, orcid, publications } = data;
+
+  return (
+    <PublicationsClient
+      initialScholar={scholar}
+      initialOrcid={orcid}
+      initialPublications={publications}
+    />
+  );
 }
 
