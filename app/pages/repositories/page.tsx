@@ -1,4 +1,5 @@
 // app/repositories/page.tsx
+import Navbar, { navItems } from '../../components/Navbar';
 import RepositoriesClient from './RepositoriesClient';
 
 interface GitHubUser {
@@ -138,20 +139,23 @@ export default async function RepositoriesPage() {
   if (!data) {
     return (
       <main className="home-main">
-        <div className="repositories-error" style={{ padding: '2rem', textAlign: 'center' }}>
-          <i className="fas fa-exclamation-triangle" style={{ fontSize: '3rem', color: '#ff6b6b', marginBottom: '1rem' }}></i>
-          <h2>Unable to Load GitHub Data</h2>
-          <p>GitHub API request failed. This may be due to:</p>
-          <ul style={{ textAlign: 'left', display: 'inline-block', marginTop: '1rem' }}>
-            <li>Rate limit exceeded (GitHub allows 60 requests/hour without a token)</li>
-            <li>Missing or invalid <code>GITHUB_TOKEN</code> environment variable</li>
-          </ul>
-          <p style={{ marginTop: '1rem', color: '#666' }}>
-            To fix: Add <code>GITHUB_TOKEN</code> to your Vercel environment variables.
-            <br />
-            The page will work without it, but you may hit rate limits during builds.
-          </p>
-        </div>
+        <Navbar items={navItems} logo="/images/shimanto.png" />
+        <section className="home-section">
+          <div className="repositories-error" style={{ padding: '2rem', textAlign: 'center' }}>
+            <i className="fas fa-exclamation-triangle" style={{ fontSize: '3rem', color: '#ff6b6b', marginBottom: '1rem' }}></i>
+            <h2>Unable to Load GitHub Data</h2>
+            <p>GitHub API request failed. This may be due to:</p>
+            <ul style={{ textAlign: 'left', display: 'inline-block', marginTop: '1rem' }}>
+              <li>Rate limit exceeded (GitHub allows 60 requests/hour without a token)</li>
+              <li>Missing or invalid <code>GITHUB_TOKEN</code> environment variable</li>
+            </ul>
+            <p style={{ marginTop: '1rem', color: '#666' }}>
+              To fix: Add <code>GITHUB_TOKEN</code> to your Vercel environment variables.
+              <br />
+              The page will work without it, but you may hit rate limits during builds.
+            </p>
+          </div>
+        </section>
       </main>
     );
   }
