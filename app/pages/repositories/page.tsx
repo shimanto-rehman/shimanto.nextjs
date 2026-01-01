@@ -64,7 +64,12 @@ async function getGitHubData() {
     ]);
 
     if (!userResponse.ok || !reposResponse.ok) {
-      throw new Error('Failed to fetch GitHub data');
+      console.error(
+        'GitHub API error:',
+        userResponse.status,
+        reposResponse.status
+      );
+      return null;
     }
 
     const [user, repos]: [GitHubUser, GitHubRepo[]] = await Promise.all([
@@ -112,15 +117,15 @@ async function getGitHubData() {
     // In ISR: if revalidation fails, keep serving the last successful static data.
     // By rethrowing here, Next.js will NOT cache this error result,
     // and the previous good page stays active.
-    throw error;
+    console.error('GitHub fetch failed:', error);
+    return null;
   }
 }
 
 // Server Component (runs at build time with ISR)
 export default async function RepositoriesPage() {
-  const { user, repos, stats } = await getGitHubData();
-
-  if (!user) {
+  const data = await getGitHubData(); 
+  if (!data) {
     return (
       <main className="home-main">
         <div className="repositories-error">
@@ -130,16 +135,20 @@ export default async function RepositoriesPage() {
       </main>
     );
   }
-
+  const { user, repos, stats } = data;
   return <RepositoriesClient initialUser={user} initialRepos={repos} initialStats={stats} />;
 }
 
 // Optional: Generate metadata dynamically
 export async function generateMetadata() {
-  const { user } = await getGitHubData();
-  
-  return {
-    title: `${user?.name || 'Repositories'} - GitHub Portfolio`,
-    description: user?.bio || 'Exploring code, one commit at a time',
-  };
+  const data = await getGitHubData();
+
+  if (!data) {
+    return {
+      title: 'Repositories - GitHub Portfolio',
+      description: 'Exploring code, one commit at a time',
+    };
+  }
+
+  const { user } = data;
 }
