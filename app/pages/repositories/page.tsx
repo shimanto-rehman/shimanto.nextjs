@@ -65,12 +65,17 @@ async function getGitHubData() {
 
     if (!userResponse.ok || !reposResponse.ok) {
       // Log error details for debugging
+      const token = process.env.GITHUB_TOKEN;
       console.error('GitHub API error:', {
         userStatus: userResponse.status,
         reposStatus: reposResponse.status,
-        hasToken: !!process.env.GITHUB_TOKEN,
+        hasToken: !!token,
+        tokenLength: token?.length || 0,
+        tokenPrefix: token ? token.substring(0, 7) + '...' : 'none',
         userStatusText: userResponse.statusText,
         reposStatusText: reposResponse.statusText,
+        environment: process.env.NODE_ENV,
+        isVercel: !!process.env.VERCEL,
       });
       return null;
     }
