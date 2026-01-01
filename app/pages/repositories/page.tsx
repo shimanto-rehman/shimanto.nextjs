@@ -64,15 +64,14 @@ async function getGitHubData() {
     ]);
 
     if (!userResponse.ok || !reposResponse.ok) {
-      // Only log in development, not during production builds
-      if (process.env.NODE_ENV === 'development') {
-        console.error(
-          'GitHub API error:',
-          userResponse.status,
-          reposResponse.status,
-          process.env.GITHUB_TOKEN ? '(with token)' : '(no token - set GITHUB_TOKEN for higher rate limits)'
-        );
-      }
+      // Log error details for debugging
+      console.error('GitHub API error:', {
+        userStatus: userResponse.status,
+        reposStatus: reposResponse.status,
+        hasToken: !!process.env.GITHUB_TOKEN,
+        userStatusText: userResponse.statusText,
+        reposStatusText: reposResponse.statusText,
+      });
       return null;
     }
 
