@@ -4,6 +4,15 @@ import axios from "axios";
 
 export async function GET() {
   try {
+    console.log('=== SCHOLAR API DEBUG ===');
+    console.log('Environment:', process.env.NODE_ENV);
+    console.log('Has SCHOLAR_AUTHOR_ID:', !!process.env.SCHOLAR_AUTHOR_ID);
+    console.log('Has SERPAPI_KEY:', !!process.env.SERPAPI_KEY);
+    console.log('SCHOLAR_AUTHOR_ID length:', process.env.SCHOLAR_AUTHOR_ID?.length || 0);
+    console.log('SERPAPI_KEY length:', process.env.SERPAPI_KEY?.length || 0);
+    console.log('SCHOLAR_AUTHOR_ID starts with:', process.env.SCHOLAR_AUTHOR_ID?.substring(0, 5) || 'MISSING');
+    console.log('========================');
+
     // Check for required environment variables
     if (!process.env.SCHOLAR_AUTHOR_ID || !process.env.SERPAPI_KEY) {
       return NextResponse.json(
