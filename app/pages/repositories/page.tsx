@@ -64,11 +64,15 @@ async function getGitHubData() {
     ]);
 
     if (!userResponse.ok || !reposResponse.ok) {
-      console.error(
-        'GitHub API error:',
-        userResponse.status,
-        reposResponse.status
-      );
+      // Only log in development, not during production builds
+      if (process.env.NODE_ENV === 'development') {
+        console.error(
+          'GitHub API error:',
+          userResponse.status,
+          reposResponse.status,
+          process.env.GITHUB_TOKEN ? '(with token)' : '(no token - set GITHUB_TOKEN for higher rate limits)'
+        );
+      }
       return null;
     }
 
@@ -115,9 +119,11 @@ async function getGitHubData() {
     return { user, repos, stats };
   } catch (error) {
     // In ISR: if revalidation fails, keep serving the last successful static data.
-    // By rethrowing here, Next.js will NOT cache this error result,
-    // and the previous good page stays active.
-    console.error('GitHub fetch failed:', error);
+    // By returning null here, Next.js will serve an error message page instead of crashing
+    // Only log in development, not during production builds
+    if (process.env.NODE_ENV === 'development') {
+      console.error('GitHub fetch failed:', error);
+    }
     return null;
   }
 }
@@ -128,9 +134,19 @@ export default async function RepositoriesPage() {
   if (!data) {
     return (
       <main className="home-main">
-        <div className="repositories-error">
-          <i className="fas fa-exclamation-triangle"></i>
-          <p>Failed to load GitHub data. Please try again later.</p>
+        <div className="repositories-error" style={{ padding: '2rem', textAlign: 'center' }}>
+          <i className="fas fa-exclamation-triangle" style={{ fontSize: '3rem', color: '#ff6b6b', marginBottom: '1rem' }}></i>
+          <h2>Unable to Load GitHub Data</h2>
+          <p>GitHub API request failed. This may be due to:</p>
+          <ul style={{ textAlign: 'left', display: 'inline-block', marginTop: '1rem' }}>
+            <li>Rate limit exceeded (GitHub allows 60 requests/hour without a token)</li>
+            <li>Missing or invalid <code>GITHUB_TOKEN</code> environment variable</li>
+          </ul>
+          <p style={{ marginTop: '1rem', color: '#666' }}>
+            To fix: Add <code>GITHUB_TOKEN</code> to your Vercel environment variables.
+            <br />
+            The page will work without it, but you may hit rate limits during builds.
+          </p>
         </div>
       </main>
     );
