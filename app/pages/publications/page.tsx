@@ -148,9 +148,6 @@ async function fetchScholarData(): Promise<ScholarProfile | null> {
       return null;
     }
 
-    console.log('Fetching Scholar data from SerpAPI...');
-    console.log('Author ID:', process.env.SCHOLAR_AUTHOR_ID);
-
     // Use native fetch instead of axios to avoid dependency issues
     const url = new URL('https://serpapi.com/search.json');
     url.searchParams.append('engine', 'google_scholar_author');
@@ -165,8 +162,6 @@ async function fetchScholarData(): Promise<ScholarProfile | null> {
         'User-Agent': 'NextJS-Portfolio/1.0',
       },
     });
-
-    console.log('SerpAPI response status:', response.status);
 
     if (!response.ok) {
       const errorText = await response.text();
@@ -184,8 +179,6 @@ async function fetchScholarData(): Promise<ScholarProfile | null> {
       console.error('SerpAPI returned error:', data.error);
       return null;
     }
-
-    console.log('SerpAPI data received successfully');
 
     // Extract citation metrics from cited_by.table array
     const citationsAll = data.cited_by?.table?.[0]?.citations?.all || 0;
@@ -221,8 +214,6 @@ async function fetchScholarData(): Promise<ScholarProfile | null> {
 async function fetchOrcidData(): Promise<OrcidProfile | null> {
   try {
     const orcidId = '0009-0007-9072-8458';
-    
-    console.log('Fetching ORCID data...');
     
     const orcidRes = await fetch(`https://pub.orcid.org/v3.0/${orcidId}/person`, {
       headers: {
@@ -283,8 +274,6 @@ async function fetchOrcidData(): Promise<OrcidProfile | null> {
 // Main data fetching function
 async function getPublicationsData() {
   try {
-    console.log('=== Starting Publications Data Fetch ===');
-
     // Fetch Scholar and ORCID data in parallel
     const [scholarData, orcidData] = await Promise.all([
       fetchScholarData(),
@@ -320,10 +309,6 @@ async function getPublicationsData() {
       profileUrl: 'https://orcid.org/0009-0007-9072-8458',
       employments: [],
     };
-
-    console.log('=== Data Fetch Complete ===');
-    console.log('Scholar data:', scholarData ? 'Success' : 'Using fallback');
-    console.log('ORCID data:', orcidData ? 'Success' : 'Using fallback');
 
     return {
       scholar,
