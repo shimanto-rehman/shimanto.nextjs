@@ -4,32 +4,22 @@ import Navbar, { navItems } from '../../components/Navbar';
 import './Publications.css';
 import PublicationsClient from './PublicationsClient';
 
+// Force dynamic rendering to avoid build-time API calls
 export const dynamic = 'force-dynamic';
-export const revalidate = 21600; 
+export const revalidate = 21600; // Revalidate every 6 hours
 
 // Types shared between server and client
 export interface ScholarProfile {
-  /** Full name from Google Scholar */
   name: string;
-  /** Profile photo URL from Scholar (can be null) */
   avatarUrl: string | null;
-  /** Primary affiliation text */
   affiliation: string | null;
-  /** Verified email text, if available */
   email?: string | null;
-  /** Optional country / location if your API provides it */
   country?: string | null;
-  /** Total citation count */
   citations: number;
-  /** h-index */
   hIndex: number;
-  /** i10-index */
   i10Index: number;
-  /** List of research interests / topics */
   interests: { name: string }[];
-  /** Link to your public Scholar / ResearchGate profile */
   profileUrl: string;
-  /** Last time the data was updated (ISO string) */
   updatedAt: string;
 }
 
@@ -73,12 +63,12 @@ export interface Publication {
   tags?: string[];
 }
 
-// Static fallback publications list (you can extend this array as you publish more)
+// Static fallback publications list
 const staticPublications: Publication[] = [
   {
     id: 'reshad-2021-curcuminoids-wound-healing',
     title:
-      'In silico investigations on curcuminoids from Curcuma longa as positive regulators of the Wnt/β‑catenin signaling pathway in wound healing',
+      'In silico investigations on curcuminoids from Curcuma longa as positive regulators of the Wnt/β-catenin signaling pathway in wound healing',
     authors:
       'R. A. I. Reshad, S. Alam, H. B. Raihan, K. N. Meem, F. Rahman, F. Zahid, M. I. Rafid, S. M. Obaydur Rahman, S. Omit, M. H. Ali',
     year: 2021,
@@ -90,25 +80,12 @@ const staticPublications: Publication[] = [
     url: 'https://link.springer.com/article/10.1186/s43042-021-00182-9',
     type: 'journal',
     abstract:
-      'Curcuminoids from Curcuma longa were investigated via molecular docking as positive regulators of key proteins in the Wnt/β‑catenin signaling pathway, highlighting their potential in promoting wound healing.',
+      'Curcuminoids from Curcuma longa were investigated via molecular docking as positive regulators of key proteins in the Wnt/β-catenin signaling pathway, highlighting their potential in promoting wound healing.',
     citations: 15,
     altmetricScore: 13,
     tags: ['wound-healing', 'curcumin', 'computational-biology'],
   },
 ];
-
-async function fetchJson<T>(url: string): Promise<T> {
-  const res = await fetch(url, {
-    // Revalidate every 6 hours
-    next: { revalidate: 21600 },
-  });
-
-  if (!res.ok) {
-    throw new Error(`Failed to fetch ${url}: ${res.status} ${res.statusText}`);
-  }
-
-  return res.json() as Promise<T>;
-}
 
 async function fetchXml(url: string): Promise<string> {
   const res = await fetch(url, {
@@ -163,53 +140,202 @@ function parseOrcidEmployments(xml: string): OrcidEmployment[] {
   return employments;
 }
 
-async function getBaseUrl(): Promise<string> {
-  if (process.env.NEXT_PUBLIC_SITE_URL) return process.env.NEXT_PUBLIC_SITE_URL;
-  if (process.env.VERCEL_URL) return `https://${process.env.VERCEL_URL}`;
-  
-  const headersList = await headers();
-  const host = headersList.get('host');
-  const protocol = process.env.NODE_ENV === 'development' ? 'http' : 'https';
-  return `${protocol}://${host}`;
-}
-// Fetch data at build time with ISR (Incremental Static Regeneration).
-// 
-// ISR Behavior:
-// 1. Initial build: Fetches data and generates static page
-// 2. Every 6 hours (revalidate: 21600): Tries to fetch fresh data in the background
-// 3. On success: Updates the cached page with new data
-// 4. On failure: Serves the last successfully generated page (no errors shown to users)
-// 5. If APIs fail forever: Continues showing the last successful data indefinitely
-//
-// This ensures users always see data (even if stale) rather than error pages.
-async function getPublicationsData() {
+// Fetch Google Scholar data directly from SerpAPI
+async function fetchScholarData(): Promise<ScholarProfile | null> {
   try {
-    let scholar: ScholarProfile;
-    let orcid: OrcidProfile;
+    if (!process.env.SCHOLAR_AUTHOR_ID || !process.env.SERPAPI_KEY) {
+      console.error('Missing SCHOLAR_AUTHOR_ID or SERPAPI_KEY environment variables');
+      return null;
+    }
 
-    const baseUrl = await getBaseUrl();
+    console.log('Fetching Scholar data from SerpAPI...');
+    console.log('Author ID:', process.env.SCHOLAR_AUTHOR_ID);
 
-    console.log('Fetching Scholar data from:', `${baseUrl}/api/scholar`);
+    // Use native fetch instead of axios to avoid dependency issues
+    const url = new URL('https://serpapi.com/search.json');
+    url.searchParams.append('engine', 'google_scholar_author');
+    url.searchParams.append('author_id', process.env.SCHOLAR_AUTHOR_ID);
+    url.searchParams.append('api_key', process.env.SERPAPI_KEY);
+    url.searchParams.append('hl', 'en');
 
-    const scholarRes = await fetch(`${baseUrl}/api/scholar`, {
+    const response = await fetch(url.toString(), {
       next: { revalidate: 21600 },
-      // Add these options for build-time reliability
-      cache: 'no-store', // Don't cache during build
-      signal: AbortSignal.timeout(30000), // 30 second timeout
+      headers: {
+        'Accept': 'application/json',
+        'User-Agent': 'NextJS-Portfolio/1.0',
+      },
     });
 
-    console.log('Scholar API response status:', scholarRes.status);
+    console.log('SerpAPI response status:', response.status);
 
-    if (!scholarRes.ok) {
-      const errorText = await scholarRes.text();
-      console.error(`Scholar API failed:`, {
-        status: scholarRes.status,
-        statusText: scholarRes.statusText,
+    if (!response.ok) {
+      const errorText = await response.text();
+      console.error('SerpAPI error:', {
+        status: response.status,
+        statusText: response.statusText,
         body: errorText.substring(0, 500)
       });
-      
-      // Return fallback data instead of null
-      scholar = {
+      return null;
+    }
+
+    const data = await response.json();
+
+    if (data.error) {
+      console.error('SerpAPI returned error:', data.error);
+      return null;
+    }
+
+    console.log('SerpAPI data received successfully');
+
+    // Extract citation metrics from cited_by.table array
+    const citationsAll = data.cited_by?.table?.[0]?.citations?.all || 0;
+    const hIndexAll = data.cited_by?.table?.[1]?.h_index?.all || 0;
+    const i10IndexAll = data.cited_by?.table?.[2]?.i10_index?.all || 0;
+
+    const author = data.author || {};
+
+    return {
+      name: author.name || 'Unknown',
+      avatarUrl: author.thumbnail || null,
+      affiliation: author.affiliations || null,
+      email: author.email || null,
+      country: undefined,
+      citations: citationsAll,
+      hIndex: hIndexAll,
+      i10Index: i10IndexAll,
+      interests: Array.isArray(author.interests)
+        ? author.interests.map((i: string | { title?: string }) => ({
+            name: typeof i === 'object' && i.title ? i.title : String(i)
+          }))
+        : [],
+      profileUrl: author.link || `https://scholar.google.com/citations?user=${process.env.SCHOLAR_AUTHOR_ID}&hl=en`,
+      updatedAt: new Date().toISOString(),
+    };
+  } catch (error) {
+    console.error('Error fetching Scholar data:', error);
+    return null;
+  }
+}
+
+// Fetch ORCID data
+async function fetchOrcidData(): Promise<OrcidProfile | null> {
+  try {
+    const orcidId = '0009-0007-9072-8458';
+    
+    console.log('Fetching ORCID data...');
+    
+    const orcidRes = await fetch(`https://pub.orcid.org/v3.0/${orcidId}/person`, {
+      headers: {
+        Accept: 'application/json',
+      },
+      next: { revalidate: 21600 },
+    });
+
+    if (!orcidRes.ok) {
+      console.error(`ORCID request failed with status ${orcidRes.status}`);
+      return null;
+    }
+
+    const orcidJson: any = await orcidRes.json();
+
+    const givenName = orcidJson?.name?.['given-names']?.value;
+    const familyName = orcidJson?.name?.['family-name']?.value;
+    const fullName = [givenName, familyName].filter(Boolean).join(' ');
+
+    const lastModifiedValue = orcidJson?.['last-modified-date']?.value;
+    const lastActiveYear =
+      typeof lastModifiedValue === 'number'
+        ? new Date(lastModifiedValue).getUTCFullYear()
+        : undefined;
+
+    const biography = orcidJson?.biography?.personal?.value || undefined;
+    const keywords = orcidJson?.keywords?.keyword?.map((k: { content: string }) => k.content) || [];
+
+    // Fetch employments from ORCID API (XML)
+    const employmentsXml = await fetchXml(`https://pub.orcid.org/v3.0/${orcidId}/employments`);
+    const employments = parseOrcidEmployments(employmentsXml);
+
+    // Use 2nd employment (index 1) for affiliation, or fallback to first if available
+    const secondEmployment = employments[1] || employments[0];
+    const affiliation = secondEmployment
+      ? `${secondEmployment.roleTitle}${secondEmployment.department ? `, ${secondEmployment.department}` : ''}, ${secondEmployment.organization}`
+      : 'Affiliation not available';
+    const country = secondEmployment?.location?.split(', ').pop() || '—';
+
+    return {
+      name: fullName || 'Unknown',
+      orcid: orcidId,
+      affiliation,
+      country,
+      totalWorks: staticPublications.length,
+      lastActiveYear,
+      profileUrl: `https://orcid.org/${orcidId}`,
+      biography,
+      keywords: keywords.length > 0 ? keywords : undefined,
+      employments,
+    };
+  } catch (error) {
+    console.error('Error fetching ORCID data:', error);
+    return null;
+  }
+}
+
+// Main data fetching function
+async function getPublicationsData() {
+  try {
+    console.log('=== Starting Publications Data Fetch ===');
+
+    // Fetch Scholar and ORCID data in parallel
+    const [scholarData, orcidData] = await Promise.all([
+      fetchScholarData(),
+      fetchOrcidData(),
+    ]);
+
+    // Create fallback Scholar data if fetch failed
+    const scholar: ScholarProfile = scholarData || {
+      name: 'Shimanto Rehman',
+      avatarUrl: '/images/shimanto.webp',
+      affiliation: 'Researcher',
+      email: null,
+      country: 'Bangladesh',
+      citations: 0,
+      hIndex: 0,
+      i10Index: 0,
+      interests: [
+        { name: 'Computational Biology' },
+        { name: 'Bioinformatics' },
+        { name: 'Machine Learning' }
+      ],
+      profileUrl: 'https://scholar.google.com/citations?user=x-HOtR4AAAAJ&hl=en',
+      updatedAt: new Date().toISOString(),
+    };
+
+    // Create fallback ORCID data if fetch failed
+    const orcid: OrcidProfile = orcidData || {
+      name: 'Shimanto Rehman',
+      orcid: '0009-0007-9072-8458',
+      affiliation: 'Researcher',
+      country: 'Bangladesh',
+      totalWorks: staticPublications.length,
+      profileUrl: 'https://orcid.org/0009-0007-9072-8458',
+      employments: [],
+    };
+
+    console.log('=== Data Fetch Complete ===');
+    console.log('Scholar data:', scholarData ? 'Success' : 'Using fallback');
+    console.log('ORCID data:', orcidData ? 'Success' : 'Using fallback');
+
+    return {
+      scholar,
+      orcid,
+      publications: staticPublications,
+    };
+  } catch (error) {
+    console.error('Error in getPublicationsData:', error);
+    
+    // Return complete fallback data
+    return {
+      scholar: {
         name: 'Shimanto Rehman',
         avatarUrl: '/images/shimanto.webp',
         affiliation: 'Researcher',
@@ -218,157 +344,26 @@ async function getPublicationsData() {
         citations: 0,
         hIndex: 0,
         i10Index: 0,
-        interests: [{ name: 'Computational Biology' }, { name: 'Bioinformatics' }],
-        profileUrl: `https://scholar.google.com/citations?user=x-HOtR4AAAAJ&hl=en`,
+        interests: [{ name: 'Computational Biology' }],
+        profileUrl: 'https://scholar.google.com/citations?user=x-HOtR4AAAAJ&hl=en',
         updatedAt: new Date().toISOString(),
-      };
-    } else {
-      const scholarJson = await scholarRes.json();
-      scholar = {
-        name: scholarJson.name ?? 'Unknown',
-        avatarUrl: scholarJson.profile_picture ?? null,
-        affiliation: scholarJson.affiliation ?? null,
-        email: scholarJson.email ?? null,
-        country: undefined,
-        citations: typeof scholarJson.citations === 'number' ? scholarJson.citations : 0,
-        hIndex: typeof scholarJson.h_index === 'number' ? scholarJson.h_index : 0,
-        i10Index: typeof scholarJson.i10_index === 'number' ? scholarJson.i10_index : 0,
-        interests: Array.isArray(scholarJson.interests)
-          ? scholarJson.interests.map((i: string | { title?: string }) => ({ 
-              name: typeof i === 'object' && i.title ? i.title : String(i) 
-            }))
-          : [],
-        profileUrl: scholarJson.profile_url ?? '',
-        updatedAt: scholarJson.updated_at ?? new Date().toISOString(),
-      };
-    }
-
-    // ORCID profile – fetched from public ORCID API (JSON)
-    // Wrap in try-catch so ORCID failures don't break the entire page
-    const orcidId = '0009-0007-9072-8458';
-    try {
-      const orcidRes = await fetch(`https://pub.orcid.org/v3.0/${orcidId}/person`, {
-        headers: {
-          Accept: 'application/json',
-        },
-        next: { revalidate: 21600 }, // 6‑hour ISR window
-        signal: AbortSignal.timeout(10000), // 10 second timeout
-      });
-
-      if (!orcidRes.ok) {
-        throw new Error(`ORCID request failed with status ${orcidRes.status}`);
-      }
-
-      interface OrcidApiResponse {
-        name?: {
-          'given-names'?: { value?: string };
-          'family-name'?: { value?: string };
-        };
-        'last-modified-date'?: { value?: number };
-        biography?: { personal?: { value?: string } };
-        keywords?: { keyword?: Array<{ content: string }> };
-      }
-
-      const orcidJson: OrcidApiResponse = await orcidRes.json();
-
-      const givenName: string | undefined = orcidJson?.name?.['given-names']?.value;
-      const familyName: string | undefined =
-        orcidJson?.['name']?.['family-name']?.value ?? orcidJson?.name?.['family-name']?.value;
-      const fullName = [givenName, familyName].filter(Boolean).join(' ');
-
-      const lastModifiedValue: number | undefined = orcidJson?.['last-modified-date']?.value;
-      const lastActiveYear =
-        typeof lastModifiedValue === 'number'
-          ? new Date(lastModifiedValue).getUTCFullYear()
-          : undefined;
-
-      // Extract biography and keywords from person API
-      const biography = orcidJson?.biography?.personal?.value || undefined;
-      const keywords = orcidJson?.keywords?.keyword?.map((k: { content: string }) => k.content) || [];
-
-      // Fetch employments from ORCID API (XML)
-      let employments: OrcidEmployment[] = [];
-      try {
-        const employmentsXml = await fetchXml(`https://pub.orcid.org/v3.0/${orcidId}/employments`);
-        employments = parseOrcidEmployments(employmentsXml);
-      } catch (empError) {
-        console.error('Failed to fetch ORCID employments:', empError);
-        // Continue with empty employments array
-      }
-
-      // Use 2nd employment (index 1) for affiliation, or fallback to first if available
-      const secondEmployment = employments[1] || employments[0];
-      const affiliation = secondEmployment
-        ? `${secondEmployment.roleTitle}${secondEmployment.department ? `, ${secondEmployment.department}` : ''}, ${secondEmployment.organization}`
-        : 'Affiliation not available';
-      const country = secondEmployment?.location?.split(', ').pop() || '—';
-
-      orcid = {
-        name: fullName || 'Unknown',
-        orcid: orcidId,
-        affiliation,
-        country,
+      },
+      orcid: {
+        name: 'Shimanto Rehman',
+        orcid: '0009-0007-9072-8458',
+        affiliation: 'Researcher',
+        country: 'Bangladesh',
         totalWorks: staticPublications.length,
-        lastActiveYear,
-        profileUrl: `https://orcid.org/${orcidId}`,
-        biography,
-        keywords: keywords.length > 0 ? keywords : undefined,
-        employments,
-      };
-    } catch (orcidError) {
-      // If ORCID fetch fails, use fallback data
-      console.error('ORCID fetch failed, using fallback data:', orcidError);
-      orcid = {
-        name: scholar.name || 'Unknown',
-        orcid: orcidId,
-        affiliation: scholar.affiliation || 'Affiliation not available',
-        country: scholar.country || '—',
-        totalWorks: staticPublications.length,
-        lastActiveYear: undefined,
-        profileUrl: `https://orcid.org/${orcidId}`,
-        biography: undefined,
-        keywords: undefined,
+        profileUrl: 'https://orcid.org/0009-0007-9072-8458',
         employments: [],
-      };
-    }
-
-    // Publications list – currently static, but you can later swap this to a fetch as well
-    const publications = staticPublications;
-
-    return { scholar, orcid, publications };
-  } catch (error) {
-    // Return null instead of throwing to allow build to succeed
-    // The page will handle null data and show an error message
-    console.error('Error fetching publications data:', error);
-    return null;
+      },
+      publications: staticPublications,
+    };
   }
 }
 
 export default async function PublicationsPage() {
   const data = await getPublicationsData();
-
-  if (!data) {
-    return (
-      <main className="home-main">
-        <Navbar items={navItems} logo="/images/shimanto.png" />
-        <section className="home-section">
-          <div className="publications-error" style={{ padding: '2rem', textAlign: 'center' }}>
-            <i className="fas fa-exclamation-triangle" style={{ fontSize: '3rem', color: '#ff6b6b', marginBottom: '1rem' }}></i>
-            <h2>Unable to Load Publications Data</h2>
-            <p>Please check that the required environment variables are configured:</p>
-            <ul style={{ textAlign: 'left', display: 'inline-block', marginTop: '1rem' }}>
-              <li><code>SCHOLAR_AUTHOR_ID</code></li>
-              <li><code>SERPAPI_KEY</code></li>
-            </ul>
-            <p style={{ marginTop: '1rem', color: '#666' }}>
-              The page will load once these are set in your Vercel environment variables.
-            </p>
-          </div>
-        </section>
-      </main>
-    );
-  }
-
   const { scholar, orcid, publications } = data;
 
   return (
@@ -379,4 +374,3 @@ export default async function PublicationsPage() {
     />
   );
 }
-
