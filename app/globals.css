@@ -117,7 +117,7 @@ body {
 
 .social-tab a {
   text-align: center;
-  color: var(--text-secondary);
+  color: var(--text-tertiary);
   display: flex;
   align-items: center;
   justify-content: center;
