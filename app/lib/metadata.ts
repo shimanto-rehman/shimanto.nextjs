@@ -2,7 +2,7 @@
 // Optimized for search rankings for "Shimanto Rehman" and "S.M. Obaydur Rahman"
 
 export const siteConfig = {
-  name: "Shimanto Rehman | S.M. Obaydur Rahman",
+  name: "Shimanto",
   title: "Shimanto Rehman - Full-Stack Software Developer & Data Science Enthusiast",
   description: "S.M. Obaydur Rahman (Shimanto Rehman) - Full-Stack Software Developer, Database Administrator, and Data Science Enthusiast. Currently working at Mutual Trust Bank PLC. Expert in Next.js, React, PHP, Laravel, Python, Oracle Database, and System Architecture.",
   url: process.env.NEXT_PUBLIC_SITE_URL || "https://shimanto.info",

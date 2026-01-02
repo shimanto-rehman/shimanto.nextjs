@@ -260,3 +260,9 @@
 .outerShadow {
   box-shadow: 10px 10px 20px #0b0b0b70, -5px -5px 15px #2525252c;
 }
+
+@media (max-width: 480px) {
+  .certificateLogo img{
+    height: 60px;
+  }
+}

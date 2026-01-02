@@ -506,3 +506,15 @@
       max-width: 50%;
     }
   }
+
+  @media (max-width: 385px) {
+    .portrait {
+      width: 100px;
+      height: 100px;
+    }
+    .link-item,
+    .mobile-submenu .link-item {
+      font-size: 8px;
+      padding: 7px 14px;
+    }
+  }

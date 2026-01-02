@@ -219,8 +219,15 @@
 }
 
 @media (max-width: 480px) {
+  .testimonialSection{
+    padding: 40px 0 50px;
+  }
+  .sectionTitle{
+    margin-bottom: 30px;
+  }
   .sectionTitle h2 {
-    font-size: 1.5rem;
+    font-size: 1.4rem;
+    margin: 0px;
   }
 
   .testiItem {

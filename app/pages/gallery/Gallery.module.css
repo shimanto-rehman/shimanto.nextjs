@@ -12,7 +12,7 @@
   }
   
   .title {
-    font-size: clamp(2.6rem, 6vw, 4rem);
+    font-size: clamp(2rem, 6vw, 4rem);
     font-weight: 800;
     margin: 0;
     line-height: 0.9;
@@ -295,4 +295,9 @@
     .navBtn { width: 40px; height: 40px; background: transparent; }
     .closeBtn { top: 10px; right: 10px; background: transparent; }
     .descriptionOverlay { padding: 40px 15px 20px; }
+  }
+
+  @media (max-width: 480px) {
+    .header {padding: 60px 10px 40px;}
+    .subtitle{font-size: 0.6rem;}
   }

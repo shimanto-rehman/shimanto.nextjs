@@ -202,3 +202,12 @@
     .description { font-size: 0.8rem; }
     .hollow { margin-left: 0; display: block; } /* Stack title on mobile */
   }
+
+  @media (max-width: 480px) {
+    .headerContainer { padding: 60px 10px 40px;}
+    .title { font-size: 1.6rem;   padding: 0px 0px 0px;}
+    .subtitle { font-size: 0.7rem; }
+    .role { font-size: 1rem; }
+    .description { font-size: 0.7rem; }
+    .hollow { margin-left: 0; display: block; } /* Stack title on mobile */
+  }
