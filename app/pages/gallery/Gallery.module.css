@@ -17,15 +17,16 @@
     margin: 0;
     line-height: 0.9;
     letter-spacing: -0.02em;
+    color: var(--text-primary);
   }
   
   .hollow {
-    -webkit-text-stroke: 1px rgba(255, 255, 255, 0.378);
+    -webkit-text-stroke: 1px var(--text-secondary);
     color: transparent;
   }
   
   .subtitle {
-    color: #a8a8a8;
+    color: var(--text-secondary);
     margin-top: 15px;
     font-size: 0.8rem;
     letter-spacing: 2px;
@@ -53,7 +54,7 @@
   
   .sectionDate {
     font-family: monospace;
-    color: #9b9a9a;
+    color: var(--text-tertiary);
     font-size: 0.9rem;
   }
   
@@ -209,7 +210,7 @@
     left: 0;
     width: 100%;
     background: linear-gradient(to top, rgba(0,0,0,0.9) 0%, rgba(0,0,0,0) 100%);
-    color: #fff;
+    color: var(--text-secondary);
     padding: 60px 20px 30px;
     pointer-events: none;
   }
@@ -223,7 +224,7 @@
   .textContainer h3 {
     margin: 0 0 6px;
     font-size: 1.2rem;
-    color: #fff;
+    color: var(--text-secondary);
   }
   
   .textContainer p {
@@ -239,7 +240,7 @@
     right: 15px;
     z-index: 2010;
     background: rgba(0,0,0,0.4);
-    color: #fff;
+    color: var(--text-secondary);
     width: 44px;
     height: 44px;
     border-radius: 50%;

@@ -109,8 +109,8 @@ export default function ProjectsPage() {
                     {selectedProject.techStack.map(t => <span key={t} className={styles.techTag}>{t}</span>)}
                   </div>
                   <p className={styles.ppDesc}>{selectedProject.description}</p>
-                  <p style={{ fontSize: '0.8rem', marginBottom: '20px' }}>
-                    Category: <span style={{ color: '#ffa751' }}>{selectedProject.category}</span> | 
+                  <p style={{ fontSize: '0.8rem', marginBottom: '20px', color: 'var(--text-secondary)' }}>
+                    Category: <span style={{ color: 'var(--text-secondary)' }}>{selectedProject.category}</span> | 
                     Status: <span style={{ color: '#ffa751' }}>{selectedProject.status}</span>
                   </p>
                   <a href={selectedProject.repoUrl} target="_blank" className={styles.ppLinkBtn}>View Github Repo</a>

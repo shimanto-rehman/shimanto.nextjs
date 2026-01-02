@@ -1,12 +1,10 @@
 /* --- Global Container --- */
 .mainWrapper {
     min-height: 100vh;
-    background-color: #050505;
     /* Deep, abstract background consistent with your site */
     background-image: 
       radial-gradient(circle at 10% 20%, rgba(251, 91, 83, 0.05), transparent 40%),
       radial-gradient(circle at 90% 80%, rgba(255, 167, 81, 0.04), transparent 40%);
-    color: #fff;
     padding-bottom: 80px;
     overflow-x: hidden;
   }
@@ -24,20 +22,20 @@
     font-weight: 800;
     margin: 0;
     letter-spacing: -1px;
-    color: #fff;
+    color: var(--text-primary);
     opacity: 0;
     animation: fadeDown 0.8s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
   }
   
   .hollow {
     /* The signature "Hollow" text effect */
-    -webkit-text-stroke: 1px rgba(255, 255, 255, 0.3);
+    -webkit-text-stroke: 1px var(--text-secondary);
     color: transparent;
     margin-left: 15px;
   }
   
   .subtitle {
-    color: #c5c5c5;
+    color: var(--text-tertiary);
     margin-top: 15px;
     font-size: 1.0rem;
     letter-spacing: 1px;
@@ -59,7 +57,7 @@
   .card {
     background: rgba(255, 255, 255, 0.02);
     backdrop-filter: blur(12px);
-    border: 1px solid rgba(255, 255, 255, 0.05);
+    border: 1px solid var(--text-tertiary);
     border-radius: 16px;
     padding: 35px;
     position: relative;
@@ -95,7 +93,7 @@
   .role {
     font-size: 1.5rem;
     font-weight: 700;
-    color: #fff;
+    color: var(--text-secondary);
     margin: 0 0 5px 0;
   }
   
@@ -108,7 +106,7 @@
   
   .period {
     font-size: 0.85rem;
-    color: #e7e7e7;
+    color: var(--text-tertiary);
     background: rgba(255, 255, 255, 0.05);
     padding: 6px 12px;
     border-radius: 20px;
@@ -116,7 +114,7 @@
   }
   
   .description {
-    color: #ccc;
+    color: var(--text-tertiary);
     line-height: 1.6;
     font-size: 0.95rem;
     margin-bottom: 25px;
@@ -132,7 +130,7 @@
   
   .courseTag {
     font-size: 0.75rem;
-    color: #aaa;
+    color: var(--text-tertiary);
     border: 1px solid rgba(255, 255, 255, 0.1);
     padding: 5px 12px;
     border-radius: 8px;
@@ -141,7 +139,7 @@
   
   .card:hover .courseTag {
     border-color: rgba(255, 255, 255, 0.3);
-    color: #fff;
+    color: var(--text-secondary);
     background: rgba(255, 255, 255, 0.05);
   }
   
@@ -159,7 +157,7 @@
   
   .emptyIcon {
     font-size: 4rem;
-    color: #333;
+    color: var(--text-tertiary);
     margin-bottom: 20px;
     background: radial-gradient(circle, rgba(255,255,255,0.05) 0%, transparent 70%);
     width: 120px;
@@ -173,12 +171,12 @@
   
   .emptyText {
     font-size: 1.5rem;
-    color: #888;
+    color: var(--text-tertiary);
     margin: 0;
   }
   
   .emptySub {
-    color: #555;
+    color: var(--text-tertiary);
     margin-top: 10px;
     font-size: 0.9rem;
   }

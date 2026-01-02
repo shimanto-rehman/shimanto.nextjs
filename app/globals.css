@@ -8,7 +8,8 @@ body {
   width: 100%;
   height: 100%;
   overflow-x: hidden;
-  background-color: black;
+  background-color: var(--bg-primary);
+  transition: background-color 0.3s ease;
 }
 
 /* Hide Scrollbar Globally - Cross-browser */
@@ -64,6 +65,25 @@ body {
   --saturation: 180%;
   --glass-reflex-light: 1;
   --glass-reflex-dark: 1;
+  
+  /* Dark Mode (Default) - Text Colors (3 shades of white) */
+  --text-primary: #ffffff;
+  --text-secondary: #e0e0e0;
+  --text-tertiary: #b0b0b0;
+  
+  /* Background */
+  --bg-primary: #000000;
+}
+
+/* Light Mode Theme */
+[data-theme="light"] {
+  /* Light Mode - Text Colors (3 shades of dark) */
+  --text-primary: #1a1a1a;
+  --text-secondary: #505050;
+  --text-tertiary: #828181;
+  
+  /* Background */
+  --bg-primary: #ffffff;
 }
 
 .glass-rectangle {
@@ -86,7 +106,7 @@ body {
     inset 2px -6.5px 1px -4px color-mix(in srgb, var(--c-dark) calc(var(--glass-reflex-dark) * 10%), transparent),
     0px 1px 5px 0px color-mix(in srgb, var(--c-dark) calc(var(--glass-reflex-dark) * 10%), transparent),
     0px 6px 16px 0px color-mix(in srgb, var(--c-dark) calc(var(--glass-reflex-dark) * 8%), transparent);
-  color: white;
+  color: var(--text-primary);
   transition: all 400ms cubic-bezier(1, 0, 0.4, 1);
 }
 
@@ -97,7 +117,7 @@ body {
 
 .social-tab a {
   text-align: center;
-  color: #eee;
+  color: var(--text-secondary);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -210,7 +230,7 @@ body {
   position: relative;
   min-height: 100vh;
   overflow: hidden;
-  color: white;
+  color: var(--text-primary);
   font-family: system-ui, -apple-system, BlinkMacSystemFont, 'SF Pro Text', sans-serif;
 }
 
@@ -268,10 +288,13 @@ body {
 /* Image */
 .home-image {
   height: 100%;
+  width: 100%;
   object-fit: cover;
+  object-position: center center;
   display: block;
   margin: auto;
   position: relative;
+  max-width: 600px;
   z-index: 1;
 }
 
@@ -423,7 +446,7 @@ body {
 .home-intro-description {
   font-size: 0.7rem;
   line-height: 1.7;
-  color: rgba(255, 255, 255, 0.9);
+  color: var(--text-secondary);
   font-weight: 300;
   font-family: 'SF Pro Text', -apple-system, BlinkMacSystemFont, sans-serif;
   text-transform: uppercase;
@@ -449,7 +472,7 @@ body {
   border: 1px solid rgba(255, 255, 255, 0.2);
   border-radius: 20px;
   font-size: 0.85rem;
-  color: rgba(255, 255, 255, 0.9);
+  color: var(--text-tertiary);
   font-weight: 400;
   font-family: 'SF Pro Text', -apple-system, BlinkMacSystemFont, sans-serif;
   transition: all 0.3s ease;
@@ -551,4 +574,9 @@ span.desig-item:nth-child(4) {
     margin-top: 0;
     transform: rotateX(90deg);
   }
-} 
+}
+
+/* Utility class for hiding elements */
+.hidden {
+  display: none !important;
+}

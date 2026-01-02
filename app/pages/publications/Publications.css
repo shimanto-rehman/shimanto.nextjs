@@ -78,7 +78,7 @@
 .pub-profile-name {
   font-size: clamp(1.1rem, 2vw, 1.6rem);
   font-weight: 600;
-  color: rgba(255, 255, 255, 0.96);
+  color: var(--text-primary);
   margin: 0 0 clamp(4px, 0.6vw, 6px) 0;
   letter-spacing: 0.02em;
 }
@@ -92,25 +92,25 @@
 .pub-profile-subtitle {
   margin: 0;
   font-size: clamp(0.8rem, 1vw, 0.9rem);
-  color: rgba(255, 255, 255, 0.82);
+  color: var(--text-secondary);
 }
 
 .pub-profile-email {
   margin: 2px 0 0 0;
   font-size: clamp(0.75rem, 0.95vw, 0.85rem);
-  color: rgba(255, 255, 255, 0.7);
+  color: var(--text-tertiary);
 }
 
 .pub-profile-location {
   margin: clamp(2px, 0.3vw, 4px) 0 0 0;
   font-size: clamp(0.75rem, 0.9vw, 0.85rem);
-  color: rgba(255, 255, 255, 0.7);
+  color: var(--text-tertiary);
 }
 
 .pub-profile-role {
   margin: clamp(6px, 0.7vw, 8px) 0 0 0;
   font-size: clamp(0.85rem, 1.1vw, 0.95rem);
-  color: rgba(255, 255, 255, 0.85);
+  color: var(--text-secondary);
 }
 
 .pub-profile-cta {
@@ -121,7 +121,7 @@
   border-radius: 999px;
   background: color-mix(in srgb, var(--c-glass) 24%, transparent);
   border: 1px solid rgba(255, 255, 255, 0.24);
-  color: rgba(255, 255, 255, 0.9);
+  color: var(--text-tertiary);
   font-size: clamp(0.75rem, 1vw, 0.9rem);
   text-decoration: none;
   transition: all 0.25s ease;
@@ -157,7 +157,7 @@
   border-radius: 999px;
   background: rgba(0, 0, 0, 0.35);
   font-size: clamp(0.7rem, 0.85vw, 0.8rem);
-  color: rgba(255, 255, 255, 0.8);
+  color: var(--text-secondary);
 }
 
 .pub-metric {
@@ -168,13 +168,13 @@
 
 .pub-metric-label {
   font-size: clamp(0.7rem, 0.85vw, 0.8rem);
-  color: rgba(255, 255, 255, 0.65);
+  color: var(--text-secondary);
 }
 
 .pub-metric-value {
   font-size: clamp(0.8rem, 1.05vw, 1rem);
   font-weight: 600;
-  color: rgba(255, 255, 255, 0.96);
+  color: var(--text-tertiary);
 }
 
 /* ORCID card */
@@ -218,14 +218,14 @@
 .pub-orcid-label {
   margin: 0 0 2px;
   font-size: clamp(0.75rem, 0.9vw, 0.85rem);
-  color: rgba(255, 255, 255, 0.6);
+  color: var(--text-secondary);
 }
 
 .pub-orcid-name {
   margin: 0;
   font-size: clamp(0.95rem, 1.4vw, 1.3rem);
   font-weight: 600;
-  color: rgba(255, 255, 255, 0.95);
+  color: var(--text-primary);
 }
 
 .pub-orcid-id {
@@ -237,7 +237,7 @@
 .pub-orcid-affil {
   margin: 4px 0 0;
   font-size: clamp(0.75rem, 0.95vw, 0.85rem);
-  color: rgba(255, 255, 255, 0.78);
+  color: var(--text-secondary);
 }
 
 
@@ -248,7 +248,7 @@
 .pub-orcid-bio {
   margin: clamp(8px, 1.2vw, 12px) 0 0 0;
   font-size: clamp(0.75rem, 0.9vw, 0.85rem);
-  color: rgba(255, 255, 255, 0.75);
+  color: var(--text-secondary);
   line-height: 1.5;
   width: 100%;
 }
@@ -266,7 +266,7 @@
   border-radius: 999px;
   background: rgba(0, 0, 0, 0.35);
   font-size: clamp(0.7rem, 0.85vw, 0.8rem);
-  color: rgba(255, 255, 255, 0.8);
+  color: var(--text-secondary);
 }
 
 /* Search */
@@ -285,7 +285,7 @@
 .pub-search-bar i {
   position: absolute;
   left: 16px;
-  color: rgba(255, 255, 255, 0.5);
+  color: var(--text-tertiary);
   font-size: 0.95rem;
 }
 
@@ -305,7 +305,7 @@
 }
 
 .pub-search-bar input::placeholder {
-  color: rgba(255, 255, 255, 0.45);
+  color: var(--text-tertiary);
 }
 
 .pub-search-bar input:focus {
@@ -317,7 +317,7 @@
   right: 14px;
   background: transparent;
   border: none;
-  color: rgba(255, 255, 255, 0.55);
+  color: var(--text-tertiary);
   cursor: pointer;
   padding: 3px;
   display: flex;
@@ -326,14 +326,14 @@
 }
 
 .pub-search-clear:hover {
-  color: rgba(255, 255, 255, 0.9);
+  color: var(--text-tertiary);
 }
 
 .pub-search-count {
   margin-top: 8px;
   text-align: center;
   font-size: clamp(0.75rem, 0.95vw, 0.9rem);
-  color: rgba(255, 255, 255, 0.7);
+  color: var(--text-tertiary);
 }
 
 /* Publication cards */
@@ -367,8 +367,8 @@
 .pub-venue-tag {
   padding: 6px 12px;
   border-radius: 999px;
-  background: rgba(0, 0, 0, 0.4);
-  color: rgba(255, 255, 255, 0.9);
+  background: rgba(0, 0, 0, 0.159);
+  color: var(--text-tertiary);
   font-size: clamp(0.75rem, 0.9vw, 0.85rem);
   font-weight: 500;
 }
@@ -386,7 +386,7 @@
   margin: 0 0 4px 0;
   font-size: clamp(0.95rem, 1.3vw, 1.2rem);
   font-weight: 500;
-  color: rgba(255, 255, 255, 0.95);
+  color: var(--text-primary);
 }
 
 .pub-title a {
@@ -401,13 +401,13 @@
 .pub-authors {
   margin: 0 0 4px 0;
   font-size: clamp(0.8rem, 0.95vw, 0.9rem);
-  color: rgba(255, 255, 255, 0.85);
+  color: var(--text-secondary);
 }
 
 .pub-meta {
   margin: 0 0 6px 0;
   font-size: clamp(0.75rem, 0.9vw, 0.85rem);
-  color: rgba(255, 255, 255, 0.7);
+  color: var(--text-tertiary);
   font-style: italic;
 }
 
@@ -418,7 +418,7 @@
 .pub-abstract {
   margin: 6px 0 8px 0;
   font-size: clamp(0.75rem, 0.9vw, 0.85rem);
-  color: rgba(255, 255, 255, 0.82);
+  color: var(--text-secondary);
 }
 
 .pub-links-row {
@@ -431,10 +431,10 @@
 .pub-link-btn {
   padding: 4px 10px;
   border-radius: 999px;
-  border: 1px solid rgba(255, 255, 255, 0.18);
-  background: rgba(0, 0, 0, 0.3);
+  border: 1px solid var(--text-tertiary);
+  background: rgba(0, 0, 0, 0.153);
   font-size: clamp(0.75rem, 0.9vw, 0.85rem);
-  color: rgba(255, 255, 255, 0.9);
+  color: var(--text-tertiary);
   text-decoration: none;
   transition: all 0.2s ease;
 }
@@ -456,9 +456,9 @@
   gap: 6px;
   padding: 3px 9px;
   border-radius: 999px;
-  background: rgba(0, 0, 0, 0.4);
+  background: rgba(0, 0, 0, 0.143);
   font-size: clamp(0.75rem, 0.9vw, 0.85rem);
-  color: rgba(255, 255, 255, 0.8);
+  color: var(--text-secondary);
 }
 
 .pub-metric-chip i {
@@ -484,7 +484,7 @@
   border-radius: 999px;
   border: 1px solid rgba(255, 255, 255, 0.14);
   background: color-mix(in srgb, var(--c-glass) 18%, transparent);
-  color: rgba(255, 255, 255, 0.9);
+  color: var(--text-tertiary);
   font-size: clamp(0.8rem, 1vw, 0.95rem);
   cursor: pointer;
   transition: all 0.2s ease;
@@ -502,7 +502,7 @@
 
 .pub-page-info {
   font-size: clamp(0.8rem, 1vw, 0.95rem);
-  color: rgba(255, 255, 255, 0.7);
+  color: var(--text-tertiary);
 }
 
 /* Responsive */

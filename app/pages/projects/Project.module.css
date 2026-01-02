@@ -43,7 +43,7 @@
     border-radius: 12px;
     cursor: pointer;
     transition: transform 0.3s ease, box-shadow 0.3s ease;
-    border: 1px solid rgba(255, 255, 255, 0.05);
+    border: 1px solid var(--text-tertiary);
   }
   
   .projectItemInner:hover {
@@ -93,7 +93,7 @@
     font-size: 1.1rem;
     font-weight: 600;
     text-align: center;
-    color: #fff;
+    color: var(--text-primary);
   }
   
   /* --- POPUP STYLES (MATCHING CERTIFICATES) --- */
@@ -150,7 +150,7 @@
 .ppCloseBtn {
   background: none;
   border: none;
-  color: #fff;
+  color: var(--text-tertiary);
   font-size: 40px;
   line-height: 1;
   cursor: pointer;
@@ -204,7 +204,7 @@
 
 .techTag {
   background: rgba(255, 255, 255, 0.05);
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  border: 1px solid var(--text-tertiary);
   padding: 4px 12px;
   border-radius: 15px;
   font-size: 0.75rem;
@@ -212,7 +212,7 @@
 }
 
 .ppDesc {
-  color: #ccc;
+  color: var(--text-tertiary);
   line-height: 1.6;
   font-size: 0.95rem;
   margin-bottom: 20px;
@@ -222,7 +222,7 @@
   display: inline-block;
   padding: 12px 25px;
   background: linear-gradient(to right, #ffe259, #ffa751);
-  color: #151515;
+  color: var(--text-secondary);
   font-weight: 700;
   border-radius: 30px;
   text-decoration: none;
@@ -320,9 +320,9 @@
     padding: 15px 25px;
     background: rgba(255, 255, 255, 0.03);
     backdrop-filter: blur(10px);
-    border: 1px solid rgba(255, 255, 255, 0.1);
+    border: 1px solid var(--text-tertiary);
     border-radius: 50px;
-    color: #fff;
+    color: var(--text-secondary);
     font-size: 1rem;
     outline: none;
     transition: 0.3s;
@@ -342,8 +342,8 @@
   
   .filterBtn {
     background: rgba(255, 255, 255, 0.05);
-    border: 1px solid rgba(255, 255, 255, 0.05);
-    color: #aaa;
+    border: 1px solid var(--text-tertiary);
+    color: var(--text-tertiary);
     padding: 8px 20px;
     border-radius: 20px;
     cursor: pointer;
@@ -353,7 +353,7 @@
   
   .filterBtn.active {
     background: linear-gradient(to right, #ffe259, #ffa751);
-    color: #111;
+    color: var(--text-secondary);
     font-weight: 600;
   }
   

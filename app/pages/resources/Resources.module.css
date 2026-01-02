@@ -1,7 +1,6 @@
 /* --- Global Layout (UNTOUCHED) --- */
 .mainWrapper {
   min-height: 100vh;
-  background-color: #050505;
   background-image: 
     radial-gradient(circle at 15% 50%, rgba(251, 91, 83, 0.08), transparent 25%),
     radial-gradient(circle at 85% 30%, rgba(255, 167, 81, 0.05), transparent 25%);
@@ -30,6 +29,7 @@
 .title {
   font-size: clamp(3rem, 9vw, 6rem);
   font-weight: 800;
+  color: var(--text-primary);
   margin: 0;
   line-height: 1;
   letter-spacing: -2px;
@@ -38,7 +38,7 @@
 }
 
 .hollow {
-  -webkit-text-stroke: 1px rgba(255, 255, 255, 0.3);
+  -webkit-text-stroke: 1px var(--text-secondary);
   color: transparent;
   display: block;
 }
@@ -181,7 +181,7 @@
 }
 
 .floatingCard:hover .cardOverlay { opacity: 1; }
-.cardOverlay i { color: #fff; font-size: 2rem; }
+.cardOverlay i { color: var(--text-secondary); font-size: 2rem; }
 
 /* Mobile Adjustments */
 @media (max-width: 768px) {

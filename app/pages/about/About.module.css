@@ -31,7 +31,7 @@
   height: 100%;
   border-radius: 50%;
   object-fit: cover;
-  border: 4px solid rgba(255, 255, 255, 0.1);
+  border: 4px solid var(--text-tertiary);
   position: relative;
   z-index: 2;
 }
@@ -49,7 +49,7 @@
 
 .heroSubtitle {
   font-size: 0.8rem;
-  color: rgba(255, 255, 255, 0.6);
+  color: var(--text-secondary);
   letter-spacing: 2px;
   text-transform: uppercase;
   margin-bottom: 25px;
@@ -64,7 +64,7 @@
   transition: transform 0.3s ease;
   padding: 20px 30px;
   border-radius: 15px;
-  color: rgba(255, 255, 255, 0.85);
+  color: var(--text-secondary);
   line-height: 1.7;
 }
 
@@ -73,7 +73,7 @@
   font-family: SF Pro Text, -apple-system, BlinkMacSystemFont, sans-serif;
   text-transform: uppercase;
   letter-spacing: .1rem;
-  color: rgba(255, 255, 255, 0.85);
+  color: var(--text-secondary);
   line-height: 1.7;
 }
 
@@ -139,13 +139,13 @@
 .cardTitle {
   font-size: 0.9rem;
   font-weight: 700;
-  color: #fff;
+  color: var(--text-primary);
   text-transform: uppercase;
   letter-spacing: 1px;
 }
 
 .cardIcon {
-  color: rgba(255, 255, 255, 0.3);
+  color: var(--text-secondary);
 }
 
 
@@ -185,7 +185,7 @@
   font-size: 14px;
   font-weight: 600;
   text-transform: capitalize;
-  color: rgba(255, 255, 255, 0.6);
+  color: var(--text-tertiary);
   transition: all 0.3s ease;
   position: relative;
   
@@ -197,14 +197,14 @@
 
 .tabItem:hover {
   background: rgba(255, 255, 255, 0.1);
-  color: #fff;
+  color: var(--text-secondary);
   transform: translateY(-2px);
 }
 
 .tabItem.active {
-  color: #fff;
+  color: var(--text-secondary);
   background: rgba(255, 255, 255, 0.15);
-  border-color: rgba(255, 255, 255, 0.3);
+  border-color: rgba(188, 188, 188, 0.424);
   box-shadow: 0 0 15px rgba(255, 255, 255, 0.1);
 }
 
@@ -257,7 +257,7 @@
   line-height: 26px !important;
   border-radius: 50%;
   font-size: 16px;
-  color: #fff;
+  color: var(--text-secondary);
   position: absolute;
   top: 35px;
   left: 50%;
@@ -297,28 +297,28 @@
 .date {
   display: block;
   font-size: 14px;
-  color: rgba(255, 255, 255, 0.5);
+  color: var(--text-tertiary);
   margin-bottom: 8px;
   font-weight: 500;
 }
 
 .title {
   font-size: 17.5px;
-  color: #fff;
+  color: var(--text-primary);
   margin-bottom: 5px;
   font-weight: 700;
 }
 
 .subtitle {
   font-size: 15px;
-  color: rgba(255, 255, 255, 0.8);
+  color: var(--text-secondary);
   font-style: italic;
   margin-bottom: 15px;
 }
 
 .desc {
   font-size: 12px;
-  color: rgba(255, 255, 255, 0.6);
+  color: var(--text-tertiary);
   line-height: 1.6;
 }
 
@@ -382,7 +382,7 @@
 
 .skillName {
   font-size: 14px;
-  color: #fff;
+  color: var(--text-secondary);
   margin-bottom: 10px;
   display: block;
 }
@@ -397,7 +397,7 @@
 
 .progress {
   height: 100%;
-  background: linear-gradient( 180deg,rgba(255,255,255,0.95), rgba(245,245,245,0.85)); /* Cool gradient */
+  background: var(--text-tertiary); /* Cool gradient */
   box-shadow: 0 10px 30px rgba(0,0,0,0.08), inset 0 1px 0 rgba(255,255,255,0.8);
   border-radius: 10px;
   position: relative;
@@ -410,7 +410,7 @@
   right: 0;
   top: -25px;
   font-size: 14px;
-  color: rgba(255, 255, 255, 0.6);
+  color: var(--text-tertiary);
 }
 
 /* --- Responsive Media Queries --- */
@@ -510,7 +510,7 @@
   backdrop-filter: blur(10px);
   border: 1px solid rgba(255, 255, 255, 0.1);
   border-radius: 12px;
-  color: #fff;
+  color: var(--text-secondary);
   font-size: clamp(0.75rem, 1.5vw, 0.9rem);
   font-weight: 600;
   cursor: pointer;
@@ -610,13 +610,13 @@
   margin: 0;
   font-size: clamp(1.1rem, 2.5vw, 1.4rem);
   font-weight: 700;
-  color: #fff;
+  color: var(--text-primary);
   letter-spacing: -0.5px;
 }
 
 .popupCategory {
   font-size: clamp(0.7rem, 1.5vw, 0.85rem);
-  color: rgba(255, 255, 255, 0.6);
+  color: var(--text-tertiary);
   text-transform: uppercase;
   letter-spacing: 1px;
 }
@@ -636,8 +636,8 @@
   height: clamp(36px, 5vw, 40px);
   border-radius: 50%;
   background: rgba(255, 255, 255, 0.05);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  color: #ccc;
+  border: 1px solid var(--text-tertiary);
+  color: var(--text-tertiary);
   font-size: clamp(0.9rem, 1.5vw, 1rem);
   transition: all 0.3s ease;
   text-decoration: none;
@@ -655,7 +655,7 @@
 .closeBtn {
   background: none;
   border: none;
-  color: #fff;
+  color: var(--text-tertiary);
   font-size: clamp(1.8rem, 4vw, 2.2rem);
   line-height: 0.8;
   cursor: pointer;
@@ -685,7 +685,7 @@
   width: 100%;
   height: 100%;
   border: none;
-  background: #fff;
+  background: var(--text-secondary);
 }
 
 /* ============================================

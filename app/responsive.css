@@ -372,6 +372,13 @@
   
   /* Extra small mobile phones (360px and below) */
   @media (max-width: 375px) {
+
+    .home-social-container {
+      position: absolute!important;
+    }
+    .home-intro-content {
+      margin-bottom: 2rem;
+    }
     .home-content-wrapper {
       padding: 1rem 1.25rem;
     }
@@ -411,8 +418,14 @@
     .glass-rectangle {
       border-radius: 25px;
     }
+    .home-intro-description {
+      font-size: 0.4rem !important;
+    }
+    .home-main{
+      overflow: visible;
+    }
   }
-  
+
   /* Landscape orientation adjustments for mobile */
   @media (max-height: 600px) and (orientation: landscape) {
     .home-content-wrapper {

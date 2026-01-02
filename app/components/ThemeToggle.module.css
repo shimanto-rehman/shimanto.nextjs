@@ -1,0 +1,304 @@
+/* Settings Button */
+.settingsButton {
+  position: fixed;
+  top: 20px;
+  left: 20px;
+  z-index: 9999;
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  background-color: color-mix(in srgb, var(--c-glass) 12%, transparent);
+  backdrop-filter: blur(25px) saturate(180%);
+  -webkit-backdrop-filter: blur(25px) saturate(180%);
+  border: 1px solid color-mix(in srgb, var(--c-light) 10%, transparent);
+  color: var(--text-tertiary);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 
+    inset 0 0 0 1px color-mix(in srgb, var(--c-light) 10%, transparent),
+    0px 1px 5px 0px color-mix(in srgb, var(--c-dark) 10%, transparent),
+    0px 6px 16px 0px color-mix(in srgb, var(--c-dark) 8%, transparent);
+}
+
+.settingsButton i {
+  font-size: 18px;
+  line-height: 1;
+}
+
+.settingsButton:hover {
+  background-color: color-mix(in srgb, var(--c-glass) 18%, transparent);
+  transform: scale(1.05);
+}
+
+.settingsButton:active {
+  transform: scale(0.95);
+}
+
+/* Overlay */
+.overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.3);
+  -webkit-backdrop-filter: blur(4px);
+  backdrop-filter: blur(4px);
+  z-index: 9998;
+  animation: fadeIn 0.2s ease-out;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+/* Panel */
+.panel {
+  position: fixed;
+  top: 80px;
+  left: 20px;
+  z-index: 9999;
+  min-width: 220px;
+  max-width: 240px;
+  padding: 16px;
+  border-radius: 16px;
+  background-color: color-mix(in srgb, var(--c-glass) 15%, transparent);
+  -webkit-backdrop-filter: blur(30px) saturate(180%);
+  backdrop-filter: blur(30px) saturate(180%);
+  border: 1px solid color-mix(in srgb, var(--c-light) 15%, transparent);
+  box-shadow: 
+    inset 0 0 0 1px color-mix(in srgb, var(--c-light) 10%, transparent),
+    0px 8px 32px 0px color-mix(in srgb, var(--c-dark) 20%, transparent),
+    0px 16px 64px 0px color-mix(in srgb, var(--c-dark) 15%, transparent);
+  animation: slideDown 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  color: var(--text-primary);
+}
+
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.panelHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 16px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid color-mix(in srgb, var(--c-light) 10%, transparent);
+}
+
+.panelHeader h3 {
+  margin: 0;
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.closeButton {
+  width: 28px;
+  height: 28px;
+  border-radius: 8px;
+  background: transparent;
+  border: none;
+  color: var(--text-secondary);
+  font-size: 24px;
+  line-height: 1;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+}
+
+.closeButton:hover {
+  background-color: color-mix(in srgb, var(--c-glass) 20%, transparent);
+  color: var(--text-secondary);
+}
+
+.toggleGroup {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.toggleItem {
+  display: flex;
+  align-items: center;
+}
+
+.toggleLabel {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  cursor: pointer;
+  font-size: 13px;
+  color: var(--text-primary);
+}
+
+.toggleLabel span {
+  font-weight: 500;
+}
+
+/* Toggle Switch */
+.toggleSwitch {
+  position: relative;
+  width: 48px;
+  height: 26px;
+  border-radius: 13px;
+  background-color: color-mix(in srgb, var(--c-dark) 30%, transparent);
+  border: 1px solid color-mix(in srgb, var(--c-light) 10%, transparent);
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  outline: none;
+  padding: 0;
+}
+
+.toggleSwitch:hover {
+  background-color: color-mix(in srgb, var(--c-dark) 40%, transparent);
+}
+
+.toggleSwitch.checked {
+  background-color: color-mix(in srgb, var(--c-light) 40%, transparent);
+}
+
+.toggleSwitch.checked:hover {
+  background-color: color-mix(in srgb, var(--c-light) 50%, transparent);
+}
+
+.toggleThumb {
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background-color: white;
+  box-shadow: 
+    0 2px 4px rgba(0, 0, 0, 0.2),
+    0 0 0 1px rgba(0, 0, 0, 0.1);
+  transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  transform: translateX(0);
+}
+
+.toggleSwitch.checked .toggleThumb {
+  transform: translateX(22px);
+}
+
+/* Mobile Responsive */
+@media (max-width: 768px) {
+  .settingsButton {
+    top: 16px;
+    left: 16px;
+    width: 44px;
+    height: 44px;
+  }
+
+  .settingsButton i {
+    font-size: 16px;
+  }
+
+  .panel {
+    top: 70px;
+    left: 16px;
+    right: 16px;
+    padding: 14px;
+  }
+
+  .panelHeader {
+    margin-bottom: 14px;
+    padding-bottom: 8px;
+  }
+
+  .panelHeader h3 {
+    font-size: 15px;
+  }
+
+  .toggleGroup {
+    gap: 10px;
+  }
+
+  .toggleLabel {
+    font-size: 12px;
+  }
+
+  .toggleSwitch {
+    width: 44px;
+    height: 24px;
+  }
+
+  .toggleThumb {
+    width: 18px;
+    height: 18px;
+  }
+
+  .toggleSwitch.checked .toggleThumb {
+    transform: translateX(20px);
+  }
+}
+
+/* Small Mobile */
+@media (max-width: 480px) {
+  .settingsButton {
+    top: 12px;
+    left: 12px;
+    width: 40px;
+    height: 40px;
+  }
+
+  .settingsButton i {
+    font-size: 15px;
+  }
+
+  .panel {
+    top: 62px;
+    left: 12px;
+    right: 12px;
+    padding: 12px;
+    border-radius: 12px;
+  }
+
+  .panelHeader h3 {
+    font-size: 14px;
+  }
+
+  .closeButton {
+    width: 24px;
+    height: 24px;
+    font-size: 20px;
+  }
+
+  .toggleLabel {
+    font-size: 11px;
+  }
+
+  .toggleSwitch {
+    width: 40px;
+    height: 22px;
+  }
+
+  .toggleThumb {
+    width: 16px;
+    height: 16px;
+  }
+
+  .toggleSwitch.checked .toggleThumb {
+    transform: translateX(18px);
+  }
+}
+
