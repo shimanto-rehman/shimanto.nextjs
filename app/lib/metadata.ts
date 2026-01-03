@@ -5,7 +5,7 @@ export const siteConfig = {
   name: "Shimanto",
   title: "Shimanto Rehman - Full-Stack Software Developer & Data Science Enthusiast",
   description: "S.M. Obaydur Rahman (Shimanto Rehman) - Full-Stack Software Developer, Database Administrator, and Data Science Enthusiast. Currently working at Mutual Trust Bank PLC. Expert in Next.js, React, PHP, Laravel, Python, Oracle Database, and System Architecture.",
-  url: process.env.NEXT_PUBLIC_SITE_URL || "https://shimanto.info",
+  url: process.env.NEXT_PUBLIC_SITE_URL || "https://shimanto.online",
   keywords: [
     "Shimanto Rehman",
     "S.M. Obaydur Rahman",
@@ -32,7 +32,7 @@ export const siteConfig = {
     name: "S.M. Obaydur Rahman",
     alternateName: "Shimanto Rehman",
     email: "shimanto.rehman.bd@gmail.com",
-    url: "https://shimanto.info",
+    url: "https://shimanto.online",
     jobTitle: "Full-Stack Software Developer",
     worksFor: {
       name: "Mutual Trust Bank PLC",
